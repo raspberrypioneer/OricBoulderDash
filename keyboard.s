@@ -1,12 +1,18 @@
 ;Copied and slightly adapted from: https://github.com/Oric-Software-Development-Kit/Oric-Software/tree/master/routines/single_row_keyboard_read
 ;
 
-#define ROM
+#define ROM  ; Using a rom, not overlay memory
+#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
 
 #ifdef ROM
+#ifdef rom_v1_1  ;Atmos
 #define IRQ_ADDRLO $0245
 #define IRQ_ADDRHI $0246
-#else
+#else  ;Oric-1
+#define IRQ_ADDRLO $0229
+#define IRQ_ADDRHI $022A
+#endif
+#else  ;using overlay memory
 #define IRQ_ADDRLO $fffe
 #define IRQ_ADDRHI $ffff
 #endif

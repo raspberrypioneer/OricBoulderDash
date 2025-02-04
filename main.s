@@ -5,24 +5,29 @@
 
 #define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
 
-;screen system routines
-#define _text $ec21
-#define _text_screen_addr $bb80
-
-;integer bytes to readable ASCII string system routines
 #ifdef rom_v1_1
+
+#define _text $ec21  ;text mode
 #define _convert_to_int $d499  ;convert integer in Y(low) and A(high) to accumulator
 #define _int_to_ASCII_string $e0d5  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
-#else
-#define _convert_to_int $d3ed  ;convert integer in Y(low) and A(high) to accumulator
-#define _int_to_ASCII_string $e0d1  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
-#endif
-
-;tape load system routines
 #define SetupTape $e76a  ; Prepare VIA for tape reading
 #define RestoreVIAState $e93d  ; Restore the VIA state
-#define TapeSync $e4ac  ; Read the header
 #define GetTapeData $e4e0  ; Actual loading of the tape content
+#define TapeSync $e4ac  ; Read the header
+
+#else
+
+#define _text $e9a9  ;text mode
+#define _convert_to_int $d3ed  ;convert integer in Y(low) and A(high) to accumulator
+#define _int_to_ASCII_string $e0d1  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
+#define SetupTape $e6ca  ; Prepare VIA for tape reading
+#define RestoreVIAState $e804  ; Restore the VIA state
+#define GetTapeData $e4a8  ; Actual loading of the tape content
+
+#endif
+
+;screen address in text mode
+#define _text_screen_addr $bb80
 
 ;map elements defines
 #define map_space 0
@@ -2335,7 +2340,9 @@ load_TAP
 #endif
 
     jsr SetupTape		; Prepare VIA for tape reading
+#ifdef rom_v1_1
     jsr TapeSync		; Read the header
+#endif
 	jsr GetTapeData		; Actual loading
 	jsr RestoreVIAState	; Restore the VIA state
     rts
