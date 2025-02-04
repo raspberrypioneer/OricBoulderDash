@@ -193,7 +193,6 @@ visible_top_left_map_y .byt 0
 score_low .byt 0
 score_high .byt 0
 
-keys_to_process .byt 0
 temp1 .byt 0
 temp2 .byt 0
 
@@ -248,19 +247,7 @@ clear_zero_loop
 	ldx #0
 	stx $bb80+35
 
-	;//
-	;// We then need to remove the keyclick, 
-	;// and also disable the cursor flashing 
-	;// that is enabled after a HIRES switch.
-	;//
-	;// #define CURSOR		0x01  /* Cursor on		  (ctrl-q) */
-	;// #define SCREEN		0x02  /* Printout to screen on (ctrl-s) */
-	;// #define NOKEYCLICK	0x08  /* Turn keyclick off	  (ctrl-f) */
-	;// #define PROTECT		0x20  /* Protect columns 0-1   (ctrl-]) */
-	lda #8+2	;// NOKEYCLICK+SCREEN no cursor
-	sta $26a
-
-    jsr _InitIRQ  ;Input keys interrupt to read keys, see read_input_keys routine and keyboard.s
+    jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s and use of _gKey value
 	jsr redefine_characters
 menu_loop
     jsr intro_and_cave_select
@@ -353,27 +340,24 @@ show_options_loop
     bne show_options_loop
 
     ;draw map, waiting for keyboard input
-    lda #0
-    sta keys_to_process
 wait_for_keypress
     jsr update_map
     jsr draw_grid_of_sprites
     dec tick_counter
-    jsr read_input_keys
-    lda keys_to_process
-    and #8  ;space
+    lda _gKey
+    and #KEY_SPACE  ;space
     bne exit_intro_keypress
-    lda keys_to_process
-    and #16  ;down
+    lda _gKey
+    and #KEY_DOWN_ARROW  ;down
     bne cave_down
-    lda keys_to_process
-    and #32  ;up
+    lda _gKey
+    and #KEY_UP_ARROW  ;up
     bne cave_up
-    lda keys_to_process
-    and #64  ;left
+    lda _gKey
+    and #KEY_LEFT_ARROW  ;left
     bne level_down
-    lda keys_to_process
-    and #128  ;right
+    lda _gKey
+    and #KEY_RIGHT_ARROW  ;right
     bne level_up
     jmp wait_for_keypress
 
@@ -1060,7 +1044,6 @@ gameplay_loop
 skip_clearing_amoeba_replacement
     stx current_amoeba_cell_type
 
-    jsr read_input_keys
     jsr update_map
 
     ;cave time on status bar
@@ -1208,14 +1191,14 @@ update_death_explosion
     cpx #$4b
     bmi check_for_escape_key_pressed_to_die
     ; if key is pressed at end of the death explosion sequence, then reduce player lives and exit
-    lda keys_to_process
+    lda _gKey
     bne lose_a_life
     dec rockford_explosion_cell_type
     ; branch if escape not pressed
 check_for_escape_key_pressed_to_die
-    lda keys_to_process
-    lsr
-    bcc check_if_pause_is_available
+    lda _gKey
+    and #KEY_LEFT_SHIFT
+    beq check_if_pause_is_available
     ; branch if explosion already underway
     lda rockford_explosion_cell_type
     bne check_if_pause_is_available
@@ -1228,8 +1211,7 @@ check_if_pause_is_available
     cmp #16
     bpl gameplay_loop_local
     ; check if pause pressed
-    lda keys_to_process
-    and #2
+    jsr check_for_pause_key
     beq gameplay_loop_local
     jsr update_with_gameplay_not_active
 gameplay_loop_local
@@ -1254,8 +1236,7 @@ unsuccessful_bonus_cave
 update_with_gameplay_not_active
 
     ; check for pause key
-    lda keys_to_process
-    and #2
+    jsr check_for_pause_key
     beq check_if_end_position_reached
     ; pause mode, show pause message
     lda #0
@@ -1381,18 +1362,15 @@ update_during_pause_or_out_of_time
     jsr update_status_message
     jsr draw_grid_of_sprites
     ldy temp2
-    jsr read_input_keys
-    lda keys_to_process
-    and #2
+    jsr check_for_pause_key
 gameplay_not_active_return
     rts
 
 ; *************************************************************************************
 check_for_pause_key
 
-    jsr read_input_keys
-    lda keys_to_process
-    and #2
+    lda _gKey
+    and #KEY_GREATER_THAN
     rts
 
 ; *************************************************************************************
@@ -1732,8 +1710,8 @@ start_large_explosion
     rts
 
 check_for_direction_key_pressed
-    lda keys_to_process
-    and #$f0
+    lda _gKey
+    and #(KEY_UP_ARROW | KEY_DOWN_ARROW | KEY_LEFT_ARROW | KEY_RIGHT_ARROW)
     bne direction_key_pressed
     ; player is not moving in any direction
     ldx #map_rockford
@@ -1756,8 +1734,9 @@ direction_key_pressed
     dex
 get_direction_index_loop
     inx
-    asl
-    bcc get_direction_index_loop
+    lda direction_key_table,x
+    and _gKey
+    beq get_direction_index_loop
     lda rockford_cell_value_for_direction,x
     beq skip_storing_rockford_cell_type
     sta rockford_cell_value
@@ -1793,8 +1772,8 @@ skip_storing_rockford_cell_type
 ;TODO: sound
 ;    inc sound4_active_flag
 check_for_return_pressed
-    lda keys_to_process
-    and #8
+    lda _gKey
+    and #KEY_SPACE
     beq store_rockford_cell_value_without_return_pressed
     ; return and direction is pressed. clear the appropriate cell
     jsr check_if_bombs_used  ;Returns accumulator used below
@@ -1891,6 +1870,12 @@ skip_no_bombs_message
     lda #map_bomb
     rts
 
+direction_key_table
+    .byt KEY_RIGHT_ARROW  ;right arrow (right)
+    .byt KEY_LEFT_ARROW  ;left arrow (left)
+    .byt KEY_UP_ARROW  ;up arrow (up)
+    .byt KEY_DOWN_ARROW  ;down arrow (down)
+
 ; *************************************************************************************
 ; Called once handler_rockford_intro_or_exit sets the last transition to $21 (x is an explosion sprite)
 ; $21 becomes unprocessed (ora #$80) and subtracted from #$90 = $11 so not processed initially but X is set to $11, set in update_map
@@ -1923,8 +1908,6 @@ handler_rockford_intro_or_exit
     cpx #map_active_exit
     beq intro_or_exit_return
     ; we have found the intro square
-    lda #0
-    sta keys_to_process
     ; wait for flashing rockford animation to finish
     lda tick_counter
     cmp #$f0
@@ -2297,52 +2280,6 @@ bomb_explode
 
 bomb_return
     rts
-
-; *************************************************************************************
-; Read input keys using keyboard interrupt technique (see URL below) and translate into keys to process in game
-; https://github.com/Oric-Software-Development-Kit/Oric-Software/tree/master/routines/single_row_keyboard_read
-read_input_keys
-
-    lda #0
-    sta keys_pressed_bits  ;list of bits representing which keys are pressed
-
-    lda _gKey  ;get the keys pressed via the interrupt (may be multiple keys pressed at once)
-    sta keys_to_test  ;store for checking purposes
-
-    ldx #7
-    stx temp1
-key_read_loop
-    ldx temp1
-    lda inkey_keys_table,x  ;get the key to check from the list (needs to be in the order from this table)
-    and keys_to_test  ;check if one of the keys pressed
-    bne set_carry  ;not zero, so key is pressed, set carry flag (1)
-    clc  ;is zero, so clear carry flag (0)
-    jmp continue_keys
-set_carry
-    sec
-continue_keys
-    rol keys_pressed_bits  ;keys_pressed_bits is built into an 8 bit number using the carry flag for each of the 8 keys tested
-    dec temp1
-    bpl key_read_loop
-
-    lda keys_pressed_bits  ;the accumulated bits become the keys to process in the game
-    sta keys_to_process  ;E.g. down and left are both pressed, keys_pressed_bits is 01010000 (checking keys in inkey_keys_table is bottom to top)
-    rts
-
-keys_to_test
-    .byt 0
-keys_pressed_bits
-    .byt 0
-
-inkey_keys_table
-    .byt KEY_LEFT_SHIFT  ;left shift (escape)
-    .byt KEY_GREATER_THAN  ;">" (pause)
-    .byt KEY_LESS_THAN  ;"<"
-    .byt KEY_SPACE  ;space
-    .byt KEY_DOWN_ARROW  ;down arrow (down)
-    .byt KEY_UP_ARROW  ;up arrow (up)
-    .byt KEY_LEFT_ARROW  ;left arrow (left)
-    .byt KEY_RIGHT_ARROW  ;right arrow (right)
 
 ; ****************************************************************************************************
 ; Cave file load
