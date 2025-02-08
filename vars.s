@@ -248,10 +248,10 @@ handler_table_low
     .byt <handler_firefly_or_butterfly
     .byt <handler_amoeba
     .byt <handler_rockford_intro_or_exit
-slime_handler_low
     .byt <handler_slime
     .byt <handler_rockford_intro_or_exit
     .byt 0
+growing_wall_handler_low
     .byt <handler_growing_wall
     .byt <handler_magic_wall
     .byt <handler_firefly_or_butterfly
@@ -268,10 +268,10 @@ handler_table_high
     .byt >handler_firefly_or_butterfly
     .byt >handler_amoeba
     .byt >handler_rockford_intro_or_exit
-slime_handler_high
     .byt >handler_slime
     .byt >handler_rockford_intro_or_exit
     .byt 0
+growing_wall_handler_high
     .byt >handler_growing_wall
     .byt >handler_magic_wall
     .byt >handler_firefly_or_butterfly
@@ -793,6 +793,17 @@ cave_play_order
     .byt 4, 8, 12, 0
 
 ; *************************************************************************************
+; self-mod code table
+;
+self_mod_code_table
+    ;used to check growing wall tile: cmp #map_growing_wall, beq skip_null_tile, nop; nop 
+    .byt $c9, map_growing_wall, $f0, 0, $ea, $ea
+    ;used to reveal-hide_tiles: cmp #map_unprocessed, bcc not_titanium, lda #map_titanium_wall
+    .byt $c9, map_unprocessed, $90, 0, $a9, map_titanium_wall
+    ;used to nop out the above
+    .byt $ea, $ea, $ea, $ea, $ea, $ea
+
+; *************************************************************************************
 ; status bar and messages
 ;
 status_bar_line1
@@ -822,7 +833,7 @@ status_message_game_over
 game_title
     .byt 11, 1, 32, "O","R","I","C", 6, "B","O","U","L","D","E","R", 32, "D","A","S","H", 32, "1", 8, 7, 0
 
-game options
+game_options
 options_cave_select
     .byt 32, 32, 32, 32, 32, 32, 32, 32
     .byt "^", "_", 9, 6, "C","A","V","E", 32, 7, "A", 6, 32, "U","P", 32, "D","O","W","N", 32, 32, 8, 7

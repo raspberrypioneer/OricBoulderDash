@@ -7,27 +7,29 @@
 
 #ifdef rom_v1_1
 
-#define _text $ec21  ;text mode
-#define _convert_to_int $d499  ;convert integer in Y(low) and A(high) to accumulator
-#define _int_to_ASCII_string $e0d5  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
-#define SetupTape $e76a  ; Prepare VIA for tape reading
-#define RestoreVIAState $e93d  ; Restore the VIA state
-#define GetTapeData $e4e0  ; Actual loading of the tape content
-#define TapeSync $e4ac  ; Read the header
+#define _TEXT_MODE $ec21  ;text mode
+#define _CONVERT_TO_INT $d499  ;convert integer in Y(low) and A(high) to accumulator
+#define _INT_TO_ASCII_STRING $e0d5  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
+#define _SETUP_TAPE $e76a  ; Prepare VIA for tape reading
+#define _RESTORE_VIA_STATE $e93d  ; Restore the VIA state
+#define _READ_TAPE_DATA $e4e0  ; Actual loading of the tape content
+#define _READ_TAPE_HEADER $e4ac  ; Read the header
+#define _PLAY_SOUND_FX $fa86  ; Play sound effect
 
 #else
 
-#define _text $e9a9  ;text mode
-#define _convert_to_int $d3ed  ;convert integer in Y(low) and A(high) to accumulator
-#define _int_to_ASCII_string $e0d1  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
-#define SetupTape $e6ca  ; Prepare VIA for tape reading
-#define RestoreVIAState $e804  ; Restore the VIA state
-#define GetTapeData $e4a8  ; Actual loading of the tape content
+#define _TEXT_MODE $e9a9  ;text mode
+#define _CONVERT_TO_INT $d3ed  ;convert integer in Y(low) and A(high) to accumulator
+#define _INT_TO_ASCII_STRING $e0d1  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
+#define _SETUP_TAPE $e6ca  ; Prepare VIA for tape reading
+#define _RESTORE_VIA_STATE $e804  ; Restore the VIA state
+#define _READ_TAPE_DATA $e4a8  ; Actual loading of the tape content
+#define _PLAY_SOUND_FX $fa6c  ; Play sound effect
 
 #endif
 
 ;screen address in text mode
-#define _text_screen_addr $bb80
+#define _TEXT_SCREEN_ADDR $bb80
 
 ;map elements defines
 #define map_space 0
@@ -143,6 +145,23 @@
 #define message_bonus_life 90
 #define message_game_over 108
 
+;sounds
+#define no_sound 0
+#define rockford_move_sound 1
+#define got_earth_sound 2
+#define got_diamond_sound 3
+#define got_all_diamonds_sound 4
+#define bonus_life_sound 4  ;same as got_all_diamonds_sound
+#define enter_cave_sound 5
+#define exit_cave_sound 6
+#define rock_move_sound 7
+#define diamond_move_sound 8
+#define hurry_sound 8  ;same as diamond_move_sound
+#define explosion_sound 9
+#define magic_wall_sound 10
+#define growing_wall_sound 10  ;same as magic_wall_sound
+#define amoeba_sound 11
+
 	.zero
 	*= $50
 
@@ -176,9 +195,6 @@ screen_addr1_high .byt 0
 
 screen_addr2_low .byt 0
 screen_addr2_high .byt 0
-
-grid_row_counter        .byt 0
-grid_column_counter     .byt 0
 
 tile_map_ptr_low        .byt 0
 tile_map_ptr_high       .byt 0
@@ -228,6 +244,8 @@ message_timer .byt 0
 tick_counter .byt 0
 sub_second_ticks .byt 0
 ticks_since_last_direction_key_pressed .byt 0
+play_sound_fx .byt 0
+play_ambient_sound .byt 0
 
 _zp_end_
 
@@ -244,7 +262,7 @@ clear_zero_loop
 	dex
 	bne clear_zero_loop
 
-	jsr _text
+	jsr _TEXT_MODE
 	;// NOKEYCLICK+SCREEN no cursor
 	lda #8+2	
 	sta $26a
@@ -256,7 +274,22 @@ clear_zero_loop
 	jsr redefine_characters
 menu_loop
     jsr intro_and_cave_select
-    jsr initialise_and_play_game
+
+    lda #3
+    sta player_lives
+
+    lda #0
+    sta score_low
+    sta score_high
+    sta bonus_low
+    sta bonus_high
+
+    ;game loop for each of the player lives
+play_next_life
+    jsr play_one_life
+    lda player_lives
+    bne play_next_life
+
     jmp menu_loop
 
 ; *************************************************************************************
@@ -281,40 +314,28 @@ intro_and_cave_select
     sta map_address_high
     jsr draw_borders
 
-    ;set the slime tile check in draw grid (self-mode code, used for the intro only)
-    lda #$c9  ;op code for cmp (immediate)
-    sta skip_tile_check
-    lda #map_slime
-    sta skip_tile_check+1
-    lda #$f0  ;op code for beq
-    sta skip_tile_check+2
+    ;set the tile check logic in draw grid (self-mod code)
+    ldx #0
+    jsr self_mod_code
     lda #skip_null_tile-(skip_tile_check+4)  ;branch forward to skip_null_tile (+4 bytes for cmp,#,beq,#)
     sta skip_tile_check+3
 
-    ;knock-out Rockford handler for now (using slime, not used on intro and inert in this case)
+    ;knock-out Rockford and growing wall handlers for now
+    ;growing wall is ignored on the intro screen, so that the title text isn't removed when drawing the map
     lda #<handler_null
     sta rockford_handler_low
-    sta slime_handler_low
+    sta growing_wall_handler_low
     lda #>handler_null
     sta rockford_handler_high
-    sta slime_handler_high
-
-    ;clear area in map to allow for title text
-    ;slime is used as the "clear" tile (also see draw_grid_of_sprites, which ignores this tile for the intro)
-clear_for_text
-    lda #map_slime  ;don't use slime on intro screen
-    sta tile_map_row_6+4,y
-    iny
-    cpy #12
-    bne clear_for_text
+    sta growing_wall_handler_high
 
     ;set title text
     ldy #0
 plot_text_byte
     lda game_title,y
     beq plot_text_end
-    sta _text_screen_addr+648,y
-    sta _text_screen_addr+688,y
+    sta _TEXT_SCREEN_ADDR+648,y
+    sta _TEXT_SCREEN_ADDR+688,y
 
     iny
     jmp plot_text_byte
@@ -336,11 +357,11 @@ plot_text_end
 show_options_loop
     dey
     lda options_cave_select,y
-    sta _text_screen_addr,y
+    sta _TEXT_SCREEN_ADDR,y
     lda options_level_select,y
-    sta _text_screen_addr+40,y
+    sta _TEXT_SCREEN_ADDR+40,y
     lda options_start,y
-    sta _text_screen_addr+80,y
+    sta _TEXT_SCREEN_ADDR+80,y
     cpy #0
     bne show_options_loop
 
@@ -381,7 +402,7 @@ cave_up
 cave_display
     clc
     adc #"A"  ; Add letter "A" to get the cave letter for the cave number (which starts from zero)
-    sta _text_screen_addr+18
+    sta _TEXT_SCREEN_ADDR+18
     jmp wait_for_keypress
 
 level_down
@@ -399,27 +420,24 @@ level_up
 level_display
     clc
     adc #"0"  ; Add digit "0" to get ASCII value of difficulty level
-    sta _text_screen_addr+58
+    sta _TEXT_SCREEN_ADDR+58
     jmp wait_for_keypress
 
 exit_intro_keypress
 
-    ;nop out the slime tile check in draw grid (self-mode code, used for the intro only)
-    lda #$ea  ;op code for nop
-    sta skip_tile_check
-    sta skip_tile_check+1
-    sta skip_tile_check+2
-    sta skip_tile_check+3
+    ;nop out the tile check logic in draw grid (self-mod code)
+    ldx #12
+    jsr self_mod_code
 
-    ;add back Rockford and slime handlers
+    ;add back Rockford and growing wall handlers
     lda #<handler_rockford
     sta rockford_handler_low
     lda #>handler_rockford
     sta rockford_handler_high
-    lda #<handler_slime
-    sta slime_handler_low
-    lda #>handler_slime
-    sta slime_handler_high
+    lda #<handler_growing_wall
+    sta growing_wall_handler_low
+    lda #>handler_growing_wall
+    sta growing_wall_handler_high
     rts
 
 cave_selection_cycle_up
@@ -436,6 +454,34 @@ handler_null
     rts
 
 ; *************************************************************************************
+; routine to self-mod a section of code, used to replace code in draw_grid_of_sprites
+; for displaying text in the map and to reveal-hide tiles
+self_mod_code
+
+    ldy #0
+self_mod_code_loop
+	lda self_mod_code_table,x
+	inx
+    sta skip_tile_check,y
+    iny
+    cpy #6
+    bne self_mod_code_loop
+	rts
+
+; *************************************************************************************
+; screen addresses
+;
+_char_screen_low
+	.byt $80, $d0, $20, $70, $c0, $10, $60, $b0, $00, $50, $a0, $f0, $40, $90
+_char_screen_high
+	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $be, $bf, $bf
+
+_char_screen_below_low
+	.byt $a8, $f8, $48, $98, $e8, $38, $88, $d8, $28, $78, $c8, $18, $68, $b8
+_char_screen_below_high
+	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $bf, $bf, $bf
+
+; *************************************************************************************
 ; Draw a full grid of sprites, updating the current map position first
 ; Below is needed to point the program counter to the next page (multiple of 256)
 .dsb 256-(*&255)  ;Add another page of bytes
@@ -446,7 +492,7 @@ draw_grid_of_sprites
     jsr update_grid_animations
 
 	lda #2  ;skip status bar
-	sta grid_row_counter
+	sta temp1  ;grid row counter
 loop_plot_row
 	tay
 
@@ -461,16 +507,20 @@ loop_plot_row
 	sta screen_addr2_high
 
 	lda #0
-	sta grid_column_counter
+	sta temp2  ;grid column counter
 loop_plot_column
 
 	;Get sprite number from map
     tay
     lda (tile_map_ptr_low),y
 
+    ;Next 6 bytes are changed with self-mod code
 skip_tile_check
-    cmp #map_slime
+    cmp #map_growing_wall
     beq skip_null_tile
+    nop
+    nop
+not_titanium
 
 	tay
 	lda cell_type_to_sprite,y
@@ -497,7 +547,7 @@ skip_tile_check
 	sta bottom_right_char+1
 
 	;Plot the top 2 and bottom 2 characters for the tile
-	lda grid_column_counter
+	lda temp2  ;grid column counter
 	asl  ;Double the counter number to get the screen offset position
 	tay
 top_left_char
@@ -518,8 +568,8 @@ bottom_right_char
 
 skip_null_tile
 
-	inc grid_column_counter
-	lda grid_column_counter
+	inc temp2  ;grid column counter
+	lda temp2  ;grid column counter
 	cmp #20  ;20 columns
 	bcc loop_plot_column
 
@@ -531,21 +581,11 @@ skip_null_tile
     bcc skip_high
     inc tile_map_ptr_high
 skip_high
-	inc grid_row_counter
-	lda grid_row_counter
+	inc temp1  ;grid row counter
+	lda temp1  ;grid row counter
 	cmp #14  ;12 rows (skip status bar in rows 0, 1)
 	bcc loop_plot_row
     rts
-
-_char_screen_low
-	.byt $80, $d0, $20, $70, $c0, $10, $60, $b0, $00, $50, $a0, $f0, $40, $90
-_char_screen_high
-	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $be, $bf, $bf
-
-_char_screen_below_low
-	.byt $a8, $f8, $48, $98, $e8, $38, $88, $d8, $28, $78, $c8, $18, $68, $b8
-_char_screen_below_high
-	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $bf, $bf, $bf
 
 ; *************************************************************************************
 ; Scrolls the map by setting the tile_map_ptr and visible_top_left_map_x and y
@@ -724,45 +764,6 @@ extract_lower_nybble
     rts
 
 ; *************************************************************************************
-initialise_and_play_game
-
-    lda #3
-    sta player_lives
-
-    lda #0
-    sta score_low
-    sta score_high
-    sta bonus_low
-    sta bonus_high
-
-play_next_life
-    jsr play_one_life
-    lda player_lives
-    bne play_next_life
-
-    ;update lives (none) on status bar
-    lda #"0"
-    sta status_bar_line2+30  ;lives available start position
-    jsr update_status_bar
-
-    ; show game over message for a while, then return
-    lda #$3e
-    sta game_over_message_countdown
-    ldy #message_game_over
-loop
-    jsr update_during_pause_or_out_of_time
-    bne initialise_return
-    dec game_over_message_countdown
-    bne loop
-    rts
-
-initialise_return
-    rts
-
-game_over_message_countdown
-    .byt 0
-
-; *************************************************************************************
 play_one_life
 
     ; Load cave parameters and map from file
@@ -794,6 +795,9 @@ play_one_life
     sta rockford_explosion_cell_type
     sta bonus_timer
     sta cell_type_to_sprite  ;ensure space is the first sprite in table
+    sta play_sound_fx
+    sta play_ambient_sound
+    sta random_seed
 
     ;populate cave map
 	jsr populate_cave_from_file
@@ -807,7 +811,127 @@ play_one_life
 
     jsr draw_borders
     jsr initialise_stage
+    jsr update_cave_time
+    jsr update_status_bar
+    ldy #message_clear
+    jsr update_status_message
+
+    ;dissolve screen when starting
+    jsr prepare_reveal_hide_code
+    lda #map_space
+    jsr screen_dissolve_effect
+
+    ;for normal game play, nop out the logic applied above in draw grid (self-mod code)
+    ldx #12
+    jsr self_mod_code
+
     jsr gameplay_loop
+
+    ;check for game over
+    lda player_lives
+    bne not_game_over
+
+    ;update lives (none) on status bar
+    lda #"0"
+    sta status_bar_line2+30  ;lives available start position
+    jsr update_status_bar
+
+    ldy #message_game_over
+    jsr update_status_message
+
+not_game_over
+
+    ;un-dissolve screen when ending
+    jsr prepare_reveal_hide_code
+    lda #map_unprocessed
+    jsr screen_dissolve_effect
+
+    rts
+
+; *************************************************************************************
+prepare_reveal_hide_code
+    ;for reveal-hide routine, add a check for unprocessed cells and set to titanium tile in draw grid (self-mod code)
+    ldx #6
+    jsr self_mod_code
+    lda #not_titanium-(skip_tile_check+4)  ;branch forward to not_titanium (+4 bytes for cmp,#,bcc,#)
+    sta skip_tile_check+3
+    rts
+
+; *************************************************************************************
+screen_dissolve_effect
+    sta dissolve_to_solid_flag
+    lda #$21
+    sta tick_counter
+screen_dissolve_loop
+    jsr reveal_or_hide_more_cells
+    jsr draw_grid_of_sprites
+    dec tick_counter
+    bpl screen_dissolve_loop
+    rts
+
+dissolve_to_solid_flag
+    .byt 0
+random_seed
+    .byt 0
+
+; *************************************************************************************
+reveal_or_hide_more_cells
+    ldy #<tile_map_row_1
+    sty map_address_low
+    lda #>tile_map_row_1
+    sta map_address_high
+
+    ldx #21
+reveal_rows_loop
+    ldy #38
+reveal_cells_loop
+    ; progress a counter in a non-obvious pattern
+    jsr get_next_random_byte
+    ; if it's early in the process (tick counter is low), then branch more often so we
+    ; reveal/hide the cells in a non-obvious pattern over time
+    lsr
+    lsr
+    lsr
+    cmp tick_counter
+    bcc skip_reveal_or_hide
+    lda (map_address_low),y
+    ; clear the top bit to reveal the cell...
+    and #$7f
+    ; ...or set the top bit to hide the cell
+    ora dissolve_to_solid_flag
+    sta (map_address_low),y
+skip_reveal_or_hide
+    dey
+    bne reveal_cells_loop
+    lda #$40
+    jsr add_a_to_ptr
+    dex
+    bne reveal_rows_loop
+
+    ; create some 'random' audio pitches to play while revealing/hiding the map
+    jsr get_next_random_byte
+    ora cave_number
+    sta sound_random_base  ;set the pitch on the A channel (first byte)
+    ldx #<sound_random_base
+    ldy #>sound_random_base
+    jsr _PLAY_SOUND_FX
+
+    rts
+
+sound_random_base
+    .byt 7,0,0,0,0,0,0,$7e,16,0,0,0,7,9
+
+; *************************************************************************************
+; a small 'pseudo-random' number routine. Generates a sequence of 256 numbers.
+get_next_random_byte
+    lda random_seed
+    asl
+    asl
+    asl
+    asl
+    sec
+    adc random_seed
+    sta random_seed
     rts
 
 ; *************************************************************************************
@@ -817,12 +941,12 @@ draw_borders
     ldx #21
 write_left_and_right_borders_loop
     ldy #38
-hide_cells_loop
+cells_to_processed_loop
     lda (map_address_low),y
-    ora #$80
+    ora #map_unprocessed
     sta (map_address_low),y
     dey
-    bne hide_cells_loop
+    bne cells_to_processed_loop
     lda #$40
     jsr add_a_to_ptr
     dex
@@ -967,9 +1091,9 @@ update_status_bar
 status_bar_loop
     dey
     lda status_bar_line1,y
-    sta _text_screen_addr,y
+    sta _TEXT_SCREEN_ADDR,y
     lda status_bar_line2,y
-    sta _text_screen_addr+40,y
+    sta _TEXT_SCREEN_ADDR+40,y
     cpy #0
     bne status_bar_loop
     rts
@@ -986,11 +1110,10 @@ status_message_loop
 	bcc plot_char
 	cpx #28
 	bcs plot_char
-get_char
 	lda status_messages,y
 	iny
 plot_char
-    sta _text_screen_addr+80,x
+    sta _TEXT_SCREEN_ADDR+80,x
     inx
     cpx #39
     bne status_message_loop
@@ -999,8 +1122,8 @@ plot_char
 ; *************************************************************************************
 add_to_status_bar
 
-    jsr _convert_to_int  ;convert integer in Y(low) and A(high) to accumulator by calling $d499 ($d3ed)
-    jsr _int_to_ASCII_string  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00 by calling $e0d5 ($e0d1)
+    jsr _CONVERT_TO_INT  ;convert integer in Y(low) and A(high) to accumulator by calling $d499 ($d3ed)
+    jsr _INT_TO_ASCII_STRING  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00 by calling $e0d5 ($e0d1)
 
     ldy temp1  ;start position on status bar
     ldx #0
@@ -1030,15 +1153,25 @@ add_status_return
     rts
 
 ; *************************************************************************************
+update_cave_time
+
+    ;cave time on status bar
+    ldx #5  ;control digits to display
+    stx temp2
+
+    ldx #20  ;cave time start position
+    stx temp1
+    ldy time_remaining
+    lda #0
+    jsr add_to_status_bar
+    rts
+
+; *************************************************************************************
 gameplay_loop
 
     lda #0
     sta current_amoeba_cell_type
     sta neighbour_cell_contents
-    ; activate movement sound
-;TODO: sound
-;    lda #$41
-;    sta sound2_active_flag
 
     ; reset number of amoeba cells found, and if already zero then clear the amoeba_replacement
     ldx #0
@@ -1050,17 +1183,7 @@ skip_clearing_amoeba_replacement
     stx current_amoeba_cell_type
 
     jsr update_map
-
-    ;cave time on status bar
-    ldx #5  ;control digits to display
-    stx temp2
-
-    ldx #20  ;cave time start position
-    stx temp1
-    ldy time_remaining
-    lda #0
-    jsr add_to_status_bar
-
+    jsr update_cave_time
     jsr update_status_bar  ;time will always need updating, and sometimes the other values (updated for those events)
 
     ;update status message
@@ -1071,6 +1194,12 @@ skip_clearing_amoeba_replacement
     lda message_timer
     and #4  ;every 4 ticks, clear message then switch back to saved message
     bne show_message_update
+    cpy #message_hurry_up
+    bne skip_hurry_sound
+    lda #hurry_sound
+    sta play_sound_fx
+skip_hurry_sound
+
     ldy #message_clear
 show_message_update
     jsr update_status_message
@@ -1116,6 +1245,8 @@ check_for_earth
     beq hurry_up
     jmp check_for_earth2
 hurry_up
+    lda #hurry_sound
+    sta play_sound_fx
     lda #message_hurry_up
     sta saved_message
     lda #$67
@@ -1124,20 +1255,21 @@ check_for_earth2
     lda neighbour_cell_contents
     cmp #map_earth
     bne skip_earth
-    ; got earth. play sound 3
-;TODO: sound
-;    inc sound3_active_flag
+
+    ldx play_sound_fx
+    cpx #rockford_move_sound
+    bcc keep_current_sound1  ;don't override a sound effect with got earth sound
+    ldx #got_earth_sound
+    stx play_sound_fx
+keep_current_sound1
+
 skip_earth
     cmp #map_diamond
     bne skip_got_diamond
-;TODO: sound
-    ; got diamond. play sounds
-;    ldx #$85
-;    ldy #$f0
-;    jsr play_sound_x_pitch_y
-;    ldx #$85
-;    ldy #$d2
-;    jsr play_sound_x_pitch_y
+
+    ldx #got_diamond_sound
+    stx play_sound_fx
+
     jsr got_diamond_so_update_status_bar
 
     ;update diamonds required on status bar
@@ -1161,8 +1293,7 @@ skip_earth
     jsr add_to_status_bar
 
 skip_got_diamond
-;TODO: sound
-;    jsr update_sounds
+    jsr update_sounds
     ; update game tick
     dec tick_counter
     lda tick_counter
@@ -1230,6 +1361,72 @@ lose_a_life
     rts
 unsuccessful_bonus_cave
     jsr calculate_next_cave_number_and_level
+    rts
+
+; *************************************************************************************
+;Below is needed to point the program counter to the next page (multiple of 256)
+.dsb 256-(*&255)  ;Add another page of bytes
+
+list_of_sounds  ;14 bytes + 2 padding bytes for ease of lookup
+sound_rockford_move
+    .byt 0,0,0,0,0,0,$0a,$77,$10,0,0,$c8,0,$0f,0,0
+sound_got_earth
+    .byt 0,0,0,0,0,0,$16,$77,$10,0,0,$c8,0,$0f,0,0
+sound_got_diamond
+    .byt 7,0,0,0,0,0,0,$7e,$10,0,0,0,7,9,0,0
+sound_got_all_diamonds
+    .byt 0,4,$64,0,0,4,0,$78,$10,$10,$10,0,7,9,0,0
+sound_enter_cave
+    .byt 0,0,0,0,0,0,5,$77,$10,0,0,0,7,9,0,0
+sound_exit_cave
+    .byt $50,0,0,0,0,0,0,$7e,$10,0,0,0,3,9,0,0
+sound_rock_move
+    .byt 0,0,$a0,$0f,0,0,$1f,$6d,0,$10,0,0,7,9,0,0
+sound_diamond_move
+    .byt 0,0,5,0,0,0,0,$7d,0,$10,0,0,7,9,0,0
+sound_explosion
+    .byt 0,0,0,0,0,0,$1f,$4f,0,$10,$10,0,14,9,0,0
+sound_magic_wall
+    .byt 0,0,0,0,$30,0,0,$7b,0,0,$10,0,7,$0f,0,0
+sound_amoeba
+    .byt 0,0,0,0,0,0,$1f,$5f,0,0,$10,0,7,$0f,0,0
+
+; *************************************************************************************
+update_sounds
+
+    lda play_ambient_sound
+    beq normal_sound  ;if no ambient sound continue to normal sounds
+    lda play_sound_fx
+    bne normal_sound  ;if a normal sound is active, check it
+    jmp ambient_sound  ;otherwise play ambient sound
+normal_sound
+    lda play_sound_fx
+    beq no_sound_to_play
+    dec play_sound_fx  ;return to start at 0 for list_of_sounds table, then asl for values of 0,16,32,48 etc in x
+    lda play_sound_fx
+    asl
+    asl
+    asl
+    asl
+    tax  ; this is the low byte of list_of_sounds
+    ldy #>list_of_sounds
+    jsr _PLAY_SOUND_FX
+
+    lda #no_sound
+    sta play_sound_fx
+no_sound_to_play
+    rts
+
+ambient_sound
+    dec play_ambient_sound  ;return to start at 0 for list_of_sounds table, then asl for values of 0,16,32,48 etc in x
+    lda play_ambient_sound
+    asl
+    asl
+    asl
+    asl
+    tax  ; this is the low byte of list_of_sounds
+    ldy #>list_of_sounds
+    jsr _PLAY_SOUND_FX
     rts
 
 ; *************************************************************************************
@@ -1325,17 +1522,9 @@ not_a_bonus_end
     lda time_remaining
     beq skip_bonus
 count_up_bonus_at_end_of_stage_loop
-;TODO: sound
-;    ldx #5
-;    stx sound5_active_flag
-;    lda #0
-;    sta sound6_active_flag
-;    lda time_remaining
-;    and #$1c
-;    tay
-;    iny
-;    ldx #$88
-;    jsr play_sound_x_pitch_y
+    lda #exit_cave_sound
+    sta play_sound_fx
+    jsr update_sounds
 
     ;add 1 to score for each time unit left
     lda #1
@@ -1363,13 +1552,16 @@ skip_bonus
     ldy #message_clear
 
 update_during_pause_or_out_of_time
-    sty temp2
+    sty save_message_number
     jsr update_status_message
     jsr draw_grid_of_sprites
-    ldy temp2
+    ldy save_message_number
     jsr check_for_pause_key
 gameplay_not_active_return
     rts
+
+save_message_number
+    .byt 0
 
 ; *************************************************************************************
 check_for_pause_key
@@ -1415,9 +1607,8 @@ update_diamonds_required_and_check_got_all
     lda #sprite_space
     sta cell_type_to_sprite
 
-;TODO: sound
-    ; play sound 6
-;    inc sound6_active_flag
+    lda #got_all_diamonds_sound
+    sta play_sound_fx
 got_diamond_return
     rts
 
@@ -1467,6 +1658,10 @@ award_bonus_life
     ldy player_lives
     lda #0
     jsr add_to_status_bar
+
+    ;play sound
+    lda #bonus_life_sound
+    sta play_sound_fx
 
     ;update message bar
     lda #message_bonus_life
@@ -1681,14 +1876,15 @@ process_c0_or_above
     ldy #$81
     sta (map_address_low),y
 play_rock_or_diamond_fall_sound
-;TODO: sound
-;    txa
-;    and #1
-;    eor #sound5_active_flag
-;    tay
-    ; store $4b or $4c (i.e. a non-zero value) in location $4b or $4c. i.e. activate
-    ; sound5_active_flag or sound6_active_flag
-;    sta page_0,y
+
+    ldy #rock_move_sound
+    txa
+    and #$0f
+    cmp #map_diamond
+    bne save_rock_or_diamond_fall_sound
+    ldy #diamond_move_sound
+save_rock_or_diamond_fall_sound
+    sty play_sound_fx
 
     ; mask off bit 6 for the current cell value
     txa
@@ -1723,8 +1919,6 @@ check_for_direction_key_pressed
 update_player_at_current_location
     lda #$41
 play_movement_sound_and_update_current_position_address
-;TODO: sound
-;    sta sound2_active_flag
     clc
     adc map_address_low
     sta map_rockford_current_position_addr_low
@@ -1774,8 +1968,8 @@ skip_storing_rockford_cell_type
     sta (map_address_low),y
     lda #4
     sta delay_trying_to_push_rock
-;TODO: sound
-;    inc sound4_active_flag
+    lda #rock_move_sound
+    sta play_sound_fx
 check_for_return_pressed
     lda _gKey
     and #KEY_SPACE
@@ -1789,6 +1983,12 @@ check_if_value_is_empty
     ldx rockford_cell_value
     bne update_player_at_current_location
 store_rockford_cell_value_without_return_pressed
+    lda play_sound_fx
+    bne keep_current_sound2  ;don't override a sound effect with Rockford default movement sound
+    lda #rockford_move_sound
+    sta play_sound_fx
+keep_current_sound2
+
     lda rockford_cell_value
     ldy neighbour_cell_pointer
     sta neighbour_cell_directions,y
@@ -1919,10 +2119,9 @@ handler_rockford_intro_or_exit
     bpl intro_or_exit_return
     ; start the explosion just before gameplay starts (x is an explosion sprite)
     ldx #$21
-;
-;    inc sound4_active_flag
-;    lda #<regular_status_bar
-;    sta status_text_address_low
+    lda #enter_cave_sound
+    sta play_sound_fx
+
 intro_or_exit_return
     rts
 
@@ -1990,8 +2189,8 @@ show_large_explosion
 set_explosion_type
     stx lookup_table_address_low
     ; activate explosion sound
-;TODO: sound
-;    stx sound6_active_flag
+    lda #explosion_sound
+    sta play_sound_fx
     ; read above left cell
     ldy #0
     lda (map_address_low),y
@@ -2054,12 +2253,16 @@ handler_growing_wall
     bne check_grow_right                                   ; If not zero (map_space) then examine cell to the right
     lda #map_unprocessed | map_growing_wall                ; Otherwise replace the left cell with another growing wall
     sta cell_left
+    lda #growing_wall_sound
+    sta play_sound_fx
 check_grow_right
     lda cell_right                                         ; read cell to the right of the growing wall
     and #$0f                                               ; getting the cell type from the lower nybble
     bne growing_wall_return                                ; If not zero (map_space) then end
     lda #map_unprocessed | map_growing_wall                ; Otherwise replace the right cell with another growing wall
     sta cell_right
+    lda #growing_wall_sound
+    sta play_sound_fx
 growing_wall_return
     rts
 
@@ -2091,12 +2294,14 @@ skip_storing_space_above
     ; store the item that has fallen through the wall below
     sta cell_below
 magic_wall_is_active
+    lda #magic_wall_sound
+    sta play_ambient_sound
     ldx #$1d
-;TODO: sound
-;    inc sound1_active_flag
     ldy magic_wall_timer
     bne store_magic_wall_state
     ; magic wall becomes inactive once the timer has run out
+    lda #no_sound
+    sta play_ambient_sound
     ldx #$2d
 store_magic_wall_state
     stx magic_wall_state
@@ -2114,8 +2319,6 @@ handler_amoeba
     beq update_amoeba
     ; play amoeba sound
     tax
-;TODO: sound
-;    sta sound6_active_flag
     rts
 
 update_amoeba
@@ -2132,8 +2335,8 @@ update_amoeba
     bne amoeba_return
 amoeba_can_grow
     stx current_amoeba_cell_type
-;TODO: sound
-;    stx sound0_active_flag
+    lda #amoeba_sound
+    sta play_ambient_sound
     inc amoeba_counter
     lda amoeba_counter
     cmp amoeba_growth_interval
@@ -2184,19 +2387,16 @@ update_amoeba_timing
 
     lda number_of_amoeba_cells_found
     beq check_for_amoeba_timeout
-;TODO: sound
-;    sta sound0_active_flag
     ldy current_amoeba_cell_type
     bne found_amoeba
-;TODO: sound
-;    inc sound7_active_flag
     ldx #(map_unprocessed | map_anim_state1) | map_wall
     bne amoeba_replacement_found
-
 found_amoeba
     adc #$38
     bcc check_for_amoeba_timeout
     ; towards the end of the level time the amoeba turns into rock
+    lda #no_sound
+    sta play_ambient_sound
     ldx #map_unprocessed | map_rock
 amoeba_replacement_found
     stx amoeba_replacement
@@ -2339,12 +2539,12 @@ load_TAP
     sta $67  ;tape speed (0 = fast, 1 = slow)
 #endif
 
-    jsr SetupTape		; Prepare VIA for tape reading
+    jsr _SETUP_TAPE		; Prepare VIA for tape reading
 #ifdef rom_v1_1
-    jsr TapeSync		; Read the header
+    jsr _READ_TAPE_HEADER		; Read the header
 #endif
-	jsr GetTapeData		; Actual loading
-	jsr RestoreVIAState	; Restore the VIA state
+	jsr _READ_TAPE_DATA		; Actual loading
+	jsr _RESTORE_VIA_STATE	; Restore the VIA state
     rts
 
 ; *************************************************************************************

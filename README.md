@@ -1,8 +1,8 @@
 # Boulder Dash for the Oric by raspberrypioneer Jan 2025
 
 # TODO for v1.0:
-- Investigate how sound works, add this into game
 - Investigate about making game / timing a bit slower
+- Investigate intro tune/music
 - Perform a full test of all gameplay, all cave parameters, cave flow incl. bonus and levels
 - Build and test other BD caves (Arno, BD2,3 and +1)
 

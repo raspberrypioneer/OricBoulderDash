@@ -3,8 +3,6 @@
 ;Below is needed to point the program counter to the next page (multiple of 256)
 ;IMPORTANT: Address must be $1e00
 .dsb 256-(*&255)  ;Add another page of bytes
-.dsb 256-(*&255)  ;Add another page of bytes
-.dsb 256-(*&255)  ;Add another page of bytes
 
 cave_parameter_data                   ; Starts at address 4e40
 param_diamond_value
@@ -17,14 +15,14 @@ param_diamond_extra_value
 	.byt $ff
 param_diamonds_required
 ;TODO: Testing
-	.byt 1,2,3,4,5
+	.byt 2,3,4,5,6
 ;    .byt $0c, $0c, $0c, $0c, $0c      ; Diamonds required for each difficulty level x5
 param_cave_time
-	.byt 30,40,50,60,70
+	.byt 20,70,80,90,95
 ;    .byt $96, $6e, $46, $28, $1e      ; Cave time for each difficulty level x5
 param_amoeba_magic_wall_time
 ;TODO: Testing
-	.byt $90
+	.byt 50
 ;    .byt $00                          ; Amoeba or Magic Wall time
 param_initial_fill_tile
     .byt $01                          ; Initial fill tile - usually dirt, sometimes space
@@ -56,8 +54,8 @@ param_bombs                           ; For homebrew bombs element
 ;    .byt $00                          ; 0 = no bombs, otherwise number of bombs available
 param_zero_gravity_time               ; New feature used to control use of gravity (whether rocks/diamonds fall)
 ;TODO: Testing
-	.byt $20
-;    .byt 0                            ; 0 = no zero-gravity time (always gravity/normal), 1-$fe = time until gravity back on, $ff = always zero gravity
+;	.byt $20
+    .byt 0                            ; 0 = no zero-gravity time (always gravity/normal), 1-$fe = time until gravity back on, $ff = always zero gravity
 param_border_tile                     ; Border tile, for the standard steelwall, set to 3
     .byt $03                          ; Is just applied to the top and bottom rows as the side borders are specified in the cave file
 param_future_use
@@ -69,7 +67,7 @@ cave_map_data  ; 20 x 40 empty cave, each byte represents 2 tiles (each nibble)
 	.byt $3f, $ff, $ff, $ff, $fd, $9f, $ff, $e0, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f3
 	.byt $3f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $fc, $ff, $ff, $ff, $ff, $ff, $f3
 	.byt $3f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f3
-	.byt $3f, $f7, $77, $ff, $ff, $60, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f3
+	.byt $3f, $7f, $ff, $ff, $ff, $60, $00, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f3
 	.byt $32, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $22, $2f, $ff, $ff, $ff, $f3
 	.byt $3f, $ff, $ff, $1f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f3
 	.byt $3f, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $ff, $f3
