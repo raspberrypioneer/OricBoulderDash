@@ -831,7 +831,7 @@ status_message_game_over
     .byt 9, 1, 32, 32, "G","A","M","E", 32, "O","V","E","R", 32, 32, 32, 32, 32
 
 game_title
-    .byt 11, 1, 32, "O","R","I","C", 6, "B","O","U","L","D","E","R", 32, "D","A","S","H", 32, "1", 8, 7, 0
+    .byt 11, 1, 32, "O","R","I","C", 6, "B","O","U","L","D","E","R", 32, "D","A","S","H", 32, 32, 8, 7, 0
 
 game_options
 options_cave_select

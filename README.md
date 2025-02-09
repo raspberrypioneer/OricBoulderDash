@@ -2,15 +2,19 @@
 
 # TODO for v1.0:
 - Investigate about making game / timing a bit slower
-- Investigate intro tune/music
 - Perform a full test of all gameplay, all cave parameters, cave flow incl. bonus and levels
+- Change intro cave Z for Arno, BD2,3 and +1
 - Build and test other BD caves (Arno, BD2,3 and +1)
+- Test on real Oric-1
+
+# Quick check
+- Investigate intro tune/music
+- Investigate - use different keys, remap? Test if swapping keys down with right is easier on Oric, see https://github.com/Oric-Software-Development-Kit/Keyboard-FullMatrix
+- Std + alt charsets are contiguous in memory - maybe one redef load for both? 
 
 # Future considerations:
-- Investigate DSK version
-- Std + alt charsets are contiguous in memory - maybe one redef load for both? 
-- Investigate - use different keys, remap? Test if swapping keys down with right is easier on Oric
-- Investigate - can colours be applied to tiles, maybe inverse colour thing? Test normal/inverse colour
+- Splashscreen in hires
+- Can colours be applied to tiles, maybe use inverse colours? Setting ink/paper for screen gets cleared when drawing grid
 - Investigate - Joystick
 - Consider adding 2 player, high score, demo mode
 

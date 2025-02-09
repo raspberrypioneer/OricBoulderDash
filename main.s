@@ -271,7 +271,11 @@ clear_zero_loop
 	stx $bb80+35
 
     jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s and use of _gKey value
+    ldy #8  ;caves table location
+    jsr load_TAP_using_filename  ;Load all caves into memory, the load-to address is set in the TAP file header
+
 	jsr redefine_characters
+
 menu_loop
     jsr intro_and_cave_select
 
@@ -295,10 +299,10 @@ play_next_life
 ; *************************************************************************************
 intro_and_cave_select
 
-    lda #25  ;Cave Z (intro cave)
+    lda #20  ;Cave Z (intro cave)
     sta cave_number
 
-	jsr load_cave_file
+	jsr load_cave_data
 	jsr populate_cave_from_file
 
     ;set visible map and Rockford position for drawing grid
@@ -471,14 +475,14 @@ self_mod_code_loop
 ; *************************************************************************************
 ; screen addresses
 ;
-_char_screen_low
+char_screen_low
 	.byt $80, $d0, $20, $70, $c0, $10, $60, $b0, $00, $50, $a0, $f0, $40, $90
-_char_screen_high
+char_screen_high
 	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $be, $bf, $bf
 
-_char_screen_below_low
+char_screen_below_low
 	.byt $a8, $f8, $48, $98, $e8, $38, $88, $d8, $28, $78, $c8, $18, $68, $b8
-_char_screen_below_high
+char_screen_below_high
 	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $bf, $bf, $bf
 
 ; *************************************************************************************
@@ -496,14 +500,14 @@ draw_grid_of_sprites
 loop_plot_row
 	tay
 
-	lda _char_screen_low,y
+	lda char_screen_low,y
 	sta screen_addr1_low
-	lda _char_screen_high,y
+	lda char_screen_high,y
 	sta screen_addr1_high
 
-	lda _char_screen_below_low,y
+	lda char_screen_below_low,y
 	sta screen_addr2_low
-	lda _char_screen_below_high,y
+	lda char_screen_below_high,y
 	sta screen_addr2_high
 
 	lda #0
@@ -767,7 +771,7 @@ extract_lower_nybble
 play_one_life
 
     ; Load cave parameters and map from file
-    jsr load_cave_file
+    jsr load_cave_data
 
     ;initialise variables
     lda #$9f
@@ -1678,6 +1682,65 @@ result_low .byt 0
 result_high .byt 0
 
 ; *************************************************************************************
+;Cave tile map
+;
+;Below is needed to point the program counter to the next page (multiple of 256)
+;IMPORTANT: Address must be $1000, $2000 etc, not $1100 for example!
+;Each row has 40 bytes used for the tiles in the game, 24 unused
+.dsb 256-(*&255)  ;Add another page of bytes
+
+tile_map_row_0
+    .dsb 64
+tile_map_row_1
+    .dsb 64
+tile_map_row_2
+    .dsb 64
+tile_map_row_3
+    .dsb 64
+tile_map_row_4
+    .dsb 64
+tile_map_row_5
+    .dsb 64
+tile_map_row_6
+    .dsb 64
+tile_map_row_7
+    .dsb 64
+tile_map_row_8
+    .dsb 64
+tile_map_row_9
+    .dsb 64
+tile_map_row_10
+    .dsb 64
+tile_map_row_11
+    .dsb 64
+tile_map_row_12
+    .dsb 64
+tile_map_row_13
+    .dsb 64
+tile_map_row_14
+    .dsb 64
+tile_map_row_15
+    .dsb 64
+tile_map_row_16
+    .dsb 64
+tile_map_row_17
+    .dsb 64
+tile_map_row_18
+    .dsb 64
+tile_map_row_19
+    .dsb 64
+tile_map_row_20
+    .dsb 64
+tile_map_row_21
+    .dsb 64
+tile_map_row_22
+    .dsb 64
+tile_map_row_23
+    .dsb 64
+tile_below_store_row  ;special row for pseudo-random generated caves with extra-tile below the random one
+    .dsb 64
+
+; *************************************************************************************
 update_map
 
     lda #20  ; twenty rows
@@ -2487,65 +2550,61 @@ bomb_return
     rts
 
 ; ****************************************************************************************************
-; Cave file load
-;   Convert cave number to a letter from A-T for the file name to load, then load using system commands
-;   Each cave is a standalone TAP file, prepared by combining the cave binary file (e.g. cavedata.s)
-;   and adding a tape load header.
-;   This is done using the OSDK header.exe utility and must be all include load address = $1e00
-;   E.g. .\bin\header.exe .\caves\A .\A.tap $1e00
-; ****************************************************************************************************
-load_cave_file
+; Load cave data
+; Using the cave number, copy the cave data already loaded from CAVES.TAP file into the 
+; cave_parameter_data location used in the program
+load_cave_data
 
-;TODO: Testing
-;    rts
-;
     lda cave_number
-    cmp load_cave_number_stored        ; Check if the cave is already stored
-    beq cave_already_loaded            ; Skip if already loaded
+    cmp load_cave_number_stored  ;Check if the cave is already stored
+    beq load_cave_data_return  ;Skip if already loaded
 
-    ;Set the tape filename
-    lda cave_number
+    ;Copy cave from load area into area used in program
+    lda cave_number  ;cave number starts from zero
     sta load_cave_number_stored
-    clc
-    adc #"A"  ; Add letter "A" to get the cave letter for the cave number (which starts from zero)
-#ifdef rom_v1_1
-    sta $27f  ; Store the cave letter filename, $27F - $28E is the filename address, terminated by #00
-    lda #0
-    sta $280
-#else
-    sta $35  ; Store the cave letter filename, $35 - $44 is the filename address, terminated by #00
-    lda #0
-    sta $36
-#endif
-    jsr load_TAP
 
-cave_already_loaded
+    tay
+    lda cave_addr_low,y
+    sta screen_addr1_low  ;source low
+    lda cave_addr_high,y
+    sta screen_addr1_high  ;source high
+
+    lda #<cave_parameter_data
+    sta screen_addr2_low  ;target low
+    lda #>cave_parameter_data
+    sta screen_addr2_high  ;target high
+
+    ;Copy from source to target for size of 448 bytes
+    ldy #0
+    ldx size+1
+    beq copy_remaining_bytes
+copy_a_page
+    lda (screen_addr1_low),y
+    sta (screen_addr2_low),y
+    iny
+    bne copy_a_page
+    inc screen_addr1_high
+    inc screen_addr2_high
+    dex
+    bne copy_a_page
+copy_remaining_bytes
+    ldx size
+    beq load_cave_data_return
+copy_a_byte
+    lda (screen_addr1_low),y
+    sta (screen_addr2_low),y
+    iny
+    dex
+    bne copy_a_byte
+
+load_cave_data_return
     rts
+
+size  ;low-high, always 448 bytes per cave
+    .byt $c0, 1
 
 load_cave_number_stored
     .byt $ff                          ; Initially cave $ff isn't a valid cave, so will always loads cave A
-
-; *************************************************************************************
-; Load the TAP file
-; File name with #00 terminator already set in $27F - $28E ($35 - $44 for rom 1.0)
-load_TAP
-
-    ;Set the tape load flags
-    lda #0
-#ifdef rom_v1_1
-    sta $24d  ;tape speed (0 = fast, 1 = slow)
-    sta $25b  ;verify flag (0 = load, 1 = verify)
-#else
-    sta $67  ;tape speed (0 = fast, 1 = slow)
-#endif
-
-    jsr _SETUP_TAPE		; Prepare VIA for tape reading
-#ifdef rom_v1_1
-    jsr _READ_TAPE_HEADER		; Read the header
-#endif
-	jsr _READ_TAPE_DATA		; Actual loading
-	jsr _RESTORE_VIA_STATE	; Restore the VIA state
-    rts
 
 ; *************************************************************************************
 ; Populate game tile map from cave_map_data loaded from file
@@ -2756,29 +2815,52 @@ seeded_rand_temp2
 ; *************************************************************************************
 ; Copy standard characters into the alternate character set for fixed status bar display
 ; Load the standard character set into address $b400+(32*8), remapping from the space character (32)
-; The load-to address is set in the TAP file header, also see load_cave_file subroutine
+; The load-to address is set in the TAP file header
 redefine_characters
 
     jsr move_standard_to_alternate_chars  ;Keep space (32) to Z (90) but in the alternate charset
+    ldy #0  ;sprites table location
+    jsr load_TAP_using_filename
+    rts
 
-    ;Prepare the filename then load
+; *************************************************************************************
+load_TAP_using_filename
+
+    ;Prepare the TAP filename starting in y offset
     ldx #0
-redef_loop
-    lda redef_char_file_name,x
+filename_loop
+    lda TAP_filenames,y
 #ifdef rom_v1_1
-    sta $27f,x  ; Store the filename, $27F - $28E is the filename address, terminated by #00
+    sta $27f,x  ;Store the filename, $27F - $28E is the filename address, terminated by #00
 #else
-    sta $35,x  ; Store the filename, $35 - $44 is the filename address, terminated by #00
+    sta $35,x  ;Store the filename, $35 - $44 is the filename address, terminated by #00
 #endif
+    iny
     inx
-    cpx #8
-    bne redef_loop
+    cpx #8  ;filename is 8 chars max
+    bne filename_loop
 
-    jsr load_TAP
+    ;Set the tape load flags
+    lda #0
+#ifdef rom_v1_1
+    sta $24d  ;tape speed (0 = fast, 1 = slow)
+    sta $25b  ;verify flag (0 = load, 1 = verify)
+#else
+    sta $67  ;tape speed (0 = fast, 1 = slow)
+#endif
+
+    jsr _SETUP_TAPE
+#ifdef rom_v1_1
+    jsr _READ_TAPE_HEADER
+#endif
+	jsr _READ_TAPE_DATA
+	jsr _RESTORE_VIA_STATE
+
 	rts
 
-redef_char_file_name
+TAP_filenames
     .byt "S", "P", "R", "I", "T", "E", "S", 0
+    .byt "C", "A", "V", "E", "S", 0, 0, 0
 
 ; *************************************************************************************
 ; Alternate characters are needed for the fixed status bar

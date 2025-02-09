@@ -4,7 +4,7 @@
 :: Set the build paremeters
 ::
 SET OSDKADDR=$600
-SET OSDKNAME=bdash
+SET OSDKNAME=BDASH
 SET OSDKLINK=-B
 
-SET OSDKFILE=main keyboard vars spr cavedata map
+SET OSDKFILE=main keyboard vars spr cavedata
