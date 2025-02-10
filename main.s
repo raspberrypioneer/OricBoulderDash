@@ -3,6 +3,7 @@
 ; by raspberrypioneer Jan 2025
 ;
 
+;#define full_matrix_keyboard  ; Use the full matrix keyboard, comment this line out for single row keyboard
 #define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
 
 #ifdef rom_v1_1
@@ -125,15 +126,15 @@
 #define sprite_bomb4 53
 #define sprite_bubble 54
 
-;keyboard input defines
-#define KEY_SPACE        1
-#define KEY_LESS_THAN    2
-#define KEY_GREATER_THAN 4
-#define KEY_UP_ARROW     8
-#define KEY_LEFT_SHIFT   16
-#define KEY_LEFT_ARROW   32
-#define KEY_DOWN_ARROW   64
-#define KEY_RIGHT_ARROW 128
+;Using these defines, you can easily check the content of KeyRowArrows
+#define KEY_MASK_SPACE        1
+#define KEY_MASK_LESS_THAN    2
+#define KEY_MASK_GREATER_THAN 4
+#define KEY_MASK_UP_ARROW     8
+#define KEY_MASK_LEFT_SHIFT   16
+#define KEY_MASK_LEFT_ARROW   32
+#define KEY_MASK_DOWN_ARROW   64
+#define KEY_MASK_RIGHT_ARROW  128
 
 ;status_messages
 #define message_clear 255
@@ -144,6 +145,8 @@
 #define message_out_of_time 72
 #define message_bonus_life 90
 #define message_game_over 108
+#define message_std_keymap 126
+#define message_alt_keymap 144
 
 ;sounds
 #define no_sound 0
@@ -181,11 +184,16 @@ cell_below_right .byt 0
 neighbour_cell_pointer .byt 0
 
 ;keyboard input
-_gKey               .byt 0
+#ifdef full_matrix_keyboard
+zpTemp01			.byt 0
+zpTemp02			.byt 0
+tmprow				.byt 0
+#else
+_KeyRowArrows		.byt 0
+#endif
 irq_A               .byt 0
 irq_X               .byt 0
 irq_Y               .byt 0
-;
 
 sprite_address_low .byt 0
 sprite_address_high .byt 0
@@ -245,9 +253,9 @@ tick_counter .byt 0
 sub_second_ticks .byt 0
 ticks_since_last_direction_key_pressed .byt 0
 play_sound_fx .byt 0
-play_ambient_sound .byt 0
 
-_zp_end_
+_zp_end_  ;last zero page byte
+play_ambient_sound .byt 0
 
 	.text
 
@@ -263,14 +271,12 @@ clear_zero_loop
 	bne clear_zero_loop
 
 	jsr _TEXT_MODE
-	;// NOKEYCLICK+SCREEN no cursor
-	lda #8+2	
+	lda #8+2  ; NOKEYCLICK+SCREEN no cursor
 	sta $26a
-	;// Erase CAPS
-	ldx #0
+	ldx #0  ; Erase CAPS
 	stx $bb80+35
 
-    jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s and use of _gKey value
+    jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s
     ldy #8  ;caves table location
     jsr load_TAP_using_filename  ;Load all caves into memory, the load-to address is set in the TAP file header
 
@@ -374,21 +380,26 @@ wait_for_keypress
     jsr update_map
     jsr draw_grid_of_sprites
     dec tick_counter
-    lda _gKey
-    and #KEY_SPACE  ;space
-    bne exit_intro_keypress
-    lda _gKey
-    and #KEY_DOWN_ARROW  ;down
-    bne cave_down
-    lda _gKey
-    and #KEY_UP_ARROW  ;up
-    bne cave_up
-    lda _gKey
-    and #KEY_LEFT_ARROW  ;left
-    bne level_down
-    lda _gKey
-    and #KEY_RIGHT_ARROW  ;right
-    bne level_up
+
+    lda _KeyRowArrows
+    cmp #KEY_MASK_SPACE
+    beq exit_intro_keypress
+
+    cmp #KEY_MASK_UP_ARROW
+    beq level_up
+
+    cmp #KEY_MASK_LEFT_ARROW
+    beq cave_down
+
+    cmp #KEY_MASK_DOWN_ARROW
+    beq level_down
+
+    cmp #KEY_MASK_RIGHT_ARROW
+    beq cave_up
+
+    cmp #KEY_MASK_LEFT_SHIFT
+    beq swap_keymap
+
     jmp wait_for_keypress
 
 cave_down
@@ -425,6 +436,32 @@ level_display
     clc
     adc #"0"  ; Add digit "0" to get ASCII value of difficulty level
     sta _TEXT_SCREEN_ADDR+58
+    jmp wait_for_keypress
+
+swap_keymap
+    lda direction_key_table
+    cmp #KEY_MASK_RIGHT_ARROW
+    beq alt_keymap
+    ;standard layout
+    ;use right arrow (right), left arrow (left), up arrow (up), down arrow (down)
+    lda #KEY_MASK_RIGHT_ARROW
+    sta direction_key_table
+    lda #KEY_MASK_DOWN_ARROW
+    sta direction_key_table+3
+    ldy #message_std_keymap
+    jsr update_status_message
+    jmp wait_for_keypress
+alt_keymap
+    ;alternate layout (more intuitive?)
+    ;the direction keys on the left of the spacebar are left, right
+    ;the direction keys on the right of the spacebar are up, down
+    ;use down arrow (right), left arrow (left), up arrow (up), right arrow (down)
+    lda #KEY_MASK_DOWN_ARROW
+    sta direction_key_table
+    lda #KEY_MASK_RIGHT_ARROW
+    sta direction_key_table+3
+    ldy #message_alt_keymap
+    jsr update_status_message
     jmp wait_for_keypress
 
 exit_intro_keypress
@@ -1331,13 +1368,13 @@ update_death_explosion
     cpx #$4b
     bmi check_for_escape_key_pressed_to_die
     ; if key is pressed at end of the death explosion sequence, then reduce player lives and exit
-    lda _gKey
+    lda _KeyRowArrows
     bne lose_a_life
     dec rockford_explosion_cell_type
     ; branch if escape not pressed
 check_for_escape_key_pressed_to_die
-    lda _gKey
-    and #KEY_LEFT_SHIFT
+    lda _KeyRowArrows
+    and #KEY_MASK_LEFT_SHIFT
     beq check_if_pause_is_available
     ; branch if explosion already underway
     lda rockford_explosion_cell_type
@@ -1570,8 +1607,8 @@ save_message_number
 ; *************************************************************************************
 check_for_pause_key
 
-    lda _gKey
-    and #KEY_GREATER_THAN
+    lda _KeyRowArrows
+    and #KEY_MASK_GREATER_THAN
     rts
 
 ; *************************************************************************************
@@ -1974,8 +2011,9 @@ start_large_explosion
     rts
 
 check_for_direction_key_pressed
-    lda _gKey
-    and #(KEY_UP_ARROW | KEY_DOWN_ARROW | KEY_LEFT_ARROW | KEY_RIGHT_ARROW)
+    lda _KeyRowArrows
+    sta temp1
+    and #(KEY_MASK_UP_ARROW | KEY_MASK_DOWN_ARROW | KEY_MASK_LEFT_ARROW | KEY_MASK_RIGHT_ARROW)
     bne direction_key_pressed
     ; player is not moving in any direction
     ldx #map_rockford
@@ -1996,8 +2034,8 @@ direction_key_pressed
     dex
 get_direction_index_loop
     inx
-    lda direction_key_table,x
-    and _gKey
+    lda temp1
+    and direction_key_table,x
     beq get_direction_index_loop
     lda rockford_cell_value_for_direction,x
     beq skip_storing_rockford_cell_type
@@ -2034,8 +2072,8 @@ skip_storing_rockford_cell_type
     lda #rock_move_sound
     sta play_sound_fx
 check_for_return_pressed
-    lda _gKey
-    and #KEY_SPACE
+    lda _KeyRowArrows
+    and #KEY_MASK_SPACE
     beq store_rockford_cell_value_without_return_pressed
     ; return and direction is pressed. clear the appropriate cell
     jsr check_if_bombs_used  ;Returns accumulator used below
@@ -2139,10 +2177,10 @@ skip_no_bombs_message
     rts
 
 direction_key_table
-    .byt KEY_RIGHT_ARROW  ;right arrow (right)
-    .byt KEY_LEFT_ARROW  ;left arrow (left)
-    .byt KEY_UP_ARROW  ;up arrow (up)
-    .byt KEY_DOWN_ARROW  ;down arrow (down)
+    .byt KEY_MASK_RIGHT_ARROW  ;right arrow (right)
+    .byt KEY_MASK_LEFT_ARROW  ;left arrow (left)
+    .byt KEY_MASK_UP_ARROW  ;up arrow (up)
+    .byt KEY_MASK_DOWN_ARROW  ;down arrow (down)
 
 ; *************************************************************************************
 ; Called once handler_rockford_intro_or_exit sets the last transition to $21 (x is an explosion sprite)

@@ -93,7 +93,7 @@ values_code .byt $df,$7f,$f7,$bf,$fe,$ef,$fd,$fb
 ReadKeyboard
 .(
     lda #00
-    sta _gKey
+    sta _KeyRowArrows
 
     ; Select the bottom row of the keyboard
     ldy #04
@@ -128,12 +128,11 @@ loop_read
 
     lda values_code,x
     eor #$ff
-    ora _gKey 
-    sta _gKey
+    ora _KeyRowArrows 
+    sta _KeyRowArrows
 
 key_not_pressed    
     dex
     bpl loop_read
     rts
 .)
-

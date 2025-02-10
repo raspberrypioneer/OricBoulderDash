@@ -1,15 +1,15 @@
 # Boulder Dash for the Oric by raspberrypioneer Jan 2025
 
 # TODO for v1.0:
+- Bug on last cave, goes to bonus on RF dead
+- Change intro cave Z for Arno, +1
 - Investigate about making game / timing a bit slower
+- Test on real Oric-1, including alternate keys
 - Perform a full test of all gameplay, all cave parameters, cave flow incl. bonus and levels
-- Change intro cave Z for Arno, BD2,3 and +1
-- Build and test other BD caves (Arno, BD2,3 and +1)
-- Test on real Oric-1
+- Test Arno, BD2,3 and +1
 
 # Quick check
 - Investigate intro tune/music
-- Investigate - use different keys, remap? Test if swapping keys down with right is easier on Oric, see https://github.com/Oric-Software-Development-Kit/Keyboard-FullMatrix
 - Std + alt charsets are contiguous in memory - maybe one redef load for both? 
 
 # Future considerations:
@@ -26,3 +26,9 @@
 `; Type of machine to emulate (atmos, oric1, oric1-16k, telestrat, pravetz)`
 `machine = atmos`
 `;machine = oric1`
+
+# Switching between single row and full matrix keyboard
+- Amend osdk_config.bat, comment / uncomment keyboard requirement
+- Amend main.s, comment / uncomment #define full_matrix_keyboard
+- Amend bd_build_all.bat, comment / uncomment CAVEADDR requirement
+- Run bd_build_all.bat to compile and create caves.tap with correct load address

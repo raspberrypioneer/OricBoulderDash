@@ -5,7 +5,10 @@ set BDVER=BoulderDash01
 
 :: Set load start addresses
 set SPRITEADDR=$b500
-set CAVEADDR=$2700
+
+:: Set cave load address, use $2800 for single row keyboard, $2900 for full matrix keyboard
+set CAVEADDR=$2800
+::set CAVEADDR=$2900
 
 :: Build main program using OSDK
 call osdk_config.bat
