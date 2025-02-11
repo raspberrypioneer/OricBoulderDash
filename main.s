@@ -1396,7 +1396,7 @@ gameplay_loop_local
 
 lose_a_life
     lda cave_number
-    cmp #15  ;don't lose a life on a bonus cave, just move to next cave instead
+    cmp #16  ;don't lose a life on a bonus cave, just move to next cave instead
     bcs unsuccessful_bonus_cave
     dec player_lives
     rts
@@ -2612,34 +2612,16 @@ load_cave_data
     lda #>cave_parameter_data
     sta screen_addr2_high  ;target high
 
-    ;Copy from source to target for size of 448 bytes
-    ldy #0
-    ldx size+1
-    beq copy_remaining_bytes
-copy_a_page
-    lda (screen_addr1_low),y
-    sta (screen_addr2_low),y
-    iny
-    bne copy_a_page
-    inc screen_addr1_high
-    inc screen_addr2_high
-    dex
-    bne copy_a_page
-copy_remaining_bytes
-    ldx size
-    beq load_cave_data_return
-copy_a_byte
-    lda (screen_addr1_low),y
-    sta (screen_addr2_low),y
-    iny
-    dex
-    bne copy_a_byte
+    ;size is always 448 bytes per cave
+    lda #$c0
+    sta copy_size  
+    lda #1
+    sta copy_size+1
+
+    jsr copy_memory  ;copy from source to target for given size
 
 load_cave_data_return
     rts
-
-size  ;low-high, always 448 bytes per cave
-    .byt $c0, 1
 
 load_cave_number_stored
     .byt $ff                          ; Initially cave $ff isn't a valid cave, so will always loads cave A
@@ -2851,12 +2833,31 @@ seeded_rand_temp2
     .byt 0
 
 ; *************************************************************************************
-; Copy standard characters into the alternate character set for fixed status bar display
-; Load the standard character set into address $b400+(32*8), remapping from the space character (32)
+; Set-up redefined chanracters
+; 1. Copy standard characters into the alternate character set for fixed status bar display
+; (easier to use for this purpose instead of the standard character set)
+; 2. Load the standard character set into address $b400+(32*8), remapping from the space character (32)
 ; The load-to address is set in the TAP file header
 redefine_characters
 
-    jsr move_standard_to_alternate_chars  ;Keep space (32) to Z (90) but in the alternate charset
+    ;preserve the main standard characters in the alternate set
+    lda #$b5
+    sta screen_addr1_high  ;source high
+    lda #$b9
+    sta screen_addr2_high  ;target high
+    lda #$80
+    sta screen_addr1_low  ;source low
+    sta screen_addr2_low  ;target low
+
+    ;size is 60 characters from space (32) to Z (90), each character is 8 bytes
+    lda #$e0
+    sta copy_size  
+    lda #1
+    sta copy_size+1
+
+    jsr copy_memory  ;copy from source to target for given size
+
+    ;load the redefined characters for sprites
     ldy #0  ;sprites table location
     jsr load_TAP_using_filename
     rts
@@ -2901,41 +2902,33 @@ TAP_filenames
     .byt "C", "A", "V", "E", "S", 0, 0, 0
 
 ; *************************************************************************************
-; Alternate characters are needed for the fixed status bar
-; (easier to use for this purpose instead of the standard character set)
-move_standard_to_alternate_chars
-
-    lda #$b5
-    sta screen_addr1_high  ;source high
-    lda #$b9
-    sta screen_addr2_high  ;target high
-    lda #$80
-    sta screen_addr1_low  ;source low
-    sta screen_addr2_low  ;target low
-
-    ldx #60  ;characters from space (32) to Z (90)
-char_group
-    dex
-
-    ldy #8  ;bytes per character
-bytes_group
-    dey
-    sty temp1
+; Copy a number of bytes (in copy size variable) from source to target memory locations
+copy_memory
 
     ldy #0
+    ldx copy_size+1
+    beq copy_remaining_bytes
+copy_a_page
     lda (screen_addr1_low),y
     sta (screen_addr2_low),y
-
-    inc screen_addr1_low
-    inc screen_addr2_low
-    lda screen_addr1_low
-    bne copy_skip_inc_high_byte  ;correct to do both high bytes
+    iny
+    bne copy_a_page
     inc screen_addr1_high
     inc screen_addr2_high
-copy_skip_inc_high_byte
-    ldy temp1
-    cpy #0
-    bne bytes_group
-    cpx #0
-    bne char_group
+    dex
+    bne copy_a_page
+copy_remaining_bytes
+    ldx copy_size
+    beq copy_return
+copy_a_byte
+    lda (screen_addr1_low),y
+    sta (screen_addr2_low),y
+    iny
+    dex
+    bne copy_a_byte
+
+copy_return
     rts
+
+copy_size
+    .byt 0, 0

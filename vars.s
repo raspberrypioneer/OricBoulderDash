@@ -459,45 +459,11 @@ sprite_to_next_sprite
     .byt 0,0,0,0,0,0,0,0,0,0,0,0,0
     .byt sprite_rockford_moving_left2, sprite_rockford_moving_left3, sprite_rockford_moving_left4, sprite_rockford_moving_left1
     .byt sprite_rockford_moving_right2, sprite_rockford_moving_right3, sprite_rockford_moving_right4, sprite_rockford_moving_right1
-
-;TODO: some of below is needed, check collision with butterfly
-    .byt $32                                                                      ; 1f32: 32          2
-    .byt $32                                                                      ; 1f33: 32          2
-    .byt sprite_diamond1                                                               ; 1f34: 03          .
-    .byt $32                                                                      ; 1f35: 32          2
-    .byt $32                                                                      ; 1f36: 32          2
-    .byt $0a                                                                           ; 1f37: 0a          .
-    .byt $3a                                                                      ; 1f38: 3a          :
-    .byt $34                                                                      ; 1f39: 34          4
-    .byt $34                                                                      ; 1f3a: 34          4
-    .byt sprite_space                                                                  ; 1f3b: 00          .
-    .byt $32                                                                      ; 1f3c: 32          2
-    .byt $32                                                                      ; 1f3d: 32          2
-    .byt $32                                                                      ; 1f3e: 32          2
-    .byt sprite_space                                                                  ; 1f3f: 00          .
-    .byt $39                                                                      ; 1f40: 39          9
-    .byt $39                                                                      ; 1f41: 39          9
-    .byt $38                                                                      ; 1f42: 38          8
-    .byt $36                                                                      ; 1f43: 36          6
-    .byt $39                                                                      ; 1f44: 39          9
-    .byt $38                                                                      ; 1f45: 38          8
-    .byt 0,0,0,0,0,0
-    .byt sprite_space                                                                  ; 1f4c: 00          .
-    .byt $33                                                                      ; 1f4d: 33          3
-    .byt $3f                                                                  ; 1f4e: 3f          ?
-    .byt sprite_space                                                                  ; 1f4f: 00          .
-    .byt $35                                                                      ; 1f50: 35          5
-    .byt sprite_space                                                                  ; 1f51: 00          .
-    .byt 0,0,0
-    .byt sprite_space                                                                  ; 1f55: 00          .
-    .byt 0
-    .byt $3e                                                                  ; 1f57: 3e          >
-    .byt $33                                                                      ; 1f58: 33          3
-    .byt sprite_space                                                                  ; 1f59: 00          .
-
-    .byt $5a, $5b, $5c, $5d, $5e, $5f,   7, $0a, $16, $64, $2a, $66, $2e,   9, $1e     ; 1f5a: 5a 5b 5c... Z[\
-    .byt $69, $6a, $6b, $6c, $6d, $6e, $6f, $70, $71, $72, $73, $74, $75, $76, $77     ; 1f69: 69 6a 6b... ijk
-    .byt $78, $79, $7a, $7b, $7c, $7d, $7e, $7f                                        ; 1f78: 78 79 7a... xyz
+    .byt $32, $32, sprite_diamond1, $32, $32, $0a, $3a, $34, $34, sprite_space, $32, $32, $32, sprite_space, $39, $39
+    .byt $38, $36, $39, $38, 0, 0, 0, 0, 0, 0, sprite_space, $33, $3f, sprite_space, $35, sprite_space
+    .byt 0, 0, 0, sprite_space, 0, $3e, $33, sprite_space, $5a, $5b, $5c, $5d, $5e, $5f, 7, $0a
+    .byt $16, $64, $2a, $66, $2e, 9, $1e, $69, $6a, $6b, $6c, $6d, $6e, $6f, $70, $71
+    .byt $72, $73, $74, $75, $76, $77, $78, $79, $7a, $7b, $7c, $7d, $7e, $7f
 
 ; *************************************************************************************
 ; Butterfly/firefly animation table

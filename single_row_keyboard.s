@@ -48,12 +48,13 @@ _InitIRQ
     lda #%1000000
     sta via_acr
 
+;TODO: Boulder Dash better with or without?
     ; Since we have only IRQ handler for everything, it is generally
     ; more useful to run at 50Hz, instead of 100 Hz.
-    lda #<20000
-    sta via_t1ll 
-    lda #>20000
-    sta via_t1lh
+;    lda #<20000
+;    sta via_t1ll 
+;    lda #>20000
+;    sta via_t1lh
 
     ; Patch IRQ vector
     lda #<irq_routine 

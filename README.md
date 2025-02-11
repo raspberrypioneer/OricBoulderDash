@@ -1,19 +1,13 @@
 # Boulder Dash for the Oric by raspberrypioneer Jan 2025
 
 # TODO for v1.0:
-- Bug on last cave, goes to bonus on RF dead
-- Change intro cave Z for Arno, +1
-- Investigate about making game / timing a bit slower
 - Test on real Oric-1, including alternate keys
 - Perform a full test of all gameplay, all cave parameters, cave flow incl. bonus and levels
-- Test Arno, BD2,3 and +1
-
-# Quick check
-- Investigate intro tune/music
-- Std + alt charsets are contiguous in memory - maybe one redef load for both? 
+- Test Arno, BD1,2,3 and +1
 
 # Future considerations:
 - Splashscreen in hires
+- Investigate intro tune/music
 - Can colours be applied to tiles, maybe use inverse colours? Setting ink/paper for screen gets cleared when drawing grid
 - Investigate - Joystick
 - Consider adding 2 player, high score, demo mode
