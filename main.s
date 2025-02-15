@@ -4,7 +4,7 @@
 ;
 
 ;#define full_matrix_keyboard  ; Use the full matrix keyboard, comment this line out for single row keyboard
-;#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
+#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
 
 #ifdef rom_v1_1
 
@@ -881,11 +881,6 @@ play_one_life
     lda player_lives
     bne not_game_over
 
-    ;update lives (none) on status bar
-    lda #"0"
-    sta status_bar_line2+30  ;lives available start position
-    jsr update_status_bar
-
     ldy #message_game_over
     jsr update_status_message
 
@@ -1074,26 +1069,10 @@ dont_allow_rock_push_up
     adc #"0"
     sta status_bar_line1+39
 
-    ;update diamonds required on status bar
-    ldx #4  ;diamonds required start position
-    stx temp1
-    ldy diamonds_required
-    lda #0
-    jsr add_to_status_bar
-
-    ;update bombs available on status bar
-    ldx #14  ;bombs available start position
-    stx temp1
-    ldy bomb_counter
-    lda #0
-    jsr add_to_status_bar
-
-    ;update lives available on status bar
-    ldx #30  ;lives available start position
-    stx temp1
-    ldy player_lives
-    lda #0
-    jsr add_to_status_bar
+    ;update diamonds required, bombs available, player lives on status bar
+    jsr update_diamonds_required
+    jsr update_bombs_available
+    jsr update_player_lives
 
     rts
 
@@ -1167,6 +1146,45 @@ plot_char
 	rts
 
 ; *************************************************************************************
+update_diamonds_required
+    ldx #5  ;diamonds required start position
+    stx temp1
+    ldy diamonds_required
+    lda #0
+    jmp add_to_status_bar
+
+; *************************************************************************************
+update_bombs_available
+    ldx #14  ;bombs available start position
+    stx temp1
+    ldy bomb_counter
+    lda #0
+    jmp add_to_status_bar
+
+; *************************************************************************************
+update_cave_time
+    ldx #19  ;cave time start position
+    stx temp1
+    ldy time_remaining
+    lda #0
+    jmp add_to_status_bar
+
+; *************************************************************************************
+update_player_lives
+    ldx #30  ;lives available start position
+    stx temp1
+    ldy player_lives
+    lda #0
+    jmp add_to_status_bar
+
+; *************************************************************************************
+update_player_score
+    ldx #35  ;score start position
+    stx temp1
+    ldy score_low
+    lda score_high
+
+; *************************************************************************************
 add_to_status_bar
 
     sta temp2  ;high byte of value to add
@@ -1175,10 +1193,10 @@ add_to_status_bar
 
     lda temp2
     beq not_high_byte_value
-    lda #7  ;control digits to display (applies to score)
+    lda #6  ;control digits to display (applies to score)
     jmp convert_integer
 not_high_byte_value
-    lda #5  ;control digits to display (applies to diamonds required, bombs, cave time, lives)
+    lda #4  ;control digits to display (applies to diamonds required, bombs, cave time, lives)
 convert_integer
     sta dont_want_space+2
     sta add_spaces_after+1
@@ -1186,7 +1204,7 @@ convert_integer
     ldy temp1  ;start position on status bar
     ldx #0
 copy_digits_to_status_bar
-    lda $100,x
+    lda $101,x  ;string of ASCII characters after leading space
     bne digit_or_space
     inx
     jmp add_spaces_after
@@ -1197,10 +1215,10 @@ digit_or_space
     iny
 dont_want_space
     inx
-    cpx #5  ;Max will use
+    cpx #4  ;Max will use
     bne copy_digits_to_status_bar
 add_spaces_after
-    cpx #5  ;Max will use
+    cpx #4  ;Max will use
     bcs add_status_return
     lda #32
     sta status_bar_line2,y
@@ -1208,16 +1226,6 @@ add_spaces_after
     inx
     jmp add_spaces_after
 add_status_return
-    rts
-
-; *************************************************************************************
-update_cave_time
-
-    ldx #20  ;cave time start position
-    stx temp1
-    ldy time_remaining
-    lda #0
-    jsr add_to_status_bar
     rts
 
 ; *************************************************************************************
@@ -1325,18 +1333,8 @@ skip_earth
     stx play_sound_fx
 
     jsr got_diamond_so_update_status_bar
-
-    ldx #4  ;diamonds required start position
-    stx temp1
-    ldy diamonds_required
-    lda #0
-    jsr add_to_status_bar
-
-    ldx #34  ;score start position
-    stx temp1
-    ldy score_low
-    lda score_high
-    jsr add_to_status_bar
+    jsr update_diamonds_required
+    jsr update_player_score
 
 skip_got_diamond
     jsr update_sounds
@@ -1404,6 +1402,8 @@ lose_a_life
     cmp #16  ;don't lose a life on a bonus cave, just move to next cave instead
     bcs unsuccessful_bonus_cave
     dec player_lives
+    jsr update_player_lives
+    jsr update_status_bar
     rts
 unsuccessful_bonus_cave
     jsr calculate_next_cave_number_and_level
@@ -1549,13 +1549,7 @@ rockford_reached_end_position
     cmp #15  ; award a life if the end was reached on a bonus cave
     bcc not_a_bonus_end
     inc player_lives
-
-    ;update lives available on status bar
-    ldx #30  ;lives available start position
-    stx temp1
-    ldy player_lives
-    lda #0
-    jsr add_to_status_bar
+    jsr update_player_lives
 
     ;update message bar
     lda #message_bonus_life
@@ -1575,14 +1569,9 @@ count_up_bonus_at_end_of_stage_loop
     ;add 1 to score for each time unit left
     lda #1
     jsr update_score
-
-    ldx #34  ;score start position
-    stx temp1
-    ldy score_low
-    lda score_high
-    jsr add_to_status_bar
-
+    jsr update_player_score
     jsr update_status_bar
+
     jsr draw_grid_of_sprites
 
     dec time_remaining
@@ -1693,13 +1682,7 @@ award_bonus_life
     lda #$27  ;Set the bonus timer to animate the pathway/space sprites
     sta bonus_timer
     inc player_lives
-
-    ;update lives available on status bar
-    ldx #30  ;lives available start position
-    stx temp1
-    ldy player_lives
-    lda #0
-    jsr add_to_status_bar
+    jsr update_player_lives
 
     ;play sound
     lda #bonus_life_sound
@@ -2165,12 +2148,7 @@ create_a_bomb
     sta message_timer
 skip_no_bombs_message
     ;update bombs available on status bar
-    ldx #14  ;bombs available start position
-    stx temp1
-    ldy bomb_counter
-    lda #0
-    jsr add_to_status_bar
-
+    jsr update_bombs_available
     lda #map_bomb
     rts
 
