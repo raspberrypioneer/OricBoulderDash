@@ -2,7 +2,7 @@
 ;
 
 #define ROM  ; Using a rom, not overlay memory
-#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
+;#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
 
 #ifdef ROM
 #ifdef rom_v1_1  ;Atmos

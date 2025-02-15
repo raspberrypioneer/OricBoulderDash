@@ -5,6 +5,7 @@
 ::
 SET OSDKADDR=$600
 SET OSDKNAME=BDASH
+SET OSDKTAPNAME=BDASH
 SET OSDKLINK=-B
 
 :: Use single row keyboard (arrow keys, space, <, > and left shift)

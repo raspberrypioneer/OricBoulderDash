@@ -13,7 +13,7 @@
 - Consider adding 2 player, high score, demo mode
 
 # Switching between Atmos and Oric-1
-- main.s and keyboard.s: find and change below
+- main.s and single_row_keyboard.s (or full_matrix_keyboard.s): find and change below
 `#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)`
 
 - oricutron.cfg (part of osdk oricutron emulator): find and change below

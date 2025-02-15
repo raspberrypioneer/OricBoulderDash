@@ -4,7 +4,7 @@
 ;
 
 ;#define full_matrix_keyboard  ; Use the full matrix keyboard, comment this line out for single row keyboard
-#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
+;#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)
 
 #ifdef rom_v1_1
 
@@ -444,24 +444,29 @@ swap_keymap
     beq alt_keymap
     ;standard layout
     ;use right arrow (right), left arrow (left), up arrow (up), down arrow (down)
-    lda #KEY_MASK_RIGHT_ARROW
-    sta direction_key_table
-    lda #KEY_MASK_DOWN_ARROW
-    sta direction_key_table+3
     ldy #message_std_keymap
     jsr update_status_message
-    jmp wait_for_keypress
+    ldy #0
+    jmp change_direction_keys
+
 alt_keymap
-    ;alternate layout (more intuitive?)
-    ;the direction keys on the left of the spacebar are left, right
-    ;the direction keys on the right of the spacebar are up, down
-    ;use down arrow (right), left arrow (left), up arrow (up), right arrow (down)
-    lda #KEY_MASK_DOWN_ARROW
-    sta direction_key_table
-    lda #KEY_MASK_RIGHT_ARROW
-    sta direction_key_table+3
     ldy #message_alt_keymap
     jsr update_status_message
+    ldy #4
+    jmp change_direction_keys
+
+change_direction_keys
+    ;alternate layout (more intuitive?)
+    ;the direction keys on the left of the spacebar are left, right
+    ;the direction keys on the right of the spacebar are down, up
+    ldx #0
+change_keys_loop
+    lda std_and_alt_keymap,y
+    iny
+    sta direction_key_table,x
+    inx
+    cpx #4
+    bne change_keys_loop
     jmp wait_for_keypress
 
 exit_intro_keypress
@@ -490,6 +495,10 @@ level_selection_cycle_up
     .byt 0,2,3,4,5,1
 level_selection_cycle_down
     .byt 0,5,1,2,3,4
+
+std_and_alt_keymap
+    .byt KEY_MASK_RIGHT_ARROW, KEY_MASK_LEFT_ARROW, KEY_MASK_UP_ARROW, KEY_MASK_DOWN_ARROW  ;standard
+    .byt KEY_MASK_DOWN_ARROW, KEY_MASK_LEFT_ARROW, KEY_MASK_RIGHT_ARROW, KEY_MASK_UP_ARROW  ;alternate
 
 handler_null
     rts
@@ -1066,9 +1075,6 @@ dont_allow_rock_push_up
     sta status_bar_line1+39
 
     ;update diamonds required on status bar
-    ldx #5  ;control digits to display (applies to bombs, lives below too)
-    stx temp2
-
     ldx #4  ;diamonds required start position
     stx temp1
     ldy diamonds_required
@@ -1163,8 +1169,19 @@ plot_char
 ; *************************************************************************************
 add_to_status_bar
 
+    sta temp2  ;high byte of value to add
     jsr _CONVERT_TO_INT  ;convert integer in Y(low) and A(high) to accumulator by calling $d499 ($d3ed)
     jsr _INT_TO_ASCII_STRING  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00 by calling $e0d5 ($e0d1)
+
+    lda temp2
+    beq not_high_byte_value
+    lda #7  ;control digits to display (applies to score)
+    jmp convert_integer
+not_high_byte_value
+    lda #5  ;control digits to display (applies to diamonds required, bombs, cave time, lives)
+convert_integer
+    sta dont_want_space+2
+    sta add_spaces_after+1
 
     ldy temp1  ;start position on status bar
     ldx #0
@@ -1180,10 +1197,10 @@ digit_or_space
     iny
 dont_want_space
     inx
-    cpx temp2  ;Max will use
+    cpx #5  ;Max will use
     bne copy_digits_to_status_bar
 add_spaces_after
-    cpx temp2  ;Max will use
+    cpx #5  ;Max will use
     bcs add_status_return
     lda #32
     sta status_bar_line2,y
@@ -1195,10 +1212,6 @@ add_status_return
 
 ; *************************************************************************************
 update_cave_time
-
-    ;cave time on status bar
-    ldx #5  ;control digits to display
-    stx temp2
 
     ldx #20  ;cave time start position
     stx temp1
@@ -1313,21 +1326,13 @@ skip_earth
 
     jsr got_diamond_so_update_status_bar
 
-    ;update diamonds required on status bar
-    ldx #5  ;control digits to display
-    stx temp2
-
     ldx #4  ;diamonds required start position
     stx temp1
     ldy diamonds_required
     lda #0
     jsr add_to_status_bar
 
-    ;update score on status bar
-    ldx #7  ;control digits to display
-    stx temp2
-
-    ldx #35  ;score start position
+    ldx #34  ;score start position
     stx temp1
     ldy score_low
     lda score_high
@@ -1414,7 +1419,7 @@ sound_rockford_move
 sound_got_earth
     .byt 0,0,0,0,0,0,$16,$77,$10,0,0,$c8,0,$0f,0,0
 sound_got_diamond
-    .byt 7,0,0,0,0,0,0,$7e,$10,0,0,0,7,9,0,0
+    .byt $64,0,0,0,0,0,0,$7e,$10,0,0,0,7,9,0,0
 sound_got_all_diamonds
     .byt 0,4,$64,0,0,4,0,$78,$10,$10,$10,0,7,9,0,0
 sound_enter_cave
@@ -1424,7 +1429,7 @@ sound_exit_cave
 sound_rock_move
     .byt 0,0,$a0,$0f,0,0,$1f,$6d,0,$10,0,0,7,9,0,0
 sound_diamond_move
-    .byt 0,0,5,0,0,0,0,$7d,0,$10,0,0,7,9,0,0
+    .byt 0,0,$30,0,0,0,0,$7d,0,$10,0,0,7,9,0,0
 sound_explosion
     .byt 0,0,0,0,0,0,$1f,$4f,0,$10,$10,0,14,9,0,0
 sound_magic_wall
@@ -1571,11 +1576,7 @@ count_up_bonus_at_end_of_stage_loop
     lda #1
     jsr update_score
 
-    ;update score on status bar
-    ldx #7  ;control digits to display
-    stx temp2
-
-    ldx #35  ;score start position
+    ldx #34  ;score start position
     stx temp1
     ldy score_low
     lda score_high
@@ -2164,9 +2165,6 @@ create_a_bomb
     sta message_timer
 skip_no_bombs_message
     ;update bombs available on status bar
-    ldx #5  ;control digits to display
-    stx temp2
-
     ldx #14  ;bombs available start position
     stx temp1
     ldy bomb_counter
