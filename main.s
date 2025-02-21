@@ -127,14 +127,14 @@
 #define sprite_bubble 54
 
 ;Using these defines, you can easily check the content of KeyRowArrows
-#define KEY_MASK_SPACE        1
-#define KEY_MASK_LESS_THAN    2
+#define KEY_MASK_SPACE 1
+#define KEY_MASK_LESS_THAN 2
 #define KEY_MASK_GREATER_THAN 4
-#define KEY_MASK_UP_ARROW     8
-#define KEY_MASK_LEFT_SHIFT   16
-#define KEY_MASK_LEFT_ARROW   32
-#define KEY_MASK_DOWN_ARROW   64
-#define KEY_MASK_RIGHT_ARROW  128
+#define KEY_MASK_UP_ARROW 8
+#define KEY_MASK_LEFT_SHIFT 16
+#define KEY_MASK_LEFT_ARROW 32
+#define KEY_MASK_DOWN_ARROW 64
+#define KEY_MASK_RIGHT_ARROW 128
 
 ;status_messages
 #define message_clear 255
@@ -165,10 +165,10 @@
 #define growing_wall_sound 10  ;same as magic_wall_sound
 #define amoeba_sound 11
 
+; *************************************************************************************
 	.zero
 	*= $50
-
-_zp_start_
+zero_page_start
 
 neighbour_cell_directions
 cell_above_left .byt 0
@@ -185,15 +185,15 @@ neighbour_cell_pointer .byt 0
 
 ;keyboard input
 #ifdef full_matrix_keyboard
-zpTemp01			.byt 0
-zpTemp02			.byt 0
-tmprow				.byt 0
+zpTemp01 .byt 0
+zpTemp02 .byt 0
+tmprow .byt 0
 #else
-_KeyRowArrows		.byt 0
+_KeyRowArrows .byt 0
 #endif
-irq_A               .byt 0
-irq_X               .byt 0
-irq_Y               .byt 0
+irq_A .byt 0
+irq_X .byt 0
+irq_Y .byt 0
 
 sprite_address_low .byt 0
 sprite_address_high .byt 0
@@ -204,16 +204,13 @@ screen_addr1_high .byt 0
 screen_addr2_low .byt 0
 screen_addr2_high .byt 0
 
-tile_map_ptr_low        .byt 0
-tile_map_ptr_high       .byt 0
+map_address_low .byt 0
+map_address_high .byt 0
 
-map_address_low         .byt 0
-map_address_high        .byt 0
-
-map_rockford_current_position_addr_low  .byt 0
+map_rockford_current_position_addr_low .byt 0
 map_rockford_current_position_addr_high .byt 0
 
-map_rockford_end_position_addr_low  .byt 0
+map_rockford_end_position_addr_low .byt 0
 map_rockford_end_position_addr_high .byt 0
 
 visible_top_left_map_x .byt 0
@@ -254,33 +251,39 @@ sub_second_ticks .byt 0
 ticks_since_last_direction_key_pressed .byt 0
 play_sound_fx .byt 0
 
-_zp_end_  ;last zero page byte
+zero_page_end  ;last zero page byte
 play_ambient_sound .byt 0
 
-	.text
-
 ; *************************************************************************************
-_main
+	.text
+program_start
 
     ;Clear the zero page addresses
 	lda #0
-	ldx #_zp_end_-_zp_start_
+	ldx #zero_page_end-zero_page_start
 clear_zero_loop
-	sta _zp_start_-1,x
+	sta zero_page_start-1,x
 	dex
 	bne clear_zero_loop
 
 	jsr _TEXT_MODE
-	lda #8+2  ; NOKEYCLICK+SCREEN no cursor
+	lda #8+2  ;No key click and no cursor
 	sta $26a
-	ldx #0  ; Erase CAPS
+	ldx #0  ;Remove CAPS text
 	stx $bb80+35
 
     jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s
+
     ldy #8  ;caves table location
     jsr load_TAP_using_filename  ;Load all caves into memory, the load-to address is set in the TAP file header
 
-	jsr redefine_characters
+    ;load the redefined characters
+    ;all 96 available standard charset characters are used for sprites / tiles
+    ;most of the alternate charset is used for numbers, letters for the fixed status bar display
+    ;  (easier to use for this purpose instead of the standard character set)
+    ;the load-to address is $b500 (skips the standard charset control characters)
+    ldy #0  ;sprites table location
+    jsr load_TAP_using_filename
 
 menu_loop
     jsr intro_and_cave_select
@@ -303,6 +306,7 @@ play_next_life
     jmp menu_loop
 
 ; *************************************************************************************
+; Load and display the intro screen, accept the cave, level, keyset from the user and start the game
 intro_and_cave_select
 
     lda #20  ;Cave Z (intro cave)
@@ -504,7 +508,7 @@ handler_null
     rts
 
 ; *************************************************************************************
-; routine to self-mod a section of code, used to replace code in draw_grid_of_sprites
+; Routine to self-mod a section of code, used to replace code in draw_grid_of_sprites
 ; for displaying text in the map and to reveal-hide tiles
 self_mod_code
 
@@ -519,17 +523,20 @@ self_mod_code_loop
 	rts
 
 ; *************************************************************************************
-; screen addresses
-;
+; Screen addresses for start of each row, split into top and bottom addresses 
+;   (each character is 2 characters high)
 char_screen_low
-	.byt $80, $d0, $20, $70, $c0, $10, $60, $b0, $00, $50, $a0, $f0, $40, $90
+	.byt $20, $70, $c0, $10, $60, $b0, $00, $50, $a0, $f0, $40, $90
 char_screen_high
-	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $be, $bf, $bf
+	.byt $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $be, $bf, $bf
 
 char_screen_below_low
-	.byt $a8, $f8, $48, $98, $e8, $38, $88, $d8, $28, $78, $c8, $18, $68, $b8
+	.byt $48, $98, $e8, $38, $88, $d8, $28, $78, $c8, $18, $68, $b8
 char_screen_below_high
-	.byt $bb, $bb, $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $bf, $bf, $bf
+	.byt $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $bf, $bf, $bf
+
+grid_rows .byt 0
+grid_cols .byt 0
 
 ; *************************************************************************************
 ; Draw a full grid of sprites, updating the current map position first
@@ -541,8 +548,8 @@ draw_grid_of_sprites
     jsr update_map_scroll_position
     jsr update_grid_animations
 
-	lda #2  ;skip status bar
-	sta temp1  ;grid row counter
+	lda #0
+	sta grid_rows
 loop_plot_row
 	tay
 
@@ -557,12 +564,12 @@ loop_plot_row
 	sta screen_addr2_high
 
 	lda #0
-	sta temp2  ;grid column counter
+	sta grid_cols
 loop_plot_column
 
 	;Get sprite number from map
     tay
-    lda (tile_map_ptr_low),y
+    lda (map_address_low),y
 
     ;Next 6 bytes are changed with self-mod code
 skip_tile_check
@@ -597,7 +604,7 @@ not_titanium
 	sta bottom_right_char+1
 
 	;Plot the top 2 and bottom 2 characters for the tile
-	lda temp2  ;grid column counter
+	lda grid_cols
 	asl  ;Double the counter number to get the screen offset position
 	tay
 top_left_char
@@ -618,22 +625,22 @@ bottom_right_char
 
 skip_null_tile
 
-	inc temp2  ;grid column counter
-	lda temp2  ;grid column counter
+	inc grid_cols
+	lda grid_cols
 	cmp #20  ;20 columns
 	bcc loop_plot_column
 
     ; move tile pointer on to next row (64 bytes)
-    lda tile_map_ptr_low
+    lda map_address_low
     clc
     adc #$40
-    sta tile_map_ptr_low
+    sta map_address_low
     bcc skip_high
-    inc tile_map_ptr_high
+    inc map_address_high
 skip_high
-	inc temp1  ;grid row counter
-	lda temp1  ;grid row counter
-	cmp #14  ;12 rows (skip status bar in rows 0, 1)
+	inc grid_rows
+	lda grid_rows
+	cmp #12  ;12 rows (skip status bar in rows 0, 1)
 	bcc loop_plot_row
     rts
 
@@ -692,14 +699,10 @@ skip_bonus_stage
     sty visible_top_left_map_y
     sty screen_addr1_high
     jsr map_xy_position_to_map_address
-    lda map_address_low
-    sta tile_map_ptr_low
-    lda map_address_high
-    sta tile_map_ptr_high
     rts
 
 ; *************************************************************************************
-; Map address (which start at $1000) becomes x,y in screen_addr1_high and low
+; Map address (which start at $1000) becomes row/column in screen_addr1_high and low
 ; e.g. $1000 is 0,0   $1098 is 2,18   $1140 is 5,0   $110f is 5,15
 map_address_to_map_xy_position
 
@@ -717,6 +720,7 @@ map_address_to_map_xy_position
     rts
 
 ; *************************************************************************************
+; Convert a grid position (row/column) to a map address
 map_xy_position_to_map_address
 
     lda #0
@@ -814,6 +818,7 @@ extract_lower_nybble
     rts
 
 ; *************************************************************************************
+; Game action starts here, playing one of Rockford's lives
 play_one_life
 
     ; Load cave parameters and map from file
@@ -894,8 +899,9 @@ not_game_over
     rts
 
 ; *************************************************************************************
+; Self-mod code applied to draw_grid_of_sprites routine to reveal-hide tiles used in cave open/close
 prepare_reveal_hide_code
-    ;for reveal-hide routine, add a check for unprocessed cells and set to titanium tile in draw grid (self-mod code)
+    ;add a check for unprocessed cells and set to titanium tile in draw grid (self-mod code)
     ldx #6
     jsr self_mod_code
     lda #not_titanium-(skip_tile_check+4)  ;branch forward to not_titanium (+4 bytes for cmp,#,bcc,#)
@@ -903,6 +909,8 @@ prepare_reveal_hide_code
     rts
 
 ; *************************************************************************************
+; Apply the cave open/close tiles which show/hide the tiles on screen
+; Performed in a loop using the game tick counter
 screen_dissolve_effect
     sta dissolve_to_solid_flag
     lda #$21
@@ -920,6 +928,7 @@ random_seed
     .byt 0
 
 ; *************************************************************************************
+; Apply the tile show/hide routine for each game play tick
 reveal_or_hide_more_cells
     ldy #<tile_map_row_1
     sty map_address_low
@@ -967,7 +976,7 @@ sound_random_base
     .byt 7,0,0,0,0,0,0,$7e,16,0,0,0,7,9
 
 ; *************************************************************************************
-; a small 'pseudo-random' number routine. Generates a sequence of 256 numbers.
+; A small 'pseudo-random' number routine. Generates a sequence of 256 numbers.
 get_next_random_byte
     lda random_seed
     asl
@@ -1007,6 +1016,7 @@ write_top_and_bottom_borders_loop
     rts
 
 ; *************************************************************************************
+; Apply the parameters for the cave being played
 initialise_stage
 
     lda #20
@@ -1077,6 +1087,7 @@ dont_allow_rock_push_up
     rts
 
 ; *************************************************************************************
+; Set Rockford start position (row/column) on map
 set_rockford_start
 
     lda param_rockford_start
@@ -1094,6 +1105,7 @@ set_rockford_start
     rts
 
 ; *************************************************************************************
+; Determine next cave to play, which depends on cave sequence, bonus caves and difficulty level
 calculate_next_cave_number_and_level
 
     ldx cave_number
@@ -1111,6 +1123,7 @@ store_cave_number_and_difficulty_level
     rts
 
 ; *************************************************************************************
+; Set the status bar display with values applied during the games (cave time, diamonds required, etc)
 update_status_bar
 
     ldy #41
@@ -1125,6 +1138,7 @@ status_bar_loop
     rts
 
 ; *************************************************************************************
+; Set the status message display with the required status message in Y register
 update_status_message
 
     ldx #0
@@ -1148,7 +1162,6 @@ plot_char
 ; *************************************************************************************
 update_diamonds_required
     ldx #5  ;diamonds required start position
-    stx temp1
     ldy diamonds_required
     lda #0
     jmp add_to_status_bar
@@ -1156,7 +1169,6 @@ update_diamonds_required
 ; *************************************************************************************
 update_bombs_available
     ldx #14  ;bombs available start position
-    stx temp1
     ldy bomb_counter
     lda #0
     jmp add_to_status_bar
@@ -1164,7 +1176,6 @@ update_bombs_available
 ; *************************************************************************************
 update_cave_time
     ldx #19  ;cave time start position
-    stx temp1
     ldy time_remaining
     lda #0
     jmp add_to_status_bar
@@ -1172,7 +1183,6 @@ update_cave_time
 ; *************************************************************************************
 update_player_lives
     ldx #30  ;lives available start position
-    stx temp1
     ldy player_lives
     lda #0
     jmp add_to_status_bar
@@ -1180,13 +1190,16 @@ update_player_lives
 ; *************************************************************************************
 update_player_score
     ldx #35  ;score start position
-    stx temp1
     ldy score_low
     lda score_high
 
 ; *************************************************************************************
+; Converts a given value in bytes into readable ASCII and displays it on the status bar
+; Parameters are X register for the position of the status bar value to update, 
+;   Y for the value (low byte), and A for the value (high byte)
 add_to_status_bar
 
+    stx temp1  ;start position of value to update
     sta temp2  ;high byte of value to add
     jsr _CONVERT_TO_INT  ;convert integer in Y(low) and A(high) to accumulator by calling $d499 ($d3ed)
     jsr _INT_TO_ASCII_STRING  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00 by calling $e0d5 ($e0d1)
@@ -1229,6 +1242,8 @@ add_status_return
     rts
 
 ; *************************************************************************************
+; Plays the cave, each iteration of the loop is a game play tick
+; The loop ends when Rockford's completes the cave or loses a life
 gameplay_loop
 
     lda #0
@@ -1410,7 +1425,8 @@ unsuccessful_bonus_cave
     rts
 
 ; *************************************************************************************
-;Below is needed to point the program counter to the next page (multiple of 256)
+; List of sounds used in the game
+; Below is needed to point the program counter to the next page (multiple of 256)
 .dsb 256-(*&255)  ;Add another page of bytes
 
 list_of_sounds  ;14 bytes + 2 padding bytes for ease of lookup
@@ -1438,6 +1454,8 @@ sound_amoeba
     .byt 0,0,0,0,0,0,$1f,$5f,0,0,$10,0,7,$0f,0,0
 
 ; *************************************************************************************
+; Plays the short sound given in play_sound_fx (got diamond, boulder moves)
+;   and plays any ambient sound if set (magic wall, amoeba sounds)
 update_sounds
 
     lda play_ambient_sound
@@ -1476,11 +1494,8 @@ ambient_sound
     rts
 
 ; *************************************************************************************
-;
-; update while paused, or out of time, or at end position (i.e. when gameplay started
-; but is not currently active)
-;
-; *************************************************************************************
+; Update screen while paused, or out of time, or at end position
+;   (i.e. when gameplay started but is not currently active)
 update_with_gameplay_not_active
 
     ; check for pause key
@@ -1602,6 +1617,8 @@ check_for_pause_key
     rts
 
 ; *************************************************************************************
+; Apply updates to diamonds required, score, sound etc when a diamond is gathered
+; Includes check if all diamonds have been gathered and opens the exit
 got_diamond_so_update_status_bar
 
     lda diamonds_required
@@ -1644,8 +1661,8 @@ got_diamond_return
     rts
 
 ; *************************************************************************************
+; Updates the score and bonus with accumulator value and performs the bonus life actions
 update_score
-; update score with accumulator value
 
     clc
     adc score_low
@@ -1703,69 +1720,33 @@ result_low .byt 0
 result_high .byt 0
 
 ; *************************************************************************************
-;Cave tile map
-;
-;Below is needed to point the program counter to the next page (multiple of 256)
-;IMPORTANT: Address must be $1000, $2000 etc, not $1100 for example!
-;Each row has 40 bytes used for the tiles in the game, 24 unused
+; Cave tile map
+; Below is needed to point the program counter to the next page (multiple of 256)
+; IMPORTANT: Address must be $1000, $2000 etc, not $1100 for example!
+; Each row has 40 bytes used for the tiles in the game, 24 unused
 .dsb 256-(*&255)  ;Add another page of bytes
 
-tile_map_row_0
+tile_map_row_0  ;top border
     .dsb 64
-tile_map_row_1
-    .dsb 64
-tile_map_row_2
-    .dsb 64
-tile_map_row_3
-    .dsb 64
-tile_map_row_4
-    .dsb 64
-tile_map_row_5
-    .dsb 64
-tile_map_row_6
-    .dsb 64
-tile_map_row_7
-    .dsb 64
-tile_map_row_8
-    .dsb 64
-tile_map_row_9
-    .dsb 64
-tile_map_row_10
-    .dsb 64
-tile_map_row_11
-    .dsb 64
-tile_map_row_12
-    .dsb 64
-tile_map_row_13
-    .dsb 64
-tile_map_row_14
-    .dsb 64
-tile_map_row_15
-    .dsb 64
-tile_map_row_16
-    .dsb 64
-tile_map_row_17
-    .dsb 64
-tile_map_row_18
-    .dsb 64
-tile_map_row_19
-    .dsb 64
+tile_map_row_1  ;1-20 rows between the borders
+    .dsb (64*19)
 tile_map_row_20
     .dsb 64
-tile_map_row_21
-    .dsb 64
-tile_map_row_22
-    .dsb 64
-tile_map_row_23
+tile_map_row_21  ;bottom border
     .dsb 64
 tile_below_store_row  ;special row for pseudo-random generated caves with extra-tile below the random one
     .dsb 64
 
 ; *************************************************************************************
+; Update the gameplay map with action handlers for each of the game actors
+; Includes logic for falling rocks, diamonds, bombs
+map_rows .byt 0
+map_cols .byt 0
+
 update_map
 
     lda #20  ; twenty rows
-    sta tile_map_ptr_low
+    sta map_rows
     lda #>tile_map_row_0
     sta map_address_high
     lda #<tile_map_row_0
@@ -1776,7 +1757,7 @@ update_map
     ; loop through the twenty rows of map
 tile_map_y_loop
     lda #38  ; 38 columns (cells per row)
-    sta tile_map_ptr_high
+    sta map_cols
     lda (map_address_low),y
     sta cell_left
     ; move to the next cell
@@ -1853,7 +1834,7 @@ move_to_next_cell
     ; move ptr to next position
     inc map_address_low
     ; loop back for the rest of the cells in the row
-    dec tile_map_ptr_high
+    dec map_cols
     bne tile_map_x_loop
     ; store the final previous_cell for the row
     lda cell_left
@@ -1863,7 +1844,7 @@ move_to_next_cell
     lda #26
     jsr add_a_to_ptr
     ; loop back for the rest of the rows
-    dec tile_map_ptr_low
+    dec map_rows
     bne tile_map_y_loop
     ; clear top bit in final row
     ldy #38
@@ -1881,7 +1862,6 @@ clear_top_bit_on_final_row_loop
 
 ; *************************************************************************************
 ; Update for rock/diamond/bomb elements
-;
 update_rock_or_diamond_that_can_fall
 
     cpy #map_bomb
@@ -1982,6 +1962,7 @@ process_next_cell
     jmp mark_cell_above_as_processed_and_move_to_next_cell
 
 ; *************************************************************************************
+; Handler for Rockford's actions - moving, pushing rocks, etc
 handler_rockford
 
     stx current_rockford_sprite
@@ -2159,6 +2140,7 @@ direction_key_table
     .byt KEY_MASK_DOWN_ARROW  ;down arrow (down)
 
 ; *************************************************************************************
+; Handler for Rockford entry, converstion of amoeba into diamonds
 ; Called once handler_rockford_intro_or_exit sets the last transition to $21 (x is an explosion sprite)
 ; $21 becomes unprocessed (ora #$80) and subtracted from #$90 = $11 so not processed initially but X is set to $11, set in update_map
 ; $11 becomes unprocessed (ora #$80) and subtracted from #$90 = $1 and using explosion_replacements table, becomes unprocessed Rockford
@@ -2180,7 +2162,7 @@ not_in_range_so_change_nothing
     rts
 
 ; *************************************************************************************
-; mark rockford cell as visible
+; Handler for Rockford's intro/exit
 handler_rockford_intro_or_exit
 
     txa
@@ -2203,8 +2185,9 @@ intro_or_exit_return
     rts
 
 ; *************************************************************************************
-;Below is needed to point the program counter to the next page (multiple of 256)
-;The self-mod code using lookup_table_address_low needs this (see show_large_explosion)
+; Handler for Firefly/Butterfly actions, moving, exploding etc
+; Below is needed to point the program counter to the next page (multiple of 256)
+; The self-mod code using lookup_table_address_low needs this (see show_large_explosion)
 .dsb 256-(*&255)  ;Add another page of bytes
 handler_firefly_or_butterfly
 
@@ -2256,6 +2239,7 @@ store_firefly_and_clear_current_cell
     rts
 
 ; *************************************************************************************
+; Handles the large explosion affecting 9 cells which turn into spaces or diamonds
 show_large_explosion
 
     txa
@@ -2322,7 +2306,7 @@ skip_storing_explosion_into_cell
     rts
 
 ; *************************************************************************************
-; Growing wall element allows a wall to extend horizontally if the item beside it is empty space
+; Handler for growing wall which allows a wall to extend horizontally if the item beside it is empty space
 handler_growing_wall
 
     lda cell_left                                          ; read cell to the left of the growing wall
@@ -2344,6 +2328,10 @@ growing_wall_return
     rts
 
 ; *************************************************************************************
+; Handler for magic wall which turns rocks to diamonds (or diamonds to rocks)
+; Activated when a rock/diamond falls onto it and a rock/diamond is converted if there is
+; space below the magic wall, otherwise it disappears. Deactives when the magic wall timer
+; ends, rocks/diamonds disappear if they fall on a deactivated magic wall
 handler_magic_wall
 
     txa
@@ -2390,6 +2378,7 @@ check_if_magic_wall_is_active
     rts
 
 ; *************************************************************************************
+; Handler for amoeba movement actions
 handler_amoeba
 
     lda amoeba_replacement
@@ -2460,13 +2449,15 @@ amoeba_return
     rts
 
 ; *************************************************************************************
+; Updates amoeba timing. At the end of amoeba growth time converts to diamonds if it is
+; constrained and cannot grow anymore, otherwise converts to rocks
 update_amoeba_timing
 
     lda number_of_amoeba_cells_found
     beq check_for_amoeba_timeout
     ldy current_amoeba_cell_type
     bne found_amoeba
-    ldx #(map_unprocessed | map_anim_state1) | map_wall
+    ldx #map_unprocessed | 18  ;via handler_basics and explosion_replacements table converts to diamond
     bne amoeba_replacement_found
 found_amoeba
     adc #$38
@@ -2493,7 +2484,7 @@ amoeba_timing_return
     rts
 
 ; *************************************************************************************
-; Slime element allows rocks and diamonds to pass through it but nothing else
+; Handler for slime element which allows rocks and diamonds to pass through it but nothing else
 ; The slime permeability cave parameter controls how quickly rocks and diamonds can pass through it
 handler_slime
 
@@ -2531,6 +2522,7 @@ item_allowed
     .byt 0
 
 ; *************************************************************************************
+; Handler for bomb action countdown and explosion
 ; Rockford can lay a bomb in a space tile by holding down return and pressing a direction key
 ; The bomb has a fuse and when time is up, it explodes like a firefly / butterfly / Rockford can
 handler_bomb
@@ -2675,7 +2667,6 @@ add_ptr_return
 ;   For some caves, a second tile may be required below the pseudo-random one
 ;   These tiles are held in a 'beneath' row, populated with second tile values from cave parameters
 ;   If non-zero, the 'beneath' row tile will override random tiles (when on the next row)
-; ****************************************************************************************************
 populate_cave_tiles_pseudo_random
 
     ldx difficulty_level               ; Use difficulty_level (values 1 to 5) for the random seed value to use
@@ -2771,7 +2762,6 @@ tile_override
 ; Pseudo-random function
 ;   Using a seed value, apply various operations to provide a value in random_seed1 used above
 ;   This value is not random, for a given seed value, the returned value is always predictable
-; ****************************************************************************************************
 pseudo_random
 
     lda random_seed1
@@ -2809,36 +2799,8 @@ seeded_rand_temp2
     .byt 0
 
 ; *************************************************************************************
-; Set-up redefined chanracters
-; 1. Copy standard characters into the alternate character set for fixed status bar display
-; (easier to use for this purpose instead of the standard character set)
-; 2. Load the standard character set into address $b400+(32*8), remapping from the space character (32)
-; The load-to address is set in the TAP file header
-redefine_characters
-
-    ;preserve the main standard characters in the alternate set
-    lda #$b5
-    sta screen_addr1_high  ;source high
-    lda #$b9
-    sta screen_addr2_high  ;target high
-    lda #$80
-    sta screen_addr1_low  ;source low
-    sta screen_addr2_low  ;target low
-
-    ;size is 60 characters from space (32) to Z (90), each character is 8 bytes
-    lda #$e0
-    sta copy_size  
-    lda #1
-    sta copy_size+1
-
-    jsr copy_memory  ;copy from source to target for given size
-
-    ;load the redefined characters for sprites
-    ldy #0  ;sprites table location
-    jsr load_TAP_using_filename
-    rts
-
-; *************************************************************************************
+; Load sprites or caves TAP files into memory at the location set in the TAP file header
+; The Y register is used as input to get the sprites or caves filename needed for loading
 load_TAP_using_filename
 
     ;Prepare the TAP filename starting in y offset
@@ -2874,8 +2836,8 @@ filename_loop
 	rts
 
 TAP_filenames
-    .byt "S", "P", "R", "I", "T", "E", "S", 0
-    .byt "C", "A", "V", "E", "S", 0, 0, 0
+    .byt "SPRITES", 0
+    .byt "CAVES", 0, 0, 0
 
 ; *************************************************************************************
 ; Copy a number of bytes (in copy size variable) from source to target memory locations

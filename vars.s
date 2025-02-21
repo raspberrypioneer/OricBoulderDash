@@ -120,115 +120,114 @@ sprite_addresses_high
 ;
 
 sprite_addr_space  ;all space characters, not remapped
-	.byt 32, 32, 32, 32
+	.byt "    "
 
 sprite_addr_earth1
 sprite_addr_earth2
-	.byt "!", 34, "#", "$"  ;34 is "
+	.byt "!", 34, "#$"  ;34 is "
 
-sprite_addr_wall1
+sprite_addr_wall1  ;reuse characters
 sprite_addr_wall2
 sprite_addr_magic_wall2
 sprite_addr_magic_wall4
-;	.byt "%", "&", "'", "("
-	.byt 37+128, 38+128, 39+128, 40+128  ;invert sprite_addr_wall1
+    .byt "%"+128, "%"+128, "%"+128, "%"+128
 
 sprite_addr_magic_wall1
 sprite_addr_magic_wall3
-;	.byt 37+128, 38+128, 39+128, 40+128  ;invert sprite_addr_wall1
-	.byt "%", "&", "'", "("
+	.byt "%%%%"
 
 sprite_addr_titanium_wall1  ;reuse characters
 sprite_addr_titanium_wall2
-    .byt ")", ")", ")", ")"
+    .byt "&&&&"
 
 sprite_addr_diamond1
+    .byt "'()*"
+sprite_addr_diamond2  ;reusing a character from diamond 1
 sprite_addr_diamond3
-    .byt "*", "+", ",", "-"
-sprite_addr_diamond2
+    .byt "+,)-"
 sprite_addr_diamond4
-	.byt 42+128, 43+128, 44+128, 45+128  ;invert sprite_addr_diamond1
+    .byt "+"+128, ","+128, ")"+128, "-"+128
 
 sprite_addr_boulder1
-    .byt ".", "/", "0", "1"
+    .byt "./01"
 sprite_addr_boulder2
     .byt 46+128, 47+128, 48+128, 49+128  ;invert sprite_addr_boulder1
 
 sprite_addr_firefly1
 sprite_addr_firefly2
-    .byt "2", "3", "4", "5"
+    .byt "2345"
 sprite_addr_firefly3
 sprite_addr_firefly4
     .byt 50+128, 51+128, 52+128, 53+128  ;invert sprite_addr_firefly1
 
 sprite_addr_amoeba1
-    .byt "6"+128, "7"+128, "8"+128, "9"+128
+    .byt "6789"
 sprite_addr_amoeba2
-    .byt ":"+128, ";"+128, "<"+128, "="+128
+    .byt ":;<="
 
 sprite_addr_box
 	.byt 32+128, 32+128, 32+128, 32+128  ;invert sprite_addr_space
 
 sprite_addr_explosion1
-    .byt ">", "?", "@", "A"
+    .byt ">?@A"
 sprite_addr_explosion2
-    .byt "B", "C", "D", "E"
+    .byt "BCDE"
 sprite_addr_explosion3
-    .byt "F", "G", "H", "I"
+    .byt "FGHI"
 sprite_addr_explosion4
-    .byt "J", "K", "L", "M"
+    .byt "JKLM"
 
 sprite_addr_butterfly1
-    .byt "N", "O", "P", "Q"
+    .byt "NOPQ"
 sprite_addr_butterfly2
-    .byt "R", "S", "T", "U"
+    .byt "RSTU"
 sprite_addr_butterfly3
-    .byt "V", "W", "X", "Y"
+    .byt "VWXY"
 
 sprite_addr_bubble
-    .byt "Z", "[", 92, "]"  ;92 is \
+    .byt "Z[", 92, "]"  ;92 is \
 
 sprite_addr_rockford_blinking1  ;aka 'normal' Rockford
-    .byt "^", "_", "`", "a"
+    .byt "^_`a"
 sprite_addr_rockford_blinking2  ;eyes blink
-    .byt "b", "c", "`", "a"
+    .byt "bc`a"
 sprite_addr_rockford_blinking3  ;eyes close
-    .byt "d", "e", "`", "a"
+    .byt "de`a"
 sprite_addr_rockford_winking1   ;right eye blink
-    .byt "^", "c", "`", "a"
+    .byt "^c`a"
 sprite_addr_rockford_winking2   ;right eye close
-    .byt "^", "e", "`", "a"
+    .byt "^e`a"
 sprite_addr_rockford_moving_down1  ;aka wait 1 - fold arms
-    .byt "^", "_", "f", "g"
+    .byt "^_fg"
 sprite_addr_rockford_moving_down2  ;aka wait 2 - fold arms, tap foot
-    .byt "^", "_", "h", "g"
+    .byt "^_hg"
 sprite_addr_rockford_moving_down3  ;aka wait 3 - eyes blink, fold arms
-    .byt "b", "c", "f", "g"
+    .byt "bcfg"
 sprite_addr_rockford_moving_up1  ;aka wait 4 - eyes close, tap foot
-    .byt "d", "e", "h", "g"
+    .byt "dehg"
 sprite_addr_rockford_moving_up2  ;aka wait 5 - eyes close, fold arms
-    .byt "d", "e", "f", "g"
+    .byt "defg"
 sprite_addr_rockford_moving_left1  ;head left, legs full
-    .byt "i", "j", "k", "l"
+    .byt "ijkl"
 sprite_addr_rockford_moving_left2  ;head left, legs part
-    .byt "i", "j", "m", "n"
+    .byt "ijmn"
 sprite_addr_rockford_moving_left3  ;head left, legs part-stand
-    .byt "i", "j", "o", "p"
+    .byt "ijop"
 sprite_addr_rockford_moving_left4  ;head left, legs stand
-    .byt "i", "j", "o", "q"
+    .byt "ijoq"
 sprite_addr_rockford_moving_right1  ;head right, legs stand
-    .byt "r", "s", "t", "u"
+    .byt "rstu"
 sprite_addr_rockford_moving_right2  ;head right, legs part-stand
-    .byt "r", "s", "v", "u"
+    .byt "rsvu"
 sprite_addr_rockford_moving_right3  ;head right, legs part
-    .byt "r", "s", "w", "x"
+    .byt "rswx"
 sprite_addr_rockford_moving_right4  ;head right, legs full
-    .byt "r", "s", "y", "z"
+    .byt "rsyz"
 
 sprite_addr_bomb
-sprite_addr_bomb2
-    .byt "{", "|", "}", "~"
 sprite_addr_bomb1
+    .byt "{|}~"
+sprite_addr_bomb2
 sprite_addr_bomb3
     .byt 123+128, 124+128, 125+128, 126+128  ;invert sprite_addr_bomb
 
@@ -773,46 +772,37 @@ self_mod_code_table
 ; status bar and messages
 ;
 status_bar_line1
-    .byt 3, "*", "+", 32, 32, 32, 32, 32, 32, 5, "{", "|", 32, 32, 32, 32, 32, 32, 32, 32
-    .byt 32, 32, 32, 32, 32, 2, "^", "_", 9, 6, 32, 32, 32, "C", "A", "V", "E", 32, "A", "1"
-
+    .byt 3, "+,      ", 5, "{|", "             ", 2, "^_", 9, 6, "   CAVE A1"
 status_bar_line2
-    .byt 3, ",", "-", 9, 32, 32, 32, 32, 8, 5, "}", "~", 9, 32, 32, 32, 32, 32, 7, 32
-    .byt 32, 32, 32, 32, 8, 2, "`", "a", 9, 32, 32, 32, 32, 6, 32, 32, 32, 32, 32, 32
+    .byt 3, ")-", 9, "    ", 8, 5, "}~", 9, "     ", 7, "     ", 8, 2, "`a", 9, "    ", 6, "      "
 
 status_messages
 status_message_paused
-    .byt 9, 6, 32, 32, 32, 32, "P","A","U","S","E","D", 32, 32, 32, 32, 32, 32
+    .byt 9, 6, "    PAUSED      "
 status_message_got_all_diamonds
-    .byt 9, 2, "G","O","T", 32, "A","L","L", 32, "D","I","A","M","O","N","D","S"
+    .byt 9, 2, "GOT ALL DIAMONDS"
 status_message_no_bombs_left
-    .byt 9, 3, "N","O", 32, "B","O","M","B","S", 32, "L","E","F","T", 32, 32, 32
+    .byt 9, 3, "NO BOMBS LEFT   "
 status_message_hurry
-    .byt 9, 3, 32, 32, 32, 32, "H","U","R","R","Y", 32, 32, 32, 32, 32, 32, 32
+    .byt 9, 3, "    HURRY       "
 status_message_out_of_time
-    .byt 9, 1, 32, "O","U","T", 32, "O","F", 32, "T","I","M","E", 32, 32, 32, 32
+    .byt 9, 1, " OUT OF TIME    "
 status_message_bonus_life
-    .byt 9, 6, 32, 32, "B","O","N","U","S", 32, "L","I","F","E", 32, 32, 32, 32
+    .byt 9, 6, "  BONUS LIFE    "
 status_message_game_over
-    .byt 9, 1, 32, 32, "G","A","M","E", 32, "O","V","E","R", 32, 32, 32, 32, 32
+    .byt 9, 1, "  GAME OVER     "
 status_message_std_keymap
-    .byt 9, 2, 32, "S","T","A","N","D","A","R","D",32,"K","E","Y","S", 32, 32
+    .byt 9, 2, " STANDARD KEYS  "
 status_message_alt_keymap
-    .byt 9, 2, 32, "A","L","T","E","R","N","A","T","E",32,"K","E","Y","S", 32
+    .byt 9, 2, " ALTERNATE KEYS "
 
 game_title
-    .byt 11, 1, 32, "O","R","I","C", 6, "B","O","U","L","D","E","R", 32, "D","A","S","H", 32, 32, 8, 7, 0
+    .byt 11, 1, 32, "ORIC", 6, "BOULDER DASH  ", 8, 7, 0
 
 game_options
 options_cave_select
-    .byt 32, 32, 32, 32, 32, 32, 32, 32
-    .byt "^", "_", 9, 6, "C","A","V","E", 32, 7, "A", 6, 32, "L","E","F","T", 32, "R","I","G","H","T", 32
-    .byt 32, 8, 7, 32, 32, 32, 32, 32
+    .byt "        ", "^_", 9, 6, "CAVE ", 7, "A", 6, " LEFT RIGHT  ", 8, 7, "     "
 options_level_select
-    .byt 32, 32, 32, 32, 32, 32, 32, 32
-    .byt "`", "a", 9, 6, "L","E","V","E","L", 7, "1", 6, 32, "U","P", 32, "D","O","W","N", 32, 32, 32, 32
-    .byt 32, 8, 7, 32, 32, 32, 32, 32
+    .byt "        ", "`a", 9, 6, "LEVEL", 7, "1", 6, " UP DOWN     ", 8, 7, "     "
 options_start
-    .byt 32, 32, 32, 32, 32, 32, 32, 32
-    .byt 9, 2, 32, 32, "P","R","E","S","S", 32, "S","P","A","C","E", 32, "T","O", 32, "S","T","A","R","T"
-    .byt 32, 8, 7, 32, 32, 32, 32, 32
+    .byt "        ", 9, 2, "  PRESS SPACE TO START ", 8, 7, "     "
