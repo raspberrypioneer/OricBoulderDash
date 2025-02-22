@@ -1,28 +1,70 @@
-# Boulder Dash for the Oric by raspberrypioneer Jan 2025
+# Boulder Dash for the Oric
+This is a fan-developed version of Boulder Dash for the Oric (Oric-1 or Atmos).
+I thought it would be a good way of getting to find out more about the Oric-1 I recently purchased by porting the BBC/Acorn Electron version of Boulder Dash to this platform.
 
-# TODO for v1.0:
-- Test on real Oric-1, including alternate keys
-- Perform a full test of all gameplay, all cave parameters, cave flow incl. bonus and levels
-- Test Arno, BD1,2,3 and +1
+This repo really contains 5 different versions of the game. They all run with the same 'game engine' but have different caves.
+- Boulder Dash, Boulder Dash 2 and Boulder Dash 3, are similar to the original games released for other platforms in the 1980's.
 
-# Future considerations:
-- Splashscreen in hires
-- Investigate intro tune/music
-- Can colours be applied to tiles, maybe use inverse colours? Setting ink/paper for screen gets cleared when drawing grid
-- Investigate - Joystick
-- Consider adding 2 player, high score, demo mode
+![Boulder Dash](./docs/BD1.png)
 
-# Switching between Atmos and Oric-1
-- main.s and single_row_keyboard.s (or full_matrix_keyboard.s): find and change below
-`#define rom_v1_1 ; Using rom v1.1 (Atmos), comment this line out for rom v1.0 (Oric-1)`
+![Boulder Dash 2](./docs/BD2.png)
 
-- oricutron.cfg (part of osdk oricutron emulator): find and change below
-`; Type of machine to emulate (atmos, oric1, oric1-16k, telestrat, pravetz)`
-`machine = atmos`
-`;machine = oric1`
+![Boulder Dash 3](./docs/BD3.png)
 
-# Switching between single row and full matrix keyboard
-- Amend osdk_config.bat, comment / uncomment keyboard requirement
-- Amend main.s, comment / uncomment #define full_matrix_keyboard
-- Amend bd_build_all.bat, comment / uncomment CAVEADDR requirement
-- Run bd_build_all.bat to compile and create caves.tap with correct load address
+- Boulder Dash +1 contains two main enhancements not in the other versions, the use of bombs and having zero-gravity caves.
+
+![Boulder Dash +1](./docs/BDP1.png)
+
+- Arno Dash 1 is one example of the many fan-developed caves found on [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/). Boulder Dash format files (BDCFF) are used to create new caves which run with the game-engine.
+
+![Arno Dash](./docs/AD1.png)
+
+
+## Oric-1, Atmos and emulation
+This game has been tested using the [Oricutron emulator](https://osdk.org/index.php?page=documentation&subpage=oricutron) and on a real Oric-1. Game TAP files were loaded via the excellent [LOCI device](https://github.com/sodiumlb/loci-hardware/wiki/LOCI-User-Manual). This device also allows the Oric-1 to use the Atmos ROM v1.1 so although the game works with both the Oric-1 and Atmos, the default build is for the Atmos. See the simple steps below to switch to an Oric-1 build.
+
+There are some differences in this Oric version of the game, although they do not affect the main game play.
+- Bombs and zero-gravity enhancements. These are only used in caves where they have been defined as cave parameters (see below for more details).
+- The status bar is different as it shows the diamonds needed, reduced each time one is gathered. The diamond value is not shown. A count of the number of bombs available is included, as are the normal things such as time remaining, lives available and the player score.
+- The game is in black and white as the Oric has an unusual way of setting colours in text-mode. I don't think it would be practical (or possible) to give each sprite their own colour (the sprites are redefined characters).
+- Currently there is no intro tune although this may be added in future. Other future improvements being considered are the ability to choose the keys to use for up-down-left-right and fire. Joystick support might be an option via the LOCI device. Lower down the list are possibly having a demo mode, overall high score and support for 2 players. A splash screen would be another nice-to-have.
+
+## Keys used
+- Both the cave and difficulty level are selectable from the main screen using the up-down, left-right arrow keys. Pressing the space bar starts the game.
+- There is a choice of using the standard up-down, left-right arrow keys for navigation within the game or an alternate layout where the arrow keys on the left of the space bar are up-down and the arrow keys on the right are down-up (this feels more natural to me on a real Oric!). Pressing the left-shift key on the menu screen toggles between having standard or alternate keys.
+
+![Menu](./docs/MENU.png)
+
+- In the game, the direction keys are used to navigate Rockford around the cave. Holding down the space bar and pressing a direction key lets Rockford push a rock, clear a space, plant a bomb or grab a diamond, all without moving.
+- The greater-than key `>` will pause the game. Pressing left-shift will kill Rockford (needed if trapped).
+
+## Developer notes
+- The `osdk_config.bat` script lists the assembler files used to build the game.
+- The `bd_build_all.bat` script uses this config information and compiles `main.s` using the OSDK `make.bat` command which in turn uses the `xa.exe` assembly-language complier, linker and `header.exe` to make the game a loadable TAP file.
+- The sprites are created as a separate TAP file, by assembling `spr.s`, adding a TAP header and naming the TAP file using `taptap.exe`.
+- The caves are also created as a separate TAP file. Individual caves are found in `caves_bin`. These are already binary files and are combined into a single file, assigned a TAP header and name.
+- The game, sprites and caves are all combined into a single TAP file to load on the Oric.
+
+## Caves
+- All 20 caves are available in memory (16 standard and 4 bonus caves). They each have the same size, 48 bytes used for parameters, 400 bytes for the map. Each tile in the map is a nibble (each byte represents two tiles). When a particular cave is about to be played, it is loaded into a section of memory labelled `cave_parameter_data`. See `cavedata.s` for more details about the parameters available. 
+- New cave files can be converted from BDCFF files found on [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/) using a conversion utility `BDCavegen.py` found in the [BBC/Acorn Electron enhanced Boulder Dash repo](https://github.com/raspberrypioneer/BoulderDash). Although it is aimed at that platform, the caves it produces have the same format as the caves for the Oric game.
+
+## Switching between Atmos and Oric-1
+By default this game runs on the Oric Atmos but is easy to build for an Oric-1 instead. In `main.s` and `single_row_keyboard.s` (or `full_matrix_keyboard.s`), comment out the line `#define rom_v1_1`, then rebuild by running `bd_build_all.bat`.
+
+If running on the Oricutron emulator, amend `oricutron.cfg` by commenting/uncommenting the lines `;machine = atmos` and `machine = oric1`.
+
+## Switching between single row and full matrix keyboard
+Although a single row keyboard is used (just having the arrow keys, space bar and a few other keys), a full matrix keyboard can be used instead. With some further development a choice of keys could be provided to users. The steps needed to switch are as follows.
+- Amend `osdk_config.bat`, comment / uncomment keyboard requirement.
+- Amend `main.s`, comment / uncomment `#define full_matrix_keyboard`.
+- Amend `bd_build_all.bat`, comment / uncomment `CAVEADDR` requirement (the full matrix keyboard is a larger program, and changes the address where the caves are loaded).
+- Run `bd_build_all.bat` to compile and create `caves.tap` with correct load address.
+
+## Acknowledgements
+The following sources have all helped to make this development possible and is gratefully acknowledged.
+- The [OSDK](https://osdk.org/index.php) is a fantastic source for all things Oric development-related. The articles and samples were especially helpful.
+- The [keyboard read routine](https://github.com/Oric-Software-Development-Kit/Oric-Software/tree/master/routines/single_row_keyboard_read) available via the OSDK makes it easy to add effective keyboard handling into a game.
+- The [Defence Force forum](https://forum.defence-force.org/index.php) is a great source of information. The [sound fx generator](https://forum.defence-force.org/viewtopic.php?t=2280) was used to create the sound effects.
+- The book [Oric Atmos and Oric 1 Graphics and Machine code techniques](https://library.defence-force.org/index.php?content=any&type=book&author=GeoffPhillips&page=books) available for download from the Oric library is a wealth of handy information.
+- The [disassembly of the original BBC/Acorn Electron game](https://github.com/TobyLobster/Boulderdash) by TobyLobster was where this all started.

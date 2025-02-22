@@ -207,6 +207,9 @@ screen_addr2_high .byt 0
 map_address_low .byt 0
 map_address_high .byt 0
 
+map_rows .byt 0
+map_cols .byt 0
+
 map_rockford_current_position_addr_low .byt 0
 map_rockford_current_position_addr_high .byt 0
 
@@ -535,9 +538,6 @@ char_screen_below_low
 char_screen_below_high
 	.byt $bc, $bc, $bc, $bd, $bd, $bd, $be, $be, $be, $bf, $bf, $bf
 
-grid_rows .byt 0
-grid_cols .byt 0
-
 ; *************************************************************************************
 ; Draw a full grid of sprites, updating the current map position first
 ; Below is needed to point the program counter to the next page (multiple of 256)
@@ -549,7 +549,7 @@ draw_grid_of_sprites
     jsr update_grid_animations
 
 	lda #0
-	sta grid_rows
+	sta map_rows
 loop_plot_row
 	tay
 
@@ -564,7 +564,7 @@ loop_plot_row
 	sta screen_addr2_high
 
 	lda #0
-	sta grid_cols
+	sta map_cols
 loop_plot_column
 
 	;Get sprite number from map
@@ -604,7 +604,7 @@ not_titanium
 	sta bottom_right_char+1
 
 	;Plot the top 2 and bottom 2 characters for the tile
-	lda grid_cols
+	lda map_cols
 	asl  ;Double the counter number to get the screen offset position
 	tay
 top_left_char
@@ -625,8 +625,8 @@ bottom_right_char
 
 skip_null_tile
 
-	inc grid_cols
-	lda grid_cols
+	inc map_cols
+	lda map_cols
 	cmp #20  ;20 columns
 	bcc loop_plot_column
 
@@ -638,8 +638,8 @@ skip_null_tile
     bcc skip_high
     inc map_address_high
 skip_high
-	inc grid_rows
-	lda grid_rows
+	inc map_rows
+	lda map_rows
 	cmp #12  ;12 rows (skip status bar in rows 0, 1)
 	bcc loop_plot_row
     rts
@@ -1740,9 +1740,6 @@ tile_below_store_row  ;special row for pseudo-random generated caves with extra-
 ; *************************************************************************************
 ; Update the gameplay map with action handlers for each of the game actors
 ; Includes logic for falling rocks, diamonds, bombs
-map_rows .byt 0
-map_cols .byt 0
-
 update_map
 
     lda #20  ; twenty rows

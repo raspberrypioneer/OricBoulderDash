@@ -7,9 +7,9 @@ set BDTAP=BDASH01
 :: Set load start addresses
 set SPRITEADDR=$b500
 
-:: Set cave load address, use $2900 for single row keyboard, $3000 for full matrix keyboard
-set CAVEADDR=$2900
-::set CAVEADDR=$3000
+:: Set cave load address, use $2300 for single row keyboard, $2400 for full matrix keyboard
+set CAVEADDR=$2300
+::set CAVEADDR=$2400
 
 :: Build main program using OSDK
 call osdk_config.bat

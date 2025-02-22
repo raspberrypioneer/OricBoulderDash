@@ -5,9 +5,9 @@ cave_addr_low
 	.byt $00, $c0, $80, $40, $00, $c0, $80, $40, $00, $c0, $80, $40, $00, $c0, $80, $40, $00, $c0, $80, $40, $00
 cave_addr_high
 #ifdef full_matrix_keyboard
-	.byt $30, $31, $33, $35, $37, $38, $3a, $3c, $3e, $3f, $41, $43, $45, $46, $48, $4a, $4c, $4d, $4f, $51, $53
+	.byt $24, $25, $27, $29, $2b, $2c, $2e, $30, $32, $33, $35, $37, $39, $3a, $3c, $3e, $40, $41, $43, $45, $47
 #else
-	.byt $29, $2a, $2c, $2e, $30, $31, $33, $35, $37, $38, $3a, $3c, $3e, $3f, $41, $43, $45, $46, $48, $4a, $4c
+	.byt $23, $24, $26, $28, $2a, $2b, $2d, $2f, $31, $32, $34, $36, $38, $39, $3b, $3d, $3f, $40, $42, $44, $46
 #endif
 
 ; *************************************************************************************
@@ -15,7 +15,7 @@ cave_addr_high
 ;Below is needed to point the program counter to the next page (multiple of 256)
 .dsb 256-(*&255)  ;Add another page of bytes
 
-cave_parameter_data                   ; Starts at address 4e40
+cave_parameter_data
 param_diamond_value
     .byt $0a                          ; Diamond value
 param_diamond_extra_value
@@ -37,7 +37,7 @@ param_tile_for_probability
 param_intermission
     .byt $00                          ; Intermission indicator (0 for normal cave, 1 for intermission / bonus cave)
 param_colours
-    .byt $05, $01, $07                ; Cave colour scheme x3 colours
+    .byt $05, $01, $07                ; Not used in the Oric game
 param_rockford_start
 	.byt $02, $03                     ; Rockford start row and column
 param_rockford_end
