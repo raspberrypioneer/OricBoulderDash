@@ -8,7 +8,7 @@
 
 #ifdef rom_v1_1
 
-#define _TEXT_MODE $ec21  ;text mode
+#define _HIRES_MODE $ec33  ;Hires mode for splash screen
 #define _CONVERT_TO_INT $d499  ;convert integer in Y(low) and A(high) to accumulator
 #define _INT_TO_ASCII_STRING $e0d5  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
 #define _SETUP_TAPE $e76a  ; Prepare VIA for tape reading
@@ -19,7 +19,7 @@
 
 #else
 
-#define _TEXT_MODE $e9a9  ;text mode
+#define _HIRES_MODE $e9bb  ;Hires mode for splash screen
 #define _CONVERT_TO_INT $d3ed  ;convert integer in Y(low) and A(high) to accumulator
 #define _INT_TO_ASCII_STRING $e0d1  ;output accumulator into an ASCII string, stored at $100 upwards, ending with $00
 #define _SETUP_TAPE $e6ca  ; Prepare VIA for tape reading
@@ -29,8 +29,9 @@
 
 #endif
 
-;screen address in text mode
+;screen address in text and hires mode
 #define _TEXT_SCREEN_ADDR $bb80
+#define _TEXT_HIRES_SCREEN_ADDR $bf68
 
 ;map elements defines
 #define map_space 0
@@ -269,25 +270,26 @@ clear_zero_loop
 	dex
 	bne clear_zero_loop
 
-	jsr _TEXT_MODE
+    jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s
+
+    jsr select_caves_for_version  ;Let the user select the game version to play, returns cave to load in Y
+    jsr load_TAP_using_filename  ;Load all caves into memory, the load-to address is set in the TAP file header
+
 	lda #8+2  ;No key click and no cursor
 	sta $26a
 	ldx #0  ;Remove CAPS text
 	stx $bb80+35
-
-    jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s
-
-    ldy #8  ;caves table location
-    jsr load_TAP_using_filename  ;Load all caves into memory, the load-to address is set in the TAP file header
 
     ;load the redefined characters
     ;all 96 available standard charset characters are used for sprites / tiles
     ;most of the alternate charset is used for numbers, letters for the fixed status bar display
     ;  (easier to use for this purpose instead of the standard character set)
     ;the load-to address is $b500 (skips the standard charset control characters)
-    ldy #0  ;sprites table location
+    ldy #0  ;sprites location
     jsr load_TAP_using_filename
 
+; *************************************************************************************
+; Menu to start with and return to after a game ends
 menu_loop
     jsr intro_and_cave_select
 
@@ -658,13 +660,13 @@ update_map_scroll_position
     sec
     sbc visible_top_left_map_x
     ldx visible_top_left_map_x
-    cmp #17
+    cmp #15
     bmi check_for_need_to_scroll_left
     cpx #20
     bpl check_for_need_to_scroll_down
     inx
 check_for_need_to_scroll_left
-    cmp #3
+    cmp #5
     bpl check_for_need_to_scroll_down
     cpx #1
     bmi check_for_need_to_scroll_down
@@ -674,13 +676,13 @@ check_for_need_to_scroll_down
     lda screen_addr1_high
     sec
     sbc visible_top_left_map_y
-    cmp #9
+    cmp #8
     bmi check_for_need_to_scroll_up
     cpy #$0a
     bpl check_for_bonus_stages
     iny
 check_for_need_to_scroll_up
-    cmp #3
+    cmp #4
     bpl check_for_bonus_stages
     cpy #1
     bmi check_for_bonus_stages
@@ -1581,6 +1583,10 @@ count_up_bonus_at_end_of_stage_loop
     sta play_sound_fx
     jsr update_sounds
 
+    ;countdown the remaining time and add to score
+    dec time_remaining
+    jsr update_cave_time
+
     ;add 1 to score for each time unit left
     lda #1
     jsr update_score
@@ -1589,7 +1595,7 @@ count_up_bonus_at_end_of_stage_loop
 
     jsr draw_grid_of_sprites
 
-    dec time_remaining
+    lda time_remaining
     bne count_up_bonus_at_end_of_stage_loop
 skip_bonus
 
@@ -2553,6 +2559,123 @@ bomb_return
     rts
 
 ; ****************************************************************************************************
+; Let the user select which version of Boulder Dash to play and load the caves file for it
+select_caves_for_version
+
+    jsr _HIRES_MODE
+
+    ldy #8  ;splash screen location
+    jsr load_TAP_using_filename  ;loads to $a000 hires screen location, displaying splash screen
+
+    lda version_selected
+version_display
+    jsr show_version_text
+    jsr delay_a_bit
+
+version_loop
+    lda _KeyRowArrows
+    cmp #KEY_MASK_SPACE
+    beq end_version_selection
+
+    cmp #KEY_MASK_UP_ARROW
+    beq version_up
+
+    cmp #KEY_MASK_DOWN_ARROW
+    beq version_down
+
+    jmp version_loop
+
+show_version_text
+    lda version_selected  ;multiply by 16 (4 x asl)
+    asl
+    asl
+    asl
+    asl
+    tay  ;version text table location in Y
+
+    ;set first line to black ink (is a clear line)
+    lda #0
+    sta _TEXT_HIRES_SCREEN_ADDR
+
+    ;set version text (all lines are the same length)
+    ldx #0
+version_text_loop
+    lda version_option_text,x
+    sta _TEXT_HIRES_SCREEN_ADDR+40,x
+    sta _TEXT_HIRES_SCREEN_ADDR+80,x
+    lda version_option_text,y
+    sta _TEXT_HIRES_SCREEN_ADDR+60,x
+    sta _TEXT_HIRES_SCREEN_ADDR+100,x
+    iny
+    inx
+    cpx #16
+    bne version_text_loop
+    rts
+
+version_down
+    ldy version_selected
+    lda version_selection_cycle_down,y
+    sta version_selected
+    jmp version_display
+
+version_up
+    ldy version_selected
+    lda version_selection_cycle_up,y
+    sta version_selected
+    jmp version_display
+
+version_selected
+    .byt 2  ;Point to third option in TAP_filenames table (zero-based, first cave file)
+
+version_selection_cycle_up
+    .byt 0,0,3,4,5,6,2
+version_selection_cycle_down
+    .byt 0,0,6,2,3,4,5
+
+end_version_selection
+    ;Exit hires for the splash screen and switch back to text mode for the game
+    lda #26  ;control character to switch to text mode (50 Hz)
+    sta _TEXT_HIRES_SCREEN_ADDR+119  ;$bfdf, last location on hires screen (in the 3 text-lines section)
+
+    ;Clear screen with zero values
+    lda #<_TEXT_SCREEN_ADDR
+    sta screen_addr2_low  ;target low
+    lda #>_TEXT_SCREEN_ADDR
+    sta screen_addr2_high  ;target high
+
+    ;size is 1120 bytes for display (28 lines of 40 columns)
+    lda #$60
+    sta clear_size  
+    lda #$04
+    sta clear_size+1
+
+    ;clear to 0
+    lda #0
+    sta clear_to
+
+    jsr clear_memory  ;clear target for given size and value
+
+    ;Get the start of the cave file name to load
+    lda version_selected  ;multiply by 8 (3 x asl)
+    asl
+    asl
+    asl
+    tay  ;caves table location in Y
+    rts
+
+; ****************************************************************************************************
+delay_a_bit
+    ldx $ff
+delay1
+    ldy $ff
+delay2
+    dey
+    bne delay2
+    dex
+    bne delay1
+    rts
+
+; ****************************************************************************************************
 ; Load cave data
 ; Using the cave number, copy the cave data already loaded from CAVES.TAP file into the 
 ; cave_parameter_data location used in the program
@@ -2832,10 +2955,6 @@ filename_loop
 
 	rts
 
-TAP_filenames
-    .byt "SPRITES", 0
-    .byt "CAVES", 0, 0, 0
-
 ; *************************************************************************************
 ; Copy a number of bytes (in copy size variable) from source to target memory locations
 copy_memory
@@ -2867,3 +2986,36 @@ copy_return
 
 copy_size
     .byt 0, 0
+
+; *************************************************************************************
+; Clear a number of bytes in target memory locations, using clear_size and clear_to
+clear_memory
+
+    ldy #0
+    ldx clear_size+1
+    beq clear_remaining_bytes
+clear_a_page
+    lda clear_to
+    sta (screen_addr2_low),y
+    iny
+    bne clear_a_page
+    inc screen_addr2_high
+    dex
+    bne clear_a_page
+clear_remaining_bytes
+    ldx clear_size
+    beq clear_return
+clear_a_byte
+    lda clear_to
+    sta (screen_addr2_low),y
+    iny
+    dex
+    bne clear_a_byte
+
+clear_return
+    rts
+
+clear_size
+    .byt 0, 0
+clear_to
+    .byt 0

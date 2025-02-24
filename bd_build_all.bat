@@ -1,34 +1,73 @@
-:: Boulder Dash - perform a full build of program, sprites, cave tap files
-
-:: Set version
-set BDVER=BoulderDash01
-set BDTAP=BDASH01
+:: Boulder Dash - perform a full build of program, sprites, cave tap files of all versions of the game combined into one tap file
+@echo off
 
 :: Set load start addresses
 set SPRITEADDR=$b500
 
-:: Set cave load address, use $2300 for single row keyboard, $2400 for full matrix keyboard
-set CAVEADDR=$2300
-::set CAVEADDR=$2400
+:: Control creation of splash screen tap (set to Y or N)
+set MAKESPLASH=N
 
-:: Build main program using OSDK
+:: Set cave load address, use $2500 for single row keyboard, $2600 for full matrix keyboard
+set CAVEADDR=$2500
+::set CAVEADDR=$2600
+
+:: Build main program using OSDK (game engine) and copy tap file to the tap folder
 call osdk_config.bat
 call %OSDK%\bin\make.bat %OSDKFILE%
-
-:: Copy main program tap file to the tap folder
-copy .\BUILD\%OSDKNAME%.tap .\TAP\%BDVER% /Y
+copy .\BUILD\%OSDKNAME%.tap .\tap /Y >nul
+echo Created game engine
 
 :: Assemble sprites then create tap file
 %OSDK%\bin\xa.exe spr.s -o .\BUILD\sprites.bin
-%OSDK%\bin\header.exe .\BUILD\sprites.bin .\TAP\%BDVER%\SPRITES.tap %SPRITEADDR%
-%OSDK%\bin\taptap.exe ren .\TAP\%BDVER%\SPRITES.tap SPRITES 0
+%OSDK%\bin\header.exe .\BUILD\sprites.bin .\tap\SPRITES.tap %SPRITEADDR% >nul
+%OSDK%\bin\taptap.exe ren .\tap\SPRITES.tap SPRITES 0
+echo Created sprites
 
-:: Create one large cave file containing all caves A to T with the Z intro cave on the end
+:: Create splash screen as a tap file
+if "%MAKESPLASH%"=="Y" (  
+%OSDK%\bin\pictconv.exe -o2 -f6 .\docs\BDsplash.png .\BUILD\BSPLASH
+%OSDK%\bin\header.exe .\BUILD\BSPLASH .\tap\BSPLASH.tap $a000
+%OSDK%\bin\taptap.exe ren .\tap\BSPLASH.tap BSPLASH 0
+echo Created splash screen
+)
+
+:: Create tap file containing the caves of each version
+set BDVER=BoulderDash01
+set BDTAP=B1CAVES
+call :create_tap_file_for_version
+
+set BDVER=BoulderDash02
+set BDTAP=B2CAVES
+call :create_tap_file_for_version
+
+set BDVER=BoulderDash03
+set BDTAP=B3CAVES
+call :create_tap_file_for_version
+
+set BDVER=BoulderDashP1
+set BDTAP=P1CAVES
+call :create_tap_file_for_version
+
+set BDVER=ArnoDash01
+set BDTAP=A1CAVES
+call :create_tap_file_for_version
+
+goto :create_combined_tap_file
+
+:: Subroutine to create one large cave file containing all caves A to T with the Z intro cave on the end for a given version
+:create_tap_file_for_version
 cd .\caves_bin\%BDVER%
-copy /b A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+Z CAVES
+copy /b A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+Z ..\..\BUILD\CAVES >nul
 cd ..\..
-%OSDK%\bin\header.exe .\caves_bin\%BDVER%\CAVES .\TAP\%BDVER%\CAVES.tap %CAVEADDR%
-%OSDK%\bin\taptap.exe ren .\TAP\%BDVER%\CAVES.tap CAVES 0
+%OSDK%\bin\header.exe .\BUILD\CAVES .\tap\%BDTAP%.tap %CAVEADDR% >nul
+%OSDK%\bin\taptap.exe ren .\tap\%BDTAP%.tap %BDTAP% 0
+echo Created cave file from %BDVER% called %BDTAP%
+exit /B
 
-:: For loading as one TAP, combine the game, caves, sprite TAP files (needed for real Oric)
-copy /b .\TAP\%BDVER%\BDASH.tap+.\TAP\%BDVER%\CAVES.tap+.\TAP\%BDVER%\SPRITES.tap .\TAP\%BDVER%\%BDTAP%.tap
+:: For loading as one tap, combine the game, caves, sprite tap files (needed for real Oric)
+:: The order of the tap files is important, the program does not rewind the tape!
+:create_combined_tap_file
+cd .\tap
+copy /b BDASH.tap+BSPLASH.tap+B1CAVES.tap+B2CAVES.tap+B3CAVES.tap+P1CAVES.tap+A1CAVES.tap+SPRITES.tap BOULDERDASH.tap >nul
+cd ..\..
+echo Created full game BOULDERDASH.tap, combining all tap files

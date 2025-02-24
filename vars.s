@@ -805,4 +805,23 @@ options_cave_select
 options_level_select
     .byt "        ", "`a", 9, 6, "LEVEL", 7, "1", 6, " UP DOWN     ", 8, 7, "     "
 options_start
-    .byt "        ", 9, 2, "  PRESS SPACE TO START ", 8, 7, "     "
+    .byt "        ", 9, 2, "  PRESS SPACE TO START ", 8, 7, "      "
+
+TAP_filenames
+    .byt "SPRITES", 0
+    .byt "BSPLASH", 0
+    .byt "B1CAVES", 0
+    .byt "B2CAVES", 0
+    .byt "B3CAVES", 0
+    .byt "P1CAVES", 0
+    .byt "A1CAVES", 0
+
+version_option_text
+    .byt 10, 7, "SELECT VERSION"
+    .dsb 16
+    .byt 6, "BOULDER DASH 1 "
+    .byt 1, "BOULDER DASH 2 "
+    .byt 2, "BOULDER DASH 3 "
+    .byt 5, "BOULDER DASH +1"
+    .byt 3, "ARNO DASH 1    "
+    .byt 4, "TUTORIAL CAVES "
