@@ -1,0 +1,712 @@
+[BDCFF]
+
+[game]
+Name=BoulderDash+1
+Levels=5
+Caves=20
+
+[cave]
+Name=Cave 1
+CaveTime=140 120 100 80 70
+DiamondsRequired=40 45 45 50 55
+DiamondValue=2
+AmoebaTime=90
+SlimePermeability=60
+Bombs=6
+Colors=Black Purple Red White
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP........Wddrrrdrrd..........W.......XW
+W.........WrrrdrrddrW.........W........W
+Wxxxxxxxx.WddrrdrrdrW.........W........W
+W.!.......WdrdrdrrdrW.........W........W
+W.........WssssssssrW.... ....W........W
+W..q...q..W        .W.... ....W..q...q.W
+W..q...q..W        .W.... ....W..q...q.W
+W..q...q..W        .W.... ....W..q...q.W
+W..q...q..W        .W.... ....W..q...q.W
+WwwwwdwwwwWrssssssssWwwwwqwwwwWxxxx.xxxW
+W.........W    r    W.... ....W........W
+W      qr.W   rrr   W.... ....W........W
+W ........W  rrrrr  W.... ....Wwwd.dxwwW
+W       ..WssssssssrW....r...xWwwxd.dwwW
+W ........W        .W.........Wwwwwd.dxW
+W       ..W        .W.........Wwwxd.dwwW
+W...... ..W        .W.........r........W
+W       ....       .W.........W........W
+W ........W.       .W.........W........W
+W      q..W.........Wa........W........W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 2
+CaveTime=150 140 130 120 110
+DiamondsRequired=32 36 40 44 48
+DiamondValue=2
+AmoebaTime=80
+Bombs=28
+ZeroGravityTime=255
+Colors=Black Cyan Green White
+RandSeed=10 13 16 19 22
+RandomFill=SPACE 60 BOULDER 50
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP....!--------------------------------W
+W.....---------------------------------W
+W.....---------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W---------------...aa...---------------W
+W---------------...aa...---------------W
+W---------.x----...aa...----x----------W
+W---------------...aa...---------------W
+W---------------...aa...---------------W
+W---------.w.---...aa...---.w.---------W
+W---------.w.---...aa...---.w.---------W
+W---------.w.---...aa...---.w.---------W
+W---------.w.---...aa...---.w.---------W
+W---------------...aa...---------------W
+W..............wssssssssw..............W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W-------------------------------------XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 3
+CaveTime=120 110 110 100 100
+DiamondsRequired=79 89 89 99 99
+DiamondValue=1
+AmoebaTime=80
+SlimePermeability=80
+Bombs=16
+Colors=Black Blue Purple White
+RandSeed=10 11 12 13 14
+RandomFill=SPACE 60 BOULDER 50
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP....---r----r----r--------------wddddW
+W.....--------r-r----r------------wrrrrW
+W.....-------rr---rr--r-----------wrrrrW
+W----!---------rrr---rr-----------wrrrrW
+W---------------------------------wrrrrW
+W----------WMMMMMMWMMMMMMW--------wrrrrW
+W----------W      W      W--------wrrrrW
+W----------W      W      W--------wrrrrW
+W----------W      W      W-------.wrrrrW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW.WssssW
+Wx................................W    W
+Wx................................W    W
+Wx................................WssssW
+Wx................................W    W
+Wx................................W    W
+Wx................................WssssW
+Wx................................     W
+Wx................................     W
+Wx................................     W
+Wx.................aa.............W   XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 4
+CaveTime=60 55 50 45 40
+DiamondsRequired=14 15 16 18 20
+DiamondValue=15
+MagicWallTime=150
+SlimePermeability=10
+Bombs=2
+Colors=Black Cyan Blue White
+InitialFill=SPACE
+RandSeed=0 4 102 151 100
+RandomFill=BOULDER 100 DIAMOND 80
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W.ssssssssssssssssssssssssssssssssssssXW
+W                                      W
+W                                      W
+W     MMMM   wMMMM   MMMMM   MMMM      W
+W    w    w  w    w    w    w    w     W
+W    w    w  w    w    w    w          W
+W    w    w  wMMMM     w    w          W
+W    w    w  w    w    w    w    w     W
+W     MMMM   w    w  MMMMM   MMMM      W
+W                                      W
+WPssssssssssssssssssssssssssssssssssss.W
+W                                      W
+W                                      W
+W.xMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMx.W
+W                                      W
+W                                      W
+W                                      W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 5
+Intermission=true
+CaveTime=45
+DiamondsRequired=32
+DiamondValue=1
+Bombs=2
+Colors=Black Cyan Red White
+
+[map]
+WWWWWWWWWWWWWWWWWWW 
+WPwddddddwxdddddddW 
+W.wddddddwxdddddddW 
+W.wwwwxddwwwwddxwwW 
+W.................W 
+WxwwwwwwxxwwwwwwwxW 
+W.................W 
+W.................W 
+W...........     wW 
+W...........    wdW 
+Wxd.........   wwXW 
+WWWWWWWWWWWWWWWWWWW 
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 6
+CaveTime=130 160 190 220 250
+DiamondsRequired=18 24 30 36 42
+DiamondValue=10
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=SPACE 100 BOULDER 80
+Colors=Black Red Green White
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP.....................................W
+W..................--------------------W
+W..................--------------------W
+W.cd...........r...--------------------W
+W.wx...........r...--------------------W
+W..................--------------------W
+W..................--------------------W
+W.cc  dd.........r...------------------W
+W.wwwwwx.........r...------------------W
+W..................--------------------W
+W..................--------------------W
+W..................--------------------W
+W.ccc   ddd.......r...-----------------W
+W.wwwwwwwwx.......r...-----------------W
+W..................--------------------W
+W..................--------------------W
+W.cccc    dddd.....r...----------------W
+W.wwwwwwwwwwwx.....r...----------------W
+W......................................W
+W.....................................XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 7
+CaveTime=120 110 100 90 80
+DiamondsRequired=5
+DiamondValue=30
+Bombs=2
+BorderTile=SLIME
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=WALL 90 BOULDER 70 DIAMOND 2
+Colors=Black Blue Green White
+
+[map]
+----------------------------------------
+rsssssssssss..s.ssss  ss.sss..ssssrrrsss
+ssrs.s....ss.....dssq s...s.....ssssrrss
+sss..sss..........r  rss......r..sssssss
+ss.....ss...r...ss.  ss..........sdssrss
+s...r............xr  ss.....r.....ssssrr
+ss...............ss.  ss..............ss
+ssss......P.......ss   .s............sss
+ss..............ssq   s.........r......s
+sss.............x..   ................ss
+rssss......s......... qss......s.....sss
+srrssss.sssrrssrrsss  s....ss..ss..sssrr
+sssrsssssssrssrrrss    sssssssssssssrrss
+ssssrrssssssssssss  r. ssrsssssssssrssss
+sssrsssssr.s.....sq     ssss.s.s..sssrsr
+ssrsss............s  d   ss.........ssss
+rrsss............ss  .   r...........sss
+ssss.....X........d  s   ss........r..ss
+ss..............ssss    ss.........ssrss
+sss............srs.s    qss.........dsrs
+ssssss..ss...sssrrq   s   ssss....ssrrss
+----------------------------------------
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 8
+CaveTime=160 160 150 150 150
+DiamondsRequired=25 27 30 32 34
+DiamondValue=10
+MagicWallTime=150
+ZeroGravityTime=80
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=SPACE 100 BOULDER 80
+Colors=Black Cyan Purple White
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W.....................................PW
+W......................................W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W.................r....................W
+W.......rr...rr...r..rr................W
+W.............r...........r....rr......W
+W........r.........r.........r.........W
+W....   cr..xr......r...rrr.....r......W
+W......rrr........rr......x....rr......W
+W.........r...w...r.r....xr............W
+W...c   rrr.............w..rrr.........W
+W........rr.....w......................W
+W................r.....r...............W
+W.................MMMM.................W
+W--------------------------------------W
+W--------------------------------------W
+W......................................W
+W.....................................XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 9
+CaveTime=160 160 150 150 150
+DiamondsRequired=25 27 30 32 34
+DiamondValue=10
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=SPACE 100 BOULDER 80
+Colors=Black Green Red White
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W.....................................XW
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W......................................W
+W..........wcw w w w wcw w w w wc......W
+W.....x...                        .....W
+W.....x...                        .....W
+W.....x...                        .....W
+W.....x...                        .....W
+W.....x...                        .....W
+W.....x...                        .....W
+W.....x...                        .....W
+W..........rcr r r r rcr r r r rc......W
+W......................................W
+WP.....................................W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 10
+Intermission=true
+CaveTime=60
+DiamondsRequired=15
+DiamondValue=15
+SlimePermeability=0
+Bombs=12
+Colors=Black Blue Green Yellow
+
+[map]
+WWWWWWWWWWWWWWWWWWW 
+WP...............!W 
+W.................W 
+Wssssssssssssssss.W 
+W                .W 
+W                .W 
+W   .   .   .   ..W 
+W   .   .   .   ..W 
+W c . c . c . c ..W 
+W.................W 
+W................XW 
+WWWWWWWWWWWWWWWWWWW 
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 11
+CaveTime=170 150 140 130 120
+DiamondsRequired=4
+DiamondValue=25
+AmoebaTime=80
+Bombs=24
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=BOULDER 100 WALL 80
+Colors=Black Red Blue Yellow
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WXwwwxw......ww....     r.x.!         PW
+W....ww......wx.... ....W.WWWWWWWWwwx.wW
+W..WWWWWWWWWWWWWWWWWWWWWW.............wW
+W.......................WWWWWWWWWWWWWWWW
+W......................................W
+Wwxrq             .wxxw.           qrxrW
+W......................................W
+W......................................W
+W--------------------------------------W
+W-----r--------------------------r-----W
+W---r---r----------------------r---r---W
+W-r-------r------------------r-------r-W
+W......................................W
+W         qw................w         qW
+W          w................w          W
+W          w................w          W
+W          w................w          W
+W          w................w          W
+W          w...aaaaddaaaa...w          W
+W         qW...aaaWddWaaa...W         qW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 12
+CaveTime=175 170 165 160 155
+DiamondsRequired=30 35 40 45 50
+DiamondValue=2
+MagicWallTime=150
+ZeroGravityTime=110
+Bombs=24
+InitialFill=DIRT
+RandSeed=10 12 14 16 18
+RandomFill=HEXPANDINGWALL 100 BOULDER 80
+Colors=Black Green Purple Cyan
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP...........rrrrrrrrrrrrrr............W
+W.............rrrrrrrrrrrr.............W
+W.....!........rrrrrrrrrr..............W
+W...............rrrrrrrr...............W
+W................rrrrrr................W
+W.................rrrr.................W
+W..................rr..................W
+W..................  ..................W
+W.................MMMM.................W
+W----------.......    .......----------W
+W-------------r...    ...r-------------W
+W----------.......    .......----------W
+W-------------r...    ...r-------------W
+W----------.......    .......----------W
+W-----------------MMMM-----------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W-------------------------------------XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 13
+CaveTime=175 170 165 160 155
+DiamondsRequired=35 38 45 48 51
+DiamondValue=3
+AmoebaTime=120
+Bombs=15
+Colors=Black Purple Red Cyan
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W............r..r........r..r.........XW
+W.......r..........r..r.............c..W
+W.....wssswwwwwwwwwwwwwwwwwwwwwwx.....xW
+W......w.wwsssssss.....................W
+Wx.....w wwa....ss.....................W
+W......w ww.....ss..................c..W
+W......w wssssssss....................xW
+Wx.....w wssssssss.....................W
+W......w.w.............................W
+W......wdw..........................c..W
+W.....w...w...........................xW
+W......wdw.............................W
+W......w.w.............................W
+Wx.....w w..........................c..W
+W......w w............................xW
+Wx.....w w.............................W
+W......w w.............................W
+W......w w..........................c..W
+W.......!.............................xW
+WP.....................................W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 14
+CaveTime=150 145 140 135 130
+DiamondsRequired=25 30 31 38 40
+DiamondValue=10
+AmoebaTime=40
+BorderTile=SPACE
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=WALL 90 BOULDER 70 DIAMOND 2
+Colors=Black Cyan Green Yellow
+
+[map]
+----------------------------------------
+ w w w w     w w w w             w w w w
+ wwwwwww     wwwwwww             wwwwwww
+  w.P.w       w.d.w   w w w w w   w.d.w 
+  s....wwwwwww....wwwwwwwwwwwwwwww....s 
+  w.................r  ...............w 
+  w.r...........r.wrrwsswrwwwwww......w 
+ wwwrwwwwwwwwwswwwww..  ..........wwww  
+wc................w.....w.....--------ww
+s ........w.......r.....w.....----d----s
+w ........w-------wd...wwww...---------w
+ wwwswwwwwwwwwswwwwwwww.......-d----d--w
+ w........w.........  r.wwwwwwwwwwwwwww 
+w.........w........w rrrwc             w
+s.........w........w.s.................s
+s-------w...w......wd...w.............w 
+w----d--w...w......wswswwwwwwwwwwww.ww  
+ wd-----w...w...........w...........s   
+ wwwwwwww.a.wwwwwwwwwr..r  ..d.....Xw   
+sswwwssssssssssssswwwsswwwssssssssswww  
+sswwwssssssssssssswwwsswwwssssssssswww  
+----------------------------------------
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 15
+Intermission=true
+CaveTime=60
+DiamondsRequired=50
+DiamondValue=20
+Bombs=3
+Colors=Black Red Blue White
+
+[map]
+WWWWWWWWWWWWWWWWWWW 
+Wd.....r.....q...qW 
+W..r...q.........qW 
+WwwwwwwwwwWq..... W 
+W.........W...q.. W 
+W........PWX......W 
+W.........W....q..W 
+WaWWWWWWWwW.q.....W 
+Wa..W.............W 
+Wa..WWW.....q.q...W 
+Wa...............dW 
+WWWWWWWWWWWWWWWWWWW 
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 16
+CaveTime=180 170 165 165 165
+DiamondsRequired=25 28 32 33 34
+DiamondValue=2
+MagicWallTime=150
+ZeroGravityTime=120
+Bombs=30
+InitialFill=DIRT
+RandSeed=10 12 14 16 18
+RandomFill=WALL 90 BOULDER 70 FIREFLYl 2
+Colors=Black Green Purple White
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W.................q.-------------------W
+W...........w.......-------------------W
+W...........Mw..w...-------------------W
+W............Mw.....-------------------W
+W.............Mw....-------------------W
+W..............Mw.q.-------------------W
+W...............M...-------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W......................................W
+WP....................................XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 17
+CaveTime=170 165 160 155 150
+DiamondsRequired=5
+DiamondValue=50
+Bombs=20
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=SLIME 90 BOULDER 70 FIREFLYl 2
+Colors=Black Purple Red Yellow
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WWwWWws-------------------sswWWsw...d.XW
+WwsWw----------------------wWwwWs.....sW
+WssW------w--------WwWW------WwW.....wsW
+WWw------WWW------sWwsWW-----Ww-----ssWW
+WW------W.d.W-----sWW.d.W-----W-----wsWW
+W------W-...-W-----W-...-W-----W-----wsW
+Ww------W-----W-----W-----W-----W-----WW
+Wss------W-----W-----W-----W-----W-----W
+WWWs------W-----W-----W-----W-----W----W
+WWwW------W-----W-----W-----W-----W----W
+WswsW-----W-----W-----W-----W-----W----W
+WWWsw-----W-----W-----W-----W-----W----W
+Wwsww-----W-----W-----W-----W-----W----W
+WWss------W-----W-----W-----W-----W----W
+WWW------W-----W-...-W-----W-...-W-----W
+Ww------W-----W-.d.-W-----W-.d.-W------W
+WW-----WW-----WWWWWW------WWswWW------wW
+W.....Wss----------------------------ssW
+W.....WsW---------------------------swWW
+WP....Wwss------------------------WswWWW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 18
+CaveTime=180 170 165 165 165
+DiamondsRequired=45 48 51 54 60
+DiamondValue=2
+AmoebaTime=60
+InitialFill=DIRT
+RandSeed=10 12 14 16 18
+RandomFill=WALL 90 BOULDER 70 FIREFLYl 2
+Colors=Black Red Green Yellow
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+WP...----------------------------------W
+W....----------------------------------W
+Wr...----------------------------------W
+W....----------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W......................................W
+W.................aaaa.................W
+W................aaaaaa................W
+W...............aaaaaaaa..............XW
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 19
+CaveTime=160 150 150 140 140
+DiamondsRequired=70 80 85 90 95
+DiamondValue=1
+AmoebaTime=80
+SlimePermeability=80
+Bombs=20
+InitialFill=DIRT
+RandSeed=0 4 102 151 100
+RandomFill=SPACE 100 BOULDER 80
+Colors=Black Purple Blue White
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+W--------------------------------------W
+W--------------------------------------W
+W--------------------------------------W
+W......................................W
+W......................................W
+W......................................W
+WP.........ssssssssssssssssssw........XW
+W..........                  w.........W
+W..........                  w.........W
+W....!.....                  w.........W
+W..........                  w.........W
+W..........ww                a.........W
+W..........ww                a.........W
+W.....cccccww                a.........W
+W.....cccccww               aa.........W
+W.....cccccww              aaa.........W
+W.....cccccww             aaaa.........W
+W.....cccccww            aaaaa.........W
+W.....wwwwwwwwwwwwwwwwwwwwwwww.........W
+W.....rrrrrrrrrrrrrrrrrrrrrrrr.........W
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+[/cave]
+
+[cave]
+Name=Cave 20
+Intermission=true
+CaveTime=30
+DiamondsRequired=1
+DiamondValue=14
+BorderTile=SPACE
+Colors=Black Red Purple White
+
+[map]
+                    
+   wwwwwwwwwwww     
+  w      P.....w    
+ w  wwwwwwwwww..w   
+w  w..........w..w  
+wqw..wwwwwww..w..w  
+ w..wd r r..w.w..w  
+ w..wXr... r..w..w  
+  w..wwwwwwwww..w   
+   w...........w    
+    wwwwwwwwwww     
+                    
+[/map]
+[/cave]
+
+[/game]
+
+[/BDCFF]

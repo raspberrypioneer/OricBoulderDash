@@ -31,12 +31,12 @@ It has been tested using the [Oricutron emulator](https://osdk.org/index.php?pag
 There are some differences in this Oric version of the game, although they do not affect the main game play.
 - Bombs and zero-gravity enhancements. These are only used in caves where they have been defined as cave parameters (see below for more details).
 - The status bar is different as it shows the diamonds needed, reduced each time one is gathered. The diamond value is not shown. A count of the number of bombs available is included, as are the normal things such as time remaining, lives available and the player score.
-- The game is in black and white as the Oric has an unusual way of setting colours in text-mode. I don't think it would be practical (or possible) to give each sprite their own colour (the sprites are redefined characters).
 - Currently there is no intro tune although this may be added in future. Other future improvements being considered are the ability to choose the keys to use for up-down-left-right and fire. Joystick support might be an option via the LOCI device. Lower down the list are possibly having a demo mode, overall high score and support for 2 players.
 
 ## Keys used
 - The version to play is selectable from the splash screen using the up-down arrow keys and pressing the space bar.
 - Both the cave and difficulty level are selectable from the main screen using the up-down, left-right arrow keys. Pressing the space bar starts the game.
+- Different colour schemes are selectable using the "<" and ">" keys.
 - There is a choice of using the standard up-down, left-right arrow keys for navigation within the game or an alternate layout where the arrow keys on the left of the space bar are up-down and the arrow keys on the right are down-up (this feels more natural to me on a real Oric!). Pressing the left-shift key on the menu screen toggles between having standard or alternate keys.
 
 ![Menu](./docs/MENU.png)

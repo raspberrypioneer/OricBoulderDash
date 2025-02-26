@@ -124,7 +124,7 @@ sprite_addr_space  ;all space characters, not remapped
 
 sprite_addr_earth1
 sprite_addr_earth2
-	.byt "!", 34, "#$"  ;34 is "
+    .byt "!"+128, 34+128, "#"+128, "$"+128
 
 sprite_addr_wall1  ;reuse characters
 sprite_addr_wall2
@@ -138,13 +138,14 @@ sprite_addr_magic_wall3
 
 sprite_addr_titanium_wall1  ;reuse characters
 sprite_addr_titanium_wall2
-    .byt "&&&&"
+    .byt "&"+128, "&"+128, "&"+128, "&"+128
 
 sprite_addr_diamond1
     .byt "'()*"
 sprite_addr_diamond2  ;reusing a character from diamond 1
-sprite_addr_diamond3
     .byt "+,)-"
+sprite_addr_diamond3
+    .byt "'"+128, "("+128, ")"+128, "*"+128
 sprite_addr_diamond4
     .byt "+"+128, ","+128, ")"+128, "-"+128
 
@@ -178,11 +179,11 @@ sprite_addr_explosion4
     .byt "JKLM"
 
 sprite_addr_butterfly1
-    .byt "NOPQ"
+    .byt "N"+128, "O"+128, "P"+128, "Q"+128
 sprite_addr_butterfly2
-    .byt "RSTU"
+    .byt "R"+128, "S"+128, "T"+128, "U"+128
 sprite_addr_butterfly3
-    .byt "VWXY"
+    .byt "V"+128, "W"+128, "X"+128, "Y"+128
 
 sprite_addr_bubble
     .byt "Z[", 92, "]"  ;92 is \
@@ -772,9 +773,9 @@ self_mod_code_table
 ; status bar and messages
 ;
 status_bar_line1
-    .byt 3, "+,      ", 5, "{|", "             ", 2, "^_", 9, 6, "   CAVE A1"
+    .byt 7, "+"+128, ","+128, "      ", 5, "{|", "             ", 2, "^_", 9, 6, "  CAVE A1 "
 status_bar_line2
-    .byt 3, ")-", 9, "    ", 8, 5, "}~", 9, "     ", 7, "     ", 8, 2, "`a", 9, "    ", 6, "      "
+    .byt 7, ")"+128, "-"+128 , 9, "    ", 8, 5, "}~", 9, "     ", 3, "     ", 8, 2, "`a", 9, "    ", 6, "      "
 
 status_messages
 status_message_paused
@@ -797,7 +798,7 @@ status_message_alt_keymap
     .byt 9, 2, " ALTERNATE KEYS "
 
 game_title
-    .byt 11, 1, 32, "ORIC", 6, "BOULDER DASH  ", 8, 7, 0
+    .byt 11, 1, "ORIC", 6, "BOULDER DASH ", 8, 0
 
 game_options
 options_cave_select
@@ -815,6 +816,7 @@ TAP_filenames
     .byt "B3CAVES", 0
     .byt "P1CAVES", 0
     .byt "A1CAVES", 0
+    .byt "BBCAVES", 0
 
 version_option_text
     .byt 10, 7, "SELECT VERSION"
@@ -824,4 +826,4 @@ version_option_text
     .byt 2, "BOULDER DASH 3 "
     .byt 5, "BOULDER DASH +1"
     .byt 3, "ARNO DASH 1    "
-    .byt 4, "TUTORIAL CAVES "
+    .byt 4, "BONUS CAVES    "

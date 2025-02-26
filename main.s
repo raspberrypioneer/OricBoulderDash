@@ -349,16 +349,7 @@ intro_and_cave_select
     sta growing_wall_handler_high
 
     ;set title text
-    ldy #0
-plot_text_byte
-    lda game_title,y
-    beq plot_text_end
-    sta _TEXT_SCREEN_ADDR+648,y
-    sta _TEXT_SCREEN_ADDR+688,y
-
-    iny
-    jmp plot_text_byte
-plot_text_end
+    jsr set_title_text
 
     ;Tick counter needed for some animation
     lda #31
@@ -390,6 +381,9 @@ wait_for_keypress
     jsr draw_grid_of_sprites
     dec tick_counter
 
+    ldx #$0f
+    jsr delay_a_bit
+
     lda _KeyRowArrows
     cmp #KEY_MASK_SPACE
     beq exit_intro_keypress
@@ -406,10 +400,33 @@ wait_for_keypress
     cmp #KEY_MASK_RIGHT_ARROW
     beq cave_up
 
+    cmp #KEY_MASK_LESS_THAN
+    beq colour_map_down
+
+    cmp #KEY_MASK_GREATER_THAN
+    beq colour_map_up
+
     cmp #KEY_MASK_LEFT_SHIFT
     beq swap_keymap
 
     jmp wait_for_keypress
+
+exit_intro_keypress
+
+    ;nop out the tile check logic in draw grid (self-mod code)
+    ldx #12
+    jsr self_mod_code
+
+    ;add back Rockford and growing wall handlers
+    lda #<handler_rockford
+    sta rockford_handler_low
+    lda #>handler_rockford
+    sta rockford_handler_high
+    lda #<handler_growing_wall
+    sta growing_wall_handler_low
+    lda #>handler_growing_wall
+    sta growing_wall_handler_high
+    rts
 
 cave_down
     ldy cave_number
@@ -447,6 +464,20 @@ level_display
     sta _TEXT_SCREEN_ADDR+58
     jmp wait_for_keypress
 
+colour_map_down
+    ldy set_line_colour+1
+    lda colour_selection_cycle_down,y
+    sta set_line_colour+1
+    jsr set_title_text  ;update the title text which need the colour setting
+    jmp wait_for_keypress
+
+colour_map_up
+    ldy set_line_colour+1
+    lda colour_selection_cycle_up,y
+    sta set_line_colour+1
+    jsr set_title_text  ;update the title text which need the colour setting
+    jmp wait_for_keypress
+
 swap_keymap
     lda direction_key_table
     cmp #KEY_MASK_RIGHT_ARROW
@@ -478,23 +509,6 @@ change_keys_loop
     bne change_keys_loop
     jmp wait_for_keypress
 
-exit_intro_keypress
-
-    ;nop out the tile check logic in draw grid (self-mod code)
-    ldx #12
-    jsr self_mod_code
-
-    ;add back Rockford and growing wall handlers
-    lda #<handler_rockford
-    sta rockford_handler_low
-    lda #>handler_rockford
-    sta rockford_handler_high
-    lda #<handler_growing_wall
-    sta growing_wall_handler_low
-    lda #>handler_growing_wall
-    sta growing_wall_handler_high
-    rts
-
 cave_selection_cycle_up
     .byt 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,0
 cave_selection_cycle_down
@@ -505,11 +519,34 @@ level_selection_cycle_up
 level_selection_cycle_down
     .byt 0,5,1,2,3,4
 
+colour_selection_cycle_up
+    .byt 0,2,3,5,0,6,1
+colour_selection_cycle_down
+    .byt 0,6,1,2,0,3,5
+
 std_and_alt_keymap
     .byt KEY_MASK_RIGHT_ARROW, KEY_MASK_LEFT_ARROW, KEY_MASK_UP_ARROW, KEY_MASK_DOWN_ARROW  ;standard
     .byt KEY_MASK_DOWN_ARROW, KEY_MASK_LEFT_ARROW, KEY_MASK_RIGHT_ARROW, KEY_MASK_UP_ARROW  ;alternate
 
 handler_null
+    rts
+
+; *************************************************************************************
+; Set menu screen title text
+set_title_text
+    ldy #0
+plot_text_byte
+    lda game_title,y
+    beq plot_text_end
+    sta _TEXT_SCREEN_ADDR+649,y
+    sta _TEXT_SCREEN_ADDR+689,y
+
+    iny
+    jmp plot_text_byte
+plot_text_end
+    lda set_line_colour+1  ;finish title with the cave colour
+    sta _TEXT_SCREEN_ADDR+649,y
+    sta _TEXT_SCREEN_ADDR+689,y
     rts
 
 ; *************************************************************************************
@@ -566,6 +603,16 @@ loop_plot_row
 	sta screen_addr2_high
 
 	lda #0
+
+    tay
+set_line_colour
+    lda #3  ;yellow
+	sta (screen_addr1_low),y
+    sta (screen_addr2_low),y
+    inc screen_addr1_low
+    inc screen_addr2_low
+    lda #0
+
 	sta map_cols
 loop_plot_column
 
@@ -629,7 +676,7 @@ skip_null_tile
 
 	inc map_cols
 	lda map_cols
-	cmp #20  ;20 columns
+    cmp #19  ;19 columns
 	bcc loop_plot_column
 
     ; move tile pointer on to next row (64 bytes)
@@ -643,7 +690,9 @@ skip_high
 	inc map_rows
 	lda map_rows
 	cmp #12  ;12 rows (skip status bar in rows 0, 1)
-	bcc loop_plot_row
+    bcs end_draw_grid
+    jmp loop_plot_row
+end_draw_grid   
     rts
 
 ; *************************************************************************************
@@ -660,9 +709,9 @@ update_map_scroll_position
     sec
     sbc visible_top_left_map_x
     ldx visible_top_left_map_x
-    cmp #15
+    cmp #14
     bmi check_for_need_to_scroll_left
-    cpx #20
+    cpx #21
     bpl check_for_need_to_scroll_down
     inx
 check_for_need_to_scroll_left
@@ -688,9 +737,8 @@ check_for_need_to_scroll_up
     bmi check_for_bonus_stages
     dey
 check_for_bonus_stages
-    lda cave_number
-    cmp #$10
-    bmi skip_bonus_stage
+    lda param_intermission
+    beq skip_bonus_stage
     ; bonus stage is always situated in top left corner
     lda #0
     tax
@@ -1075,11 +1123,11 @@ dont_allow_rock_push_up
     lda cave_number
     clc
     adc #"A"  ; Add letter "A" to get the cave letter for the cave number (which starts from zero)
-    sta status_bar_line1+38
+    sta status_bar_line1+37
     lda difficulty_level
     clc
     adc #"0"
-    sta status_bar_line1+39
+    sta status_bar_line1+38
 
     ;update diamonds required, bombs available, player lives on status bar
     jsr update_diamonds_required
@@ -1191,7 +1239,7 @@ update_player_lives
 
 ; *************************************************************************************
 update_player_score
-    ldx #35  ;score start position
+    ldx #34  ;score start position
     ldy score_low
     lda score_high
 
@@ -1667,6 +1715,24 @@ got_diamond_return
     rts
 
 ; *************************************************************************************
+; Cave tile map
+; Below is needed to point the program counter to the next page (multiple of 256)
+; IMPORTANT: Address must be $1000, $2000 etc, not $1100 for example!
+; Each row has 40 bytes used for the tiles in the game, 24 unused
+.dsb 256-(*&255)  ;Add another page of bytes
+
+tile_map_row_0  ;top border
+    .dsb 64
+tile_map_row_1  ;1-20 rows between the borders
+    .dsb (64*19)
+tile_map_row_20
+    .dsb 64
+tile_map_row_21  ;bottom border
+    .dsb 64
+tile_below_store_row  ;special row for pseudo-random generated caves with extra-tile below the random one
+    .dsb 64
+
+; *************************************************************************************
 ; Updates the score and bonus with accumulator value and performs the bonus life actions
 update_score
 
@@ -1724,24 +1790,6 @@ bonus_low .byt 0
 bonus_high .byt 0
 result_low .byt 0
 result_high .byt 0
-
-; *************************************************************************************
-; Cave tile map
-; Below is needed to point the program counter to the next page (multiple of 256)
-; IMPORTANT: Address must be $1000, $2000 etc, not $1100 for example!
-; Each row has 40 bytes used for the tiles in the game, 24 unused
-.dsb 256-(*&255)  ;Add another page of bytes
-
-tile_map_row_0  ;top border
-    .dsb 64
-tile_map_row_1  ;1-20 rows between the borders
-    .dsb (64*19)
-tile_map_row_20
-    .dsb 64
-tile_map_row_21  ;bottom border
-    .dsb 64
-tile_below_store_row  ;special row for pseudo-random generated caves with extra-tile below the random one
-    .dsb 64
 
 ; *************************************************************************************
 ; Update the gameplay map with action handlers for each of the game actors
@@ -2570,6 +2618,7 @@ select_caves_for_version
     lda version_selected
 version_display
     jsr show_version_text
+    ldx $ff
     jsr delay_a_bit
 
 version_loop
@@ -2581,6 +2630,12 @@ version_loop
     beq version_up
 
     cmp #KEY_MASK_DOWN_ARROW
+    beq version_down
+
+    cmp #KEY_MASK_RIGHT_ARROW
+    beq version_up
+
+    cmp #KEY_MASK_LEFT_ARROW
     beq version_down
 
     jmp version_loop
@@ -2628,9 +2683,9 @@ version_selected
     .byt 2  ;Point to third option in TAP_filenames table (zero-based, first cave file)
 
 version_selection_cycle_up
-    .byt 0,0,3,4,5,6,2
+    .byt 0,0,3,4,5,6,7,2
 version_selection_cycle_down
-    .byt 0,0,6,2,3,4,5
+    .byt 0,0,7,2,3,4,5,6
 
 end_version_selection
     ;Exit hires for the splash screen and switch back to text mode for the game
@@ -2665,7 +2720,6 @@ end_version_selection
 
 ; ****************************************************************************************************
 delay_a_bit
-    ldx $ff
 delay1
     ldy $ff
 delay2

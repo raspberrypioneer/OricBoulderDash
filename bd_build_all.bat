@@ -7,9 +7,12 @@ set SPRITEADDR=$b500
 :: Control creation of splash screen tap (set to Y or N)
 set MAKESPLASH=N
 
-:: Set cave load address, use $2500 for single row keyboard, $2600 for full matrix keyboard
-set CAVEADDR=$2500
-::set CAVEADDR=$2600
+:: Control creation of cave file taps (set to Y or N)
+set MAKECAVES=N
+
+:: Set cave load address, use $2600 for single row keyboard, $2700 for full matrix keyboard
+set CAVEADDR=$2600
+::set CAVEADDR=$2700
 
 :: Build main program using OSDK (game engine) and copy tap file to the tap folder
 call osdk_config.bat
@@ -32,6 +35,7 @@ echo Created splash screen
 )
 
 :: Create tap file containing the caves of each version
+if "%MAKECAVES%"=="Y" (  
 set BDVER=BoulderDash01
 set BDTAP=B1CAVES
 call :create_tap_file_for_version
@@ -52,6 +56,11 @@ set BDVER=ArnoDash01
 set BDTAP=A1CAVES
 call :create_tap_file_for_version
 
+set BDVER=BoulderBonus
+set BDTAP=BBCAVES
+call :create_tap_file_for_version
+)
+
 goto :create_combined_tap_file
 
 :: Subroutine to create one large cave file containing all caves A to T with the Z intro cave on the end for a given version
@@ -68,6 +77,6 @@ exit /B
 :: The order of the tap files is important, the program does not rewind the tape!
 :create_combined_tap_file
 cd .\tap
-copy /b BDASH.tap+BSPLASH.tap+B1CAVES.tap+B2CAVES.tap+B3CAVES.tap+P1CAVES.tap+A1CAVES.tap+SPRITES.tap BOULDERDASH.tap >nul
+copy /b BDASH.tap+BSPLASH.tap+B1CAVES.tap+B2CAVES.tap+B3CAVES.tap+P1CAVES.tap+A1CAVES.tap+BBCAVES.tap+SPRITES.tap BOULDERDASH.tap >nul
 cd ..\..
 echo Created full game BOULDERDASH.tap, combining all tap files
