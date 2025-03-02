@@ -262,16 +262,6 @@ play_ambient_sound .byt 0
 	.text
 program_start
 
-    ;Clear the zero page addresses
-	lda #0
-	ldx #zero_page_end-zero_page_start
-clear_zero_loop
-	sta zero_page_start-1,x
-	dex
-	bne clear_zero_loop
-
-    jsr _InitIRQ  ;Input keys interrupt to read keys, see keyboard.s
-
     jsr select_caves_for_version  ;Let the user select the game version to play, returns cave to load in Y
     jsr load_TAP_using_filename  ;Load all caves into memory, the load-to address is set in the TAP file header
 
@@ -287,6 +277,14 @@ clear_zero_loop
     ;the load-to address is $b500 (skips the standard charset control characters)
     ldy #0  ;sprites location
     jsr load_TAP_using_filename
+
+    ;Clear the zero page addresses
+	lda #0
+	ldx #zero_page_end-zero_page_start
+clear_zero_loop
+	sta zero_page_start-1,x
+	dex
+	bne clear_zero_loop
 
 ; *************************************************************************************
 ; Menu to start with and return to after a game ends
@@ -2615,10 +2613,14 @@ select_caves_for_version
     ldy #8  ;splash screen location
     jsr load_TAP_using_filename  ;loads to $a000 hires screen location, displaying splash screen
 
+    ;Input keys interrupt to read keys, see keyboard.s
+    ;Located here for rom 1.0 as interrupts must be running normally for HIRES and TEXT mode commands
+    jsr _InitIRQ
+
     lda version_selected
 version_display
     jsr show_version_text
-    ldx $ff
+    ldx #$ff
     jsr delay_a_bit
 
 version_loop
@@ -2688,9 +2690,6 @@ version_selection_cycle_down
     .byt 0,0,7,2,3,4,5,6
 
 end_version_selection
-    ;Exit hires for the splash screen and switch back to text mode for the game
-    lda #26  ;control character to switch to text mode (50 Hz)
-    sta _TEXT_HIRES_SCREEN_ADDR+119  ;$bfdf, last location on hires screen (in the 3 text-lines section)
 
     ;Clear screen with zero values
     lda #<_TEXT_SCREEN_ADDR
@@ -2709,6 +2708,12 @@ end_version_selection
     sta clear_to
 
     jsr clear_memory  ;clear target for given size and value
+
+    ;Exit hires for the splash screen and switch back to text mode for the game
+    lda #26  ;control character to switch to text mode (50 Hz)
+    sta _TEXT_SCREEN_ADDR
+    ldx #$0f
+    jsr delay_a_bit
 
     ;Get the start of the cave file name to load
     lda version_selected  ;multiply by 8 (3 x asl)
