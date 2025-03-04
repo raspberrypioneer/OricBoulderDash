@@ -10,9 +10,9 @@ set MAKESPLASH=N
 :: Control creation of cave file taps (set to Y or N)
 set MAKECAVES=N
 
-:: Set cave load address, use $2600 for single row keyboard, $2700 for full matrix keyboard
-set CAVEADDR=$2600
-::set CAVEADDR=$2700
+:: Set cave load address, use $3800 for single row keyboard, $3900 for full matrix keyboard
+set CAVEADDR=$3800
+::set CAVEADDR=$3900
 
 :: Build main program using OSDK (game engine) and copy tap file to the tap folder
 call osdk_config.bat

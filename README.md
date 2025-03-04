@@ -44,11 +44,15 @@ There are some differences in this Oric version of the game, although they do no
 - In the game, the direction keys are used to navigate Rockford around the cave. Holding down the space bar and pressing a direction key lets Rockford push a rock, clear a space, plant a bomb or grab a diamond, all without moving.
 - The greater-than key `>` will pause the game. Pressing left-shift will kill Rockford (needed if trapped).
 
+- The game comes with instructions which explain the main characters and features.
+
+![Instructions](./docs/INSTRUCT.png)
+
 ## Developer notes
 - The `osdk_config.bat` script lists the assembler files used to build the game.
 - The `bd_build_all.bat` script uses this config information and compiles `main.s` using the OSDK `make.bat` command which in turn uses the `xa.exe` assembly-language complier, linker and `header.exe` to make the game a loadable TAP file.
 - The sprites are created as a separate TAP file, by assembling `spr.s`, adding a TAP header and naming the TAP file using `taptap.exe`.
-- A splash screen TAP file is created using `pictconv.exe`, given a TAP header and name. This is an optional step.
+- A splash screen TAP file is created using `pictconv.exe`, given a TAP header and name.
 - The caves for each game version are combined then created as separate TAP files. Individual caves are found in `caves_bin`. These are already binary files and are combined into a single file, assigned a TAP header and name.
 - The game, sprites and caves for all versions are all combined into a single TAP file to load on the Oric. The order of these files is important as the program does not rewind the tape to find the TAP file to load!
 
@@ -75,3 +79,4 @@ The following sources have all helped to make this development possible and is g
 - The [Defence Force forum](https://forum.defence-force.org/index.php) is a great source of information. The [sound fx generator](https://forum.defence-force.org/viewtopic.php?t=2280) was used to create the sound effects. The [Oric Boulder Dash chat](https://forum.defence-force.org/viewtopic.php?t=2714) has guided further development with helpful input from Oric experts.
 - The book [Oric Atmos and Oric 1 Graphics and Machine code techniques](https://library.defence-force.org/index.php?content=any&type=book&author=GeoffPhillips&page=books) available for download from the Oric library is a wealth of handy information.
 - The [disassembly of the original BBC/Acorn Electron game](https://github.com/TobyLobster/Boulderdash) by TobyLobster was where this all started.
+- [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/)

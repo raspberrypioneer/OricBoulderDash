@@ -278,6 +278,8 @@ program_start
     ldy #0  ;sprites location
     jsr load_TAP_using_filename
 
+    jsr display_instructions
+
     ;Clear the zero page addresses
 	lda #0
 	ldx #zero_page_end-zero_page_start
@@ -2691,6 +2693,26 @@ version_selection_cycle_down
 
 end_version_selection
 
+    jsr clear_screen
+
+    ;Exit hires for the splash screen and switch back to text mode for the game
+    lda #26  ;control character to switch to text mode (50 Hz)
+    sta _TEXT_SCREEN_ADDR
+    ldx #$0f
+    jsr delay_a_bit
+
+    ;Get the start of the cave file name to load
+    lda version_selected  ;multiply by 8 (3 x asl)
+    asl
+    asl
+    asl
+    tay  ;caves table location in Y
+    rts
+
+; ****************************************************************************************************
+; Clears the screen (with zero values)
+clear_screen
+
     ;Clear screen with zero values
     lda #<_TEXT_SCREEN_ADDR
     sta screen_addr2_low  ;target low
@@ -2708,19 +2730,6 @@ end_version_selection
     sta clear_to
 
     jsr clear_memory  ;clear target for given size and value
-
-    ;Exit hires for the splash screen and switch back to text mode for the game
-    lda #26  ;control character to switch to text mode (50 Hz)
-    sta _TEXT_SCREEN_ADDR
-    ldx #$0f
-    jsr delay_a_bit
-
-    ;Get the start of the cave file name to load
-    lda version_selected  ;multiply by 8 (3 x asl)
-    asl
-    asl
-    asl
-    tay  ;caves table location in Y
     rts
 
 ; ****************************************************************************************************
@@ -3013,6 +3022,71 @@ filename_loop
 	jsr _RESTORE_VIA_STATE
 
 	rts
+
+; *************************************************************************************
+; Display instruction screens for the game
+display_instructions
+
+    ldy #0
+    sty current_instruction_page
+    jsr display_page_of_instructions
+
+instructions_loop
+    lda _KeyRowArrows
+    cmp #KEY_MASK_SPACE
+    beq end_instructions
+
+    cmp #KEY_MASK_DOWN_ARROW
+    beq next_instruction_page
+
+    jmp instructions_loop
+
+end_instructions
+    jsr clear_screen
+    rts
+
+next_instruction_page
+    ldy current_instruction_page
+    iny
+    cpy #4  ;4 pages of instructions
+    bne show_instruction_page
+    ldy #0
+show_instruction_page
+    sty current_instruction_page
+    jsr display_page_of_instructions
+
+    ldx #$ff
+    jsr delay_a_bit
+    jmp instructions_loop
+
+display_page_of_instructions
+    lda instruction_page_low,y
+    sta screen_addr1_low  ;source low
+    lda instruction_page_high,y
+    sta screen_addr1_high  ;source high
+
+    lda #<_TEXT_SCREEN_ADDR
+    sta screen_addr2_low  ;target low
+    lda #>_TEXT_SCREEN_ADDR
+    sta screen_addr2_high  ;target high
+
+    ;size is 1120 bytes for display (28 lines of 40 columns)
+    lda #$60
+    sta copy_size  
+    lda #$04
+    sta copy_size+1
+    lda #$60
+
+    jsr copy_memory
+    rts
+
+current_instruction_page
+    .byt 0
+
+instruction_page_low
+    .byt <instructions_1, <instructions_2, <instructions_3, <instructions_4
+instruction_page_high
+    .byt >instructions_1, >instructions_2, >instructions_3, >instructions_4
 
 ; *************************************************************************************
 ; Copy a number of bytes (in copy size variable) from source to target memory locations
