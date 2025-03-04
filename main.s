@@ -2238,8 +2238,6 @@ intro_or_exit_return
 ; *************************************************************************************
 ; Handler for Firefly/Butterfly actions, moving, exploding etc
 ; Below is needed to point the program counter to the next page (multiple of 256)
-; The self-mod code using lookup_table_address_low needs this (see show_large_explosion)
-.dsb 256-(*&255)  ;Add another page of bytes
 handler_firefly_or_butterfly
 
     cpx #map_deadly

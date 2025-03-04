@@ -631,7 +631,9 @@ update_cell_type_when_below_a_falling_rock_or_diamond
 ; Given a cell type, decide what it turns into when affected by an explosion
 ;   0 = not affected
 ;   $ff = Rockford dies
-;
+; The self-mod code using lookup_table_address_low needs this (see show_large_explosion)
+.dsb 256-(*&255)  ;Add another page of bytes
+
 cell_types_that_will_turn_into_large_explosion
     .byt map_unprocessed | map_large_explosion_state3                                  ; map_space
     .byt map_unprocessed | map_large_explosion_state3                                  ; map_earth
