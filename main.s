@@ -696,7 +696,7 @@ end_draw_grid
     rts
 
 ; *************************************************************************************
-; Scrolls the map by setting the tile_map_ptr and visible_top_left_map_x and y
+; Scrolls the map by setting the map_address_high/low and visible_top_left_map_x and y
 ; Note: each time Rockford moves and pushes the boundaries, visible_top_left_map_x and y are incremented / decremented
 ;       this means the visible position is not set based on Rockford's absolute position at the start
 update_map_scroll_position
@@ -753,7 +753,7 @@ skip_bonus_stage
 
 ; *************************************************************************************
 ; Map address (which start at $1000) becomes row/column in screen_addr1_high and low
-; e.g. $1000 is 0,0   $1098 is 2,18   $1140 is 5,0   $110f is 5,15
+; e.g. $1000 is 0,0   $1098 is 2,24   $1140 is 5,0   $110f is 5,15
 map_address_to_map_xy_position
 
     lda map_address_high
@@ -3073,7 +3073,6 @@ display_page_of_instructions
     sta copy_size  
     lda #$04
     sta copy_size+1
-    lda #$60
 
     jsr copy_memory
     rts

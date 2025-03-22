@@ -731,7 +731,7 @@ rockford_cell_value_for_direction
     .byt 0, 0  ;no animation for up/down - remain as normal Rockford
 
 map_offset_for_direction  ;direction pointer to cells next to Rockford (in $41)
-    .byt $40, $42, 1, $81  ;left, right, up, down
+    .byt $42, $40, 1, $81  ;right, left, up, down
 
 neighbour_cell_pointer_from_direction_index  ;direction pointer to surrounding cell reference table (Rockford)
     .byt 5 ;points to cell_right
