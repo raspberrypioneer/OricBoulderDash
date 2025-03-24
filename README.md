@@ -26,6 +26,8 @@ This repo really contains 5 different versions of the game. They all run with th
 ## Oric-1, Atmos and emulation
 [Oric Boulder Dash](./tap/BOULDERDASH.tap) is available in the tap folder.
 
+The quickest way to give it a try is via the [JOric emulator](https://oric.games/?url=https://raw.github.com/raspberrypioneer/OricBoulderDash/master/tap/BOULDERDASH.tap). More about this emulator is available [here](https://github.com/lanceewing/joric).
+
 It has been tested using the [Oricutron emulator](https://osdk.org/index.php?page=documentation&subpage=oricutron) and on a real Oric-1. The game TAP file was loaded via the excellent [LOCI device](https://github.com/sodiumlb/loci-hardware/wiki/LOCI-User-Manual). This device also allows the Oric-1 to use the Atmos ROM v1.1 so although the game works with both the Oric-1 and Atmos, the default build is for the Atmos. See the simple steps below to switch to an Oric-1 build.
 
 There are some differences in this Oric version of the game, although they do not affect the main game play.

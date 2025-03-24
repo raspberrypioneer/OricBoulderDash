@@ -2136,7 +2136,6 @@ no_up_ptr_high_change
     sta (map_address_low),y
     lda #4  ;reset the delay for next time
     sta delay_trying_to_push_rock
-;    inc sound4_active_flag
     pla  ;restore current line pointer high/low from stack
     sta map_address_low
     pla
@@ -2432,7 +2431,6 @@ handler_amoeba
 
     lda amoeba_replacement
     beq update_amoeba
-    ; play amoeba sound
     tax
     rts
 
@@ -2507,16 +2505,16 @@ update_amoeba_timing
     ldy current_amoeba_cell_type
     bne found_amoeba
     ldx #map_unprocessed | 18  ;via handler_basics and explosion_replacements table converts to diamond
-    bne amoeba_replacement_found
+    bne amoeba_replacement_found  ;always branch
 found_amoeba
     adc #$38
     bcc check_for_amoeba_timeout
     ; towards the end of the level time the amoeba turns into rock
-    lda #no_sound
-    sta play_ambient_sound
     ldx #map_unprocessed | map_rock
 amoeba_replacement_found
     stx amoeba_replacement
+    lda #no_sound
+    sta play_ambient_sound
 check_for_amoeba_timeout
     lda time_remaining
     cmp #50
