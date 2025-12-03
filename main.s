@@ -359,6 +359,10 @@ intro_and_cave_select
     lda #0
     sta cave_number
 
+    ;also clear sound parameters
+    sta theme_note_duration
+    sta active_sound_offset
+
     lda #1
     sta difficulty_level
 
@@ -377,6 +381,7 @@ show_options_loop
 
     ;draw map, waiting for keyboard input
 wait_for_keypress
+    jsr play_theme_tune
     jsr update_map
     jsr draw_grid_of_sprites
     dec tick_counter
@@ -530,6 +535,50 @@ std_and_alt_keymap
 
 handler_null
     rts
+
+; *************************************************************************************
+; Play title screen theme tune on repeat
+; The data for each of the two channels is 256 bytes in low byte, high byte sequence
+; The y register holds the pitch position and cycles back to zero after 255 is reached
+play_theme_tune
+
+    lda theme_note_duration
+    beq play_theme_note  ;duration of last note complete, start a new one
+    dec theme_note_duration
+    rts
+
+play_theme_note
+
+    ldy active_sound_offset
+    lda theme_voice_1_pitch_low_high,y
+    sta sound_theme_base
+    lda theme_voice_2_pitch_low_high,y
+    sta sound_theme_base+2
+
+    iny
+
+    lda theme_voice_1_pitch_low_high,y
+    sta sound_theme_base+1
+    lda theme_voice_2_pitch_low_high,y
+    sta sound_theme_base+3
+
+    iny
+    sty active_sound_offset
+
+    lda #1  ;reset the duration
+    sta theme_note_duration
+
+    ldx #<sound_theme_base
+    ldy #>sound_theme_base
+    jsr _PLAY_SOUND_FX
+    rts
+
+theme_note_duration
+    .byt 0
+active_sound_offset
+    .byt 0
+sound_theme_base  ;First 4 bytes are replaced with the pitch low-high bytes for both channels A, B
+    .byt 0,1,2,3,0,0,0,$7c,16,16,0,0,7,0
 
 ; *************************************************************************************
 ; Set menu screen title text

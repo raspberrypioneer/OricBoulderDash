@@ -830,110 +830,41 @@ version_option_text
     .byt 3, "ARNO DASH 1    "
     .byt 4, "BONUS CAVES    "
 
-instructions_1
-    .byt 9, 6, "      BOULDER DASH INSTRUCTIONS       "
-    .dsb 40," "
-    .byt 9, 7, "ROCKFORD MUST GATHER ALL DIAMONDS     "
-    .byt 9, 7, "NEEDED TO COMPLETE EACH CAVE AND      "
-    .byt 9, 7, "REACH THE EXIT BEFORE TIME RUNS OUT   "
-    .dsb 40," "
-    .byt 8, 3, "       ^_  ", 7, "+"+128, ","+128, "  ", "+"+128, ","+128, "  ", "+"+128, ","+128, 3, 12, "&"+128, "&"+128, "            "
-    .byt 8, 3, "       `a  ", 7, ")"+128, "-"+128, "  ", ")"+128, "-"+128, "  ", ")"+128, "-"+128, 3, 12, "&"+128, "&"+128, "            "
-    .dsb 80," "
-    .byt 9, 1, "ARROW KEYS", 7, "MOVE ROCKFORD AROUND       "
-    .dsb 80," "
-    .byt 9, 1, "SPACE BAR + ARROW KEYS                "
-    .byt 9, 7, "CLEARS A SPACE, PUSHES A ROCK, ", 8, 3, "^_ ./"
-    .byt 9, 7, "GRABS A DIAMOND, OR PLANTS A   ", 8, 3, "`a 01"
-    .byt 9, 7, "BOMB WITHOUT ROCKFORD MOVING          "
-    .dsb 40," "
-    .byt 8, 3, "                                    ./"
-    .byt 9, 1, "SHIFT", 7, "KILLS ROCKFORD WHEN TRAPPED ", 8, 3, "01"
-    .byt 9, 7, "OR WHEN A CAVE CANNOT BE SOLVED ", 8, 3, "./^_"
-    .byt 9, 1, "                                ", 8, 3, "01`a"
-    .dsb 40," "
-    .byt 9, 1, ">", 7, "PAUSES THE GAME                     "
-    .dsb 120," "
-    .byt 9, 2, "DOWN", 7, "CONTINUES,", 2, "SPACE", 7, "STARTS GAME     "
+; *************************************************************************************
+; title screen theme tune
+; The data for each of the two channels is 256 bytes in low byte, high byte sequence
+theme_voice_1_pitch_low_high
+    .byt $65, $01, $1c, $01, $ee, $00, $b2, $00, $3e, $01, $0c, $01, $ee, $00, $9f, $00
+    .byt $e1, $00, $c8, $00, $b2, $00, $96, $00, $c8, $00, $6a, $00, $bd, $00, $77, $00
+    .byt $65, $01, $b2, $00, $dd, $01, $3e, $01, $91, $01, $9f, $00, $3e, $01, $91, $01
+    .byt $65, $01, $b2, $00, $dd, $01, $3e, $01, $e1, $00, $59, $00, $b2, $00, $e1, $00
+    .byt $91, $01, $c8, $00, $18, $02, $65, $01, $fd, $00, $64, $00, $c8, $00, $fd, $00
+    .byt $dd, $01, $bd, $00, $a9, $01, $b2, $00, $0c, $01, $0c, $01, $86, $00, $0c, $01
+    .byt $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00
+    .byt $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00
+    .byt $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00
+    .byt $b2, $00, $b2, $00, $b2, $00, $b2, $00, $c8, $00, $c8, $00, $c8, $00, $c8, $00
+    .byt $b2, $00, $59, $00, $b2, $00, $64, $00, $b2, $00, $6a, $00, $b2, $00, $77, $00
+    .byt $c8, $00, $64, $00, $c8, $00, $64, $00, $c8, $00, $86, $00, $c8, $00, $64, $00
+    .byt $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00, $b2, $00
+    .byt $b2, $00, $b2, $00, $b2, $00, $b2, $00, $c8, $00, $c8, $00, $c8, $00, $c8, $00
+    .byt $8e, $00, $b2, $00, $ee, $00, $1c, $01, $9f, $00, $c8, $00, $0c, $01, $91, $01
+    .byt $8e, $00, $b2, $00, $ee, $00, $1c, $01, $9f, $00, $c8, $00, $0c, $01, $91, $01
 
-instructions_2
-    .byt 9, 7, "ON THE", 6, "MENU", 7, "SCREEN                    "
-    .dsb 40," "
-    .byt 9, 1, "LEFT RIGHT", 7, "CHANGES THE CAVE TO PLAY   "
-    .byt 9, 1, "UP DOWN", 7, "CHANGES THE DIFFICULTY LEVEL  "
-    .dsb 40," "
-    .byt 9, 1, "SHIFT", 7, "TOGGLES THE ARROW DIRECTION KEYS"
-    .byt 9, 6, "  STANDARD LAYOUT", 1, "LEFT DOWN UP RIGHT  "
-    .byt 9, 6, "  ALTERNATE LAYOUT", 1, "LEFT RIGHT DOWN UP "
-    .dsb 40," "
-    .byt 9, 1, "< >", 7, "CHANGES THE COLOUR SCHEME         "
-    .dsb 80," "
-    .byt 9, 7, "EACH CAVE HAS A DIFFERENT PUZZLE", 8, 3, "^_  "
-    .byt 9, 7, "FOR ROCKFORD TO OVERCOME        ", 8, 3, "`a  "
-    .dsb 40," "
-    .byt 9, 7, "WATCH OUT FOR FALLING ROCKS AND ", 8, 3, "./  "
-    .byt 9, 7, "DIAMONDS WHICH KILL ROCKFORD!   ", 8, 3, "01  "
-    .byt 9, 7, "BUTTERFLIES AND FIREFLIES     ", 8, 3, "N"+128, "O"+128, 4, " 23"
-    .byt 9, 7, "ARE ALSO LETHAL!              ", 8, 3, "P"+128, "Q"+128, 4, " 45"
-    .dsb 40," "
-    .byt 9, 7, "ROCKFORD CAN PUSH ROCKS INTO  ", 8, 3, "rs ./ "
-    .byt 9, 7, "SPACES TO GET PAST OBSTACLES, ", 8, 3, "yz 01 "
-    .byt 9, 7, "DROP THEM ONTO FIREFLIES TO   ", 8, 3, "!"+128, 34+128, "!"+128, 34+128, "  "
-    .byt 9, 7, "KILL THEM, OR DROP THEM ONTO  ", 8, 3, "#"+128, "$"+128, "#"+128, "$"+128, "  "
-    .byt 9, 7, "BUTTERFLIES TO CHANGE THEM    ", 8, 3, "!"+128, 34+128, "!"+128, 34+128, "N"+128, "O"+128
-    .byt 9, 7, "INTO DIAMONDS                 ", 8, 3, "!"+128, 34+128, "!"+128, 34+128, "P"+128, "Q"+128
-    .dsb 40," "
-    .byt 9, 2, "DOWN", 7, "CONTINUES,", 2, "SPACE", 7, "STARTS GAME     "
-
-instructions_3
-    .byt 9, 7, "WALLS RESTRICT WHERE ROCKFORD CAN ", 8, 3, "%"+128, "%"+128
-    .byt 9, 7, "GO. AN EXPLOSION FROM A FIREFLY,  ", 8, 3, "%"+128, "%"+128
-    .byt 9, 7, "BUTTERFLY OR BOMB DESTROYS BRICK  ", 8, 3, "&"+128, "&"+128
-    .byt 9, 7, "WALLS BUT NOT TITANIUM ONES       ", 8, 3, "&"+128, "&"+128
-    .dsb 80," "
-    .byt 9, 7, "DROP ROCKS ONTO THE MAGIC WALL TO ", 8, 3, "./"
-    .byt 9, 7, "CHANGE THEM INTO DIAMONDS. THERE  ", 8, 3, "01"
-    .byt 9, 7, "MUST BE EMPTY SPACE BELOW THE   ", 8, 3, "%%%%"
-    .byt 9, 7, "WALL FOR THE DIAMONDS TO LAND.  ", 8, 3, "%%%%"
-    .byt 9, 7, "BEWARE IT ALSO TURNS DIAMONDS   ", 8, 7, "+"+128, ","+128, "  "
-    .byt 9, 7, "INTO ROCKS!                     ", 8, 7, ")"+128, "-"+128, "  "
-    .dsb 80," "
-    .byt 9, 7, "WATCH OUT FOR THE GROWING WALL", 8, 3, " %%%  "
-    .byt 9, 7, "WHICH GROWS INTO EMPTY SPACE  ", 8, 3, "%%%   "
-    .byt 9, 7, "ON EITHER SIDE OF IT                  "
-    .dsb 80," "
-    .byt 9, 7, "TRAP THE GROWING AMOEBA USING   ", 8, 3, "././"
-    .byt 9, 7, "ROCKS TO TURN IT INTO DIAMONDS  ", 8, 3, "0101"
-    .byt 9, 7, "BEWARE IT WILL EVENTUALLY TURN  ", 8, 7, ":;67"
-    .byt 9, 7, "TO ROCK IF IT GROWS TOO LARGE!  ", 8, 7, "<=89"  
-    .byt 9, 7, "THE AMOEBA KILLS FIREFLIES AND", 8, 3, "N"+128, "O"+128, 4, " 23"
-    .byt 9, 7, "TURNS BUTTERFLIES TO DIAMONDS ", 8, 3, "P"+128, "Q"+128, 4, " 45"
-    .dsb 80," "
-    .byt 9, 2, "DOWN", 7, "CONTINUES,", 2, "SPACE", 7, "STARTS GAME     "
-
-instructions_4
-    .byt 9, 7, "SLIME LOOKS LIKE THE AMOEBA BUT   ", 8, 3, "./"
-    .byt 9, 7, "DOES NOT GROW. IT SLOWS DOWN ROCKS", 8, 3, "01"
-    .byt 9, 7, "AND DIAMONDS FROM DROPPING INTO   ", 8, 7, ":;"
-    .byt 9, 7, "EMPTY SPACE BELOW IT              ", 8, 7, "<="
-    .dsb 80," "
-    .byt 9, 7, "ROCKFORD CAN USE BOMBS IN SOME    ", 8, 3, "{|"
-    .byt 9, 7, "CAVES. THEY EXPLODE AFTER A SHORT ", 8, 3, "}~"
-    .byt 9, 7, "DELAY AND DESTROY ALMOST ANYTHING     "
-    .dsb 80," "
-    .byt 9, 7, "SOME CAVES HAVE ZERO GRAVITY WHERE", 8, 3, "Z["
-    .byt 9, 7, "ROCKS, DIAMONDS AND BOMBS DO NOT  ", 8, 3, 92, "]"
-    .byt 9, 7, "FALL. ROCKS LOOK LIKE BUBBLES AND     "
-    .byt 9, 7, "CAN BE PUSHED IN ALL DIRECTIONS   ", 8, 3, "Z["
-    .byt 9, 7, "BEWARE ZERO GRAVITY CAN RUN OUT!  ", 8, 3, 92, "]"
-    .dsb 80," "
-
-    .byt 9, 7, "SCORE POINTS BY GATERING DIAMONDS.    "
-    .byt 9, 7, "THEY ARE MORE VALUABLE WHEN FEWER ARE "
-    .byt 9, 7, "AVAILABLE, AND WHEN ROCKFORD'S EXIT   "
-    .byt 9, 7, "IS OPEN AND THERE ARE STILL SOME LEFT "
-    .dsb 40," "
-    .byt 9, 7, "EVERY 500 POINTS, ROCKFORD   ", 8, 3, "ij", 7, 127, 127, 127, 127
-    .byt 9, 7, "IS AWARDED A BONUS LIFE!     ", 8, 3, "mn", 7, 127, 127, 127, 127
-    .dsb 80," "
-    .byt 9, 2, "DOWN", 7, "RESTARTS,", 2, "SPACE", 7, "STARTS GAME      "
+theme_voice_2_pitch_low_high
+    .byt $cb, $02, $dd, $01, $65, $01, $2c, $01, $23, $03, $a9, $01, $91, $01, $0c, $01
+    .byt $85, $03, $85, $03, $c2, $01, $85, $03, $91, $01, $86, $00, $7b, $01, $96, $00
+    .byt $cb, $02, $cb, $02, $cb, $02, $cb, $02, $23, $03, $23, $03, $23, $03, $23, $03
+    .byt $cb, $02, $cb, $02, $cb, $02, $cb, $02, $c2, $01, $c2, $01, $c2, $01, $c2, $01
+    .byt $23, $03, $23, $03, $23, $03, $23, $03, $fa, $01, $fa, $01, $fa, $01, $fa, $01
+    .byt $bb, $03, $ee, $00, $bb, $03, $ee, $00, $30, $04, $30, $04, $cb, $02, $cb, $02
+    .byt $cb, $02, $cb, $02, $cb, $02, $cb, $02, $65, $01, $65, $01, $cb, $02, $cb, $02
+    .byt $23, $03, $23, $03, $23, $03, $23, $03, $91, $01, $91, $01, $23, $03, $23, $03
+    .byt $cb, $02, $8e, $00, $cb, $02, $86, $00, $65, $01, $8e, $00, $cb, $02, $86, $00
+    .byt $23, $03, $8e, $00, $23, $03, $86, $00, $91, $01, $9f, $00, $23, $03, $96, $00
+    .byt $cb, $02, $cb, $02, $cb, $02, $77, $00, $65, $01, $65, $01, $cb, $02, $96, $00
+    .byt $23, $03, $23, $03, $23, $03, $23, $03, $91, $01, $91, $01, $23, $03, $23, $03
+    .byt $cb, $02, $8e, $00, $cb, $02, $86, $00, $65, $01, $8e, $00, $cb, $02, $86, $00
+    .byt $23, $03, $8e, $00, $23, $03, $86, $00, $91, $01, $9f, $00, $23, $03, $96, $00
+    .byt $b2, $00, $ee, $00, $1c, $01, $65, $01, $c8, $00, $0c, $01, $3e, $01, $23, $03
+    .byt $77, $00, $8e, $00, $b2, $00, $ee, $00, $0c, $01, $3e, $01, $91, $01, $23, $03
