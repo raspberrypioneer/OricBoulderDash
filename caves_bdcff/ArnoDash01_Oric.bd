@@ -648,6 +648,42 @@ W.................W
 W................PW 
 WWWWWWWWWWWWWWWWWWW 
 [/map]
+
+[/cave]
+
+[cave]
+Name=Cave 21
+DiamondValue=1
+DiamondExtraValue=1
+DiamondsRequired=1 1 1 1 1
+CaveTime=10 10 10 10 10
+Colors=Blue Purple Yellow
+
+[map]
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+wcw   w w   w   wqw w                  w
+w w w   w w w w   w w                  w
+wcw www   w w wwwww w                  w
+w      wwww     wqw w                  w
+wcww www   wwwwqw w w                  w
+w   xxxxxxxxxxx   w w                  w
+ WW  WWW  WWW  WWW  w                  w
+W  W W  W  W  W   W w                  w
+W  W WWW   W  W     w                  w
+W  W W  W  W  W   W w                  w
+ WW  W  W WWW  WWW  w                  w
+w                   w                  w
+wwwwwwwwwwwwwwwwwwwww                  w
+w                                      w
+w                                      w
+w                                      w
+w                                      w
+w                                      w
+w                                      w
+w                                      w
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+[/map]
+
 [/cave]
 
 [/game]

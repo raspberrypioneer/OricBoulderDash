@@ -1,0 +1,1349 @@
+[
+    {
+        "CaveLetter": "A",
+        "CaveNumber": 1,
+        "CaveTime": [
+            240,
+            160,
+            120,
+            100,
+            100
+        ],
+        "Colors": [
+            "cyan",
+            "green",
+            "white"
+        ],
+        "DiamondExtraValue": 15,
+        "DiamondValue": 15,
+        "DiamondsRequired": [
+            10,
+            10,
+            10,
+            20,
+            20
+        ],
+        "MagicWallTime": 25,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W------------------w-.MMM.MMM.MMMW-----W",
+            "W------------------w-.M...M...M..W-----W",
+            "W------------------w-.MMM.MMM.MMMW---P-W",
+            "W------------------w-.M.....M...MW-----W",
+            "W------------------wr.M...MMM.MMMW-----W",
+            "W--..............--w-............W-----W",
+            "W--MMMMMMMMMMMMMM--w-............W-----W",
+            "W------------------w-............W-----W",
+            "W------------------w-............W-----W",
+            "W--..............--w-............W-----W",
+            "Wwwwwwwwwwwwwwwwwwww-............W-----W",
+            "W--------------------............W-----W",
+            "W--------------------............W-----W",
+            "W--------------------............W-----W",
+            "W--------------------............W-----W",
+            "W-------------WWWWWWWWWWWWWWWWWWWW-----W",
+            "W--------------   .     .     .     .  W",
+            "W----X---------   .     .     .     .  W",
+            "W--------------   .     .     .     .  W",
+            "W--------------  q.    q.    q.    q.  W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            11,
+            12,
+            13,
+            14,
+            15
+        ],
+        "RockfordExit": [
+            18,
+            5
+        ],
+        "RockfordStart": [
+            3,
+            37
+        ],
+        "TileForProbability": [
+            "BOULDER",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            50,
+            5
+        ]
+    },
+    {
+        "AmoebaTime": 10,
+        "CaveLetter": "B",
+        "CaveNumber": 2,
+        "CaveTime": [
+            200,
+            190,
+            180,
+            170,
+            160
+        ],
+        "Colors": [
+            "white",
+            "blue",
+            "lt.purple"
+        ],
+        "DiamondExtraValue": 10,
+        "DiamondValue": 3,
+        "DiamondsRequired": [
+            75,
+            80,
+            85,
+            90,
+            95
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "Wr  rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr  rW",
+            "W.  ................................  .W",
+            "W.  ................................  .W",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW---WWWWWWW---WWWWWWW---WWWWW  WW",
+            "WW  WWWW-r-WWWWWWW-r-WWWWWWW-r-WWWWW  WW",
+            "WW  WWWWW.WWWWWWWWW.WWWWWWWWW.WWWWWW  WW",
+            "W  P                                  XW",
+            "W                                      W",
+            "W                                      W",
+            "W                                      W",
+            "W                                      W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            100,
+            137,
+            140,
+            251,
+            51
+        ],
+        "RockfordExit": [
+            16,
+            38
+        ],
+        "RockfordStart": [
+            16,
+            3
+        ],
+        "TileForProbability": [
+            "BOULDER",
+            "AMOEBA"
+        ],
+        "TileProbability": [
+            254,
+            127
+        ]
+    },
+    {
+        "CaveLetter": "C",
+        "CaveNumber": 3,
+        "CaveTime": [
+            150,
+            150,
+            150,
+            150,
+            200
+        ],
+        "Colors": [
+            "purple",
+            "cyan",
+            "white"
+        ],
+        "DiamondExtraValue": 50,
+        "DiamondValue": 25,
+        "DiamondsRequired": [
+            16,
+            12,
+            18,
+            15,
+            15
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W------------------------------------P-W",
+            "W------WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W------W-------------------------------W",
+            "W------W-------------------------------W",
+            "W------W-------------------------------W",
+            "W------W------WWWWWWWWWWWWWWWWWWW------W",
+            "W------W------W-----------------W------W",
+            "W------W------W---X-------------W------W",
+            "W------W------W-----------------W------W",
+            "W------W------WWWWWWWWWWWW------W------W",
+            "W------W------------------------W------W",
+            "W------W------------------------W------W",
+            "W------W------------------------W------W",
+            "W------WWWWWWWWWWWWWWWWWWWWWWWWWW------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            24,
+            45,
+            52,
+            30,
+            40
+        ],
+        "RockfordExit": [
+            10,
+            18
+        ],
+        "RockfordStart": [
+            3,
+            37
+        ],
+        "TileForProbability": [
+            "SPACE",
+            "BOULDER",
+            "FIREFLYl",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            120,
+            50,
+            15,
+            9
+        ]
+    },
+    {
+        "AmoebaTime": 140,
+        "CaveLetter": "D",
+        "CaveNumber": 4,
+        "CaveTime": [
+            80,
+            70,
+            60,
+            50,
+            40
+        ],
+        "Colors": [
+            "cyan",
+            "green",
+            "pink"
+        ],
+        "DiamondExtraValue": 8,
+        "DiamondValue": 5,
+        "DiamondsRequired": [
+            50,
+            52,
+            54,
+            56,
+            58
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W.....................aadddddddddddddddW",
+            "W....qqqqqqqqqqr......aad.............dW",
+            "W.....................aad.............dW",
+            "W.....................aad.............dW",
+            "W....qqqqqqqqqqr......aad.............dW",
+            "W.....................aad.............dW",
+            "W.....................aad.............dW",
+            "W....qqqqqqqqqqr......aad.............dW",
+            "W.....................aad.............dW",
+            "WX...................waad.............dW",
+            "W..................P.waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waad.............dW",
+            "W....................waadddddddddddddddW",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RockfordExit": [
+            10,
+            1
+        ],
+        "RockfordStart": [
+            11,
+            19
+        ]
+    },
+    {
+        "CaveLetter": "Q",
+        "CaveNumber": 5,
+        "CaveTime": [
+            20,
+            20,
+            20,
+            20,
+            20
+        ],
+        "Colors": [
+            "purple",
+            "blue",
+            "white"
+        ],
+        "DiamondExtraValue": 30,
+        "DiamondValue": 30,
+        "DiamondsRequired": [
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "Intermission": true,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWW ",
+            "W.................W ",
+            "W....rrrrrrr......W ",
+            "W..P.rqqqqqr......W ",
+            "W....rqqqqqr......W ",
+            "W....rqqdqqr......W ",
+            "W....rqqqqqr......W ",
+            "W....rqqqqqr......W ",
+            "W....rrrrrrr......W ",
+            "W.................W ",
+            "W.X...............W ",
+            "WWWWWWWWWWWWWWWWWWW "
+        ],
+        "RockfordExit": [
+            10,
+            2
+        ],
+        "RockfordStart": [
+            3,
+            3
+        ]
+    },
+    {
+        "CaveLetter": "E",
+        "CaveNumber": 6,
+        "CaveTime": [
+            30,
+            30,
+            30,
+            30,
+            30
+        ],
+        "Colors": [
+            "cyan",
+            "purple",
+            "pink"
+        ],
+        "DiamondExtraValue": 40,
+        "DiamondValue": 20,
+        "DiamondsRequired": [
+            5,
+            8,
+            10,
+            10,
+            10
+        ],
+        "MagicWallTime": 2,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W-------------------...................W",
+            "W-------------------...................W",
+            "W-------------------...................W",
+            "W-------------------...................W",
+            "Wsssssssssssssssssss...................W",
+            "W-------------------...................W",
+            "Wsssssssssssssssssss...................W",
+            "W                   ...................W",
+            "Wsssssssssssssssssss...................W",
+            "W                   ...................W",
+            "W                   ...................W",
+            "W                   ...................W",
+            "W                   ...................W",
+            "W                   ...................W",
+            "W                   ...................W",
+            "W                   ...................W",
+            "W  P                ...................W",
+            "Wsssssssssssssssssss...............X...W",
+            "W                   ...................W",
+            "WMMMMMMMMMMMMMMMMMMM...................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            30,
+            31,
+            32,
+            33,
+            34
+        ],
+        "RockfordExit": [
+            18,
+            35
+        ],
+        "RockfordStart": [
+            17,
+            3
+        ],
+        "SlimePermeability": 10,
+        "TileForProbability": [
+            "BOULDER",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            255,
+            127
+        ]
+    },
+    {
+        "CaveLetter": "F",
+        "CaveNumber": 7,
+        "CaveTime": [
+            200,
+            200,
+            200,
+            200,
+            200
+        ],
+        "Colors": [
+            "red",
+            "green",
+            "white"
+        ],
+        "DiamondExtraValue": 80,
+        "DiamondValue": 5,
+        "DiamondsRequired": [
+            30,
+            40,
+            32,
+            32,
+            42
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W...       W...........................W",
+            "WP.W q     W..w.---------.w............W",
+            "W..W WWWWW W..w.---------.w............W",
+            "W..W       W..w.---------.w............W",
+            "W.XW       W..w.---------.w............W",
+            "W..W WWWWWqW..w.---------.w............W",
+            "W..W       W..w.---------.w............W",
+            "W..W q     W..w.---------.w............W",
+            "W..W WWWWW W..w.---------.w............W",
+            "W..W       W..w...........w............W",
+            "W..W       W..w.wwwwwwwww.w............W",
+            "W..W WWWWWqW..w...........w............W",
+            "W..W       W..w.---------.w............W",
+            "W..W q     W..w.---------.w............W",
+            "W..W WWWWW W..w.---------.w............W",
+            "W..W       W..w.---------.w............W",
+            "W..W       W..w.---------.w............W",
+            "W..W WWWWWqW..w.---------.w............W",
+            "W..W       W..w.---------.w............W",
+            "W..W       ............................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            10,
+            11,
+            12,
+            13,
+            14
+        ],
+        "RockfordExit": [
+            5,
+            2
+        ],
+        "RockfordStart": [
+            2,
+            1
+        ],
+        "TileForProbability": [
+            "BOULDER",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            220,
+            80
+        ]
+    },
+    {
+        "CaveLetter": "G",
+        "CaveNumber": 8,
+        "CaveTime": [
+            200,
+            180,
+            180,
+            150,
+            150
+        ],
+        "Colors": [
+            "cyan",
+            "blue",
+            "pink"
+        ],
+        "DiamondExtraValue": 50,
+        "DiamondValue": 20,
+        "DiamondsRequired": [
+            8,
+            14,
+            15,
+            15,
+            12
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W--------------------------------------W",
+            "W-ww--ww--ww--ww--ww--ww--ww--ww--ww---W",
+            "W--------------------------------------W",
+            "W----------wwwwwwwwwwwww---------------W",
+            "W----------wrrwrrwrrwrrwrr-------------W",
+            "W-ww--ww--ww..w..w..w..w..ww--ww--ww---W",
+            "W----------w  w  w  w  w---------------W",
+            "W----------w  w  w  w  w---------------W",
+            "W----------w  w  w  w  w---------------W",
+            "W-ww--ww--ww  w  w  w  w--ww--ww--ww---W",
+            "W--------P-wX w  w  w  w---------------W",
+            "W----------w  w  w  w  w---------------W",
+            "W----------wwwwwwwwwwwww---------------W",
+            "W-ww--ww--ww--ww--ww--ww--ww--ww--ww---W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W-ww--ww--ww--ww--ww--ww--ww--ww--ww---W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            10,
+            11,
+            15,
+            13,
+            14
+        ],
+        "RockfordExit": [
+            11,
+            12
+        ],
+        "RockfordStart": [
+            11,
+            9
+        ],
+        "TileForProbability": [
+            "SPACE",
+            "BOULDER",
+            "FIREFLYl",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            120,
+            50,
+            15,
+            9
+        ]
+    },
+    {
+        "AmoebaTime": 120,
+        "CaveLetter": "H",
+        "CaveNumber": 9,
+        "CaveTime": [
+            200,
+            160,
+            120,
+            100,
+            80
+        ],
+        "Colors": [
+            "purple",
+            "green",
+            "lt.orange"
+        ],
+        "DiamondExtraValue": 10,
+        "DiamondValue": 5,
+        "DiamondsRequired": [
+            30,
+            40,
+            50,
+            60,
+            70
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "WP..................w....aaaaaaaaaa....W",
+            "W. c c c c c c......w..................W",
+            "W. .......... ......w..................W",
+            "W. ..........c.....Xw..................W",
+            "W. .......... ......w..................W",
+            "W. ..........c......w..................W",
+            "W. .......... ......w..................W",
+            "W. ..........c......w..................W",
+            "W.  c c c c c ......w..................W",
+            "W...................w..................W",
+            "W...................w..................W",
+            "W...................w..................W",
+            "W...................w..................W",
+            "W...................w..................W",
+            "W...................w..................W",
+            "W......................................W",
+            "W......................................W",
+            "W......................................W",
+            "W......................................W",
+            "W......................................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RockfordExit": [
+            4,
+            19
+        ],
+        "RockfordStart": [
+            1,
+            1
+        ]
+    },
+    {
+        "CaveLetter": "R",
+        "CaveNumber": 10,
+        "CaveTime": [
+            30,
+            25,
+            20,
+            20,
+            20
+        ],
+        "Colors": [
+            "cyan",
+            "red",
+            "white"
+        ],
+        "DiamondExtraValue": 10,
+        "DiamondValue": 10,
+        "DiamondsRequired": [
+            6,
+            6,
+            6,
+            6,
+            6
+        ],
+        "Intermission": true,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWW ",
+            "W.................W ",
+            "WP................W ",
+            "W..   ..   ..   ..W ",
+            "W..   ..   ..   ..W ",
+            "W.. dq.. dq.. dq..W ",
+            "W.................W ",
+            "W..   ..   ..   ..W ",
+            "W..   ..   ..   ..W ",
+            "W..cd ..cd ..cd ..W ",
+            "W................XW ",
+            "WWWWWWWWWWWWWWWWWWW "
+        ],
+        "RockfordExit": [
+            10,
+            17
+        ],
+        "RockfordStart": [
+            2,
+            1
+        ]
+    },
+    {
+        "CaveLetter": "I",
+        "CaveNumber": 11,
+        "CaveTime": [
+            160,
+            140,
+            120,
+            100,
+            80
+        ],
+        "Colors": [
+            "purple",
+            "green",
+            "pink"
+        ],
+        "DiamondExtraValue": 50,
+        "DiamondValue": 5,
+        "DiamondsRequired": [
+            75,
+            75,
+            75,
+            75,
+            75
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W   q               q               q  W",
+            "W  d.d.d.d.d  .d.d.d.d.d.d.d  .d.d.d.  W",
+            "W  WWWWWWWWW  WWWWWWWWWWWWWW  WWWWWWW  W",
+            "W                                      W",
+            "W   q               q               q  W",
+            "W  d.d.d.d.d  .d.d.d.d.d.d.d  .d.d.d.  W",
+            "W  WWWWWWWWW  WWWWWWWWWWWWWW  WWWWWWW  W",
+            "W                                      W",
+            "W   q              q                q  W",
+            "W  d.d.d.d.d.d.d.  Wd  d.d.d.d.d.d.d.  W",
+            "W  WWWWWWWWWWWWWW  W.  WWWWWWWWWWWWWW  W",
+            "W                  Wd                  W",
+            "WP  q              W.               q XW",
+            "W  d.d.d.d.d.d.d.  Wd  d.d.d.d.d.d.d.  W",
+            "W  WWWWWWWWWWWWWW  W.  WWWWWWWWWWWWWW  W",
+            "W                  Wd                  W",
+            "W   q              W.               q  W",
+            "W  d.d.d.d.d.d.d.  Wd  d.d.d.d.d.d.d.  W",
+            "W  WWWWWWWWWWWWWW  W.  WWWWWWWWWWWWWW  W",
+            "W                                      W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RockfordExit": [
+            13,
+            38
+        ],
+        "RockfordStart": [
+            13,
+            1
+        ]
+    },
+    {
+        "CaveLetter": "J",
+        "CaveNumber": 12,
+        "CaveTime": [
+            200,
+            180,
+            160,
+            140,
+            120
+        ],
+        "Colors": [
+            "cyan",
+            "purple",
+            "white"
+        ],
+        "DiamondExtraValue": 10,
+        "DiamondValue": 5,
+        "DiamondsRequired": [
+            18,
+            27,
+            36,
+            45,
+            54
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--qc-----qc-----qc-----qc-------------W",
+            "W--rr-----rr-----rr-----rr-------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W------P-------------------------------W",
+            "W--------------------------------------W",
+            "W--qc-----qc-----qc-----qc-------------W",
+            "W--rr-----rr-----rr-----rr-------------W",
+            "W--------------------------------------W",
+            "W-----------------------------X--------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "W--------------------------------------W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "RockfordExit": [
+            15,
+            30
+        ],
+        "RockfordStart": [
+            10,
+            7
+        ],
+        "TileForProbability": [
+            "BOULDER"
+        ],
+        "TileProbability": [
+            1
+        ]
+    },
+    {
+        "CaveLetter": "K",
+        "CaveNumber": 13,
+        "CaveTime": [
+            60,
+            60,
+            60,
+            60,
+            60
+        ],
+        "Colors": [
+            "red",
+            "green",
+            "pink"
+        ],
+        "DiamondExtraValue": 30,
+        "DiamondValue": 15,
+        "DiamondsRequired": [
+            21,
+            24,
+            19,
+            23,
+            27
+        ],
+        "MagicWallTime": 2,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "Wqqqqqqqqqqqqqqqqqqqqqqqqq.............W",
+            "W.........r............................W",
+            "W.-------.P.--------------------------.W",
+            "W.-------w w--------------------------.W",
+            "W.-------www--------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.---------------------------------X--.W",
+            "W.------------------------------------.W",
+            "W......................................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            10,
+            11,
+            12,
+            13,
+            15
+        ],
+        "RockfordExit": [
+            18,
+            35
+        ],
+        "RockfordStart": [
+            3,
+            10
+        ],
+        "TileForProbability": [
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            15
+        ]
+    },
+    {
+        "CaveLetter": "L",
+        "CaveNumber": 14,
+        "CaveTime": [
+            240,
+            220,
+            200,
+            170,
+            150
+        ],
+        "Colors": [
+            "green",
+            "cyan",
+            "white"
+        ],
+        "DiamondExtraValue": 15,
+        "DiamondValue": 15,
+        "DiamondsRequired": [
+            35,
+            36,
+            33,
+            37,
+            34
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W----- ----- ----- --P-- ----- ----- -.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "Www wwwww wwwww wwwww wwwww wwwww wwwX.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W----- ----- ----- ----- ----- ----- -.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "Www wwwww wwwww wwwww wwwww wwwww www-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W----- ----- ----- ----- ----- ----- -.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "W-----w-----w-----w-----w-----w-----w-.W",
+            "Www wwwww wwwww wwwww wwwww wwwww www-.W",
+            "W-------------------------------------.W",
+            "W......................................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            12,
+            8,
+            7,
+            9,
+            11
+        ],
+        "RockfordExit": [
+            6,
+            37
+        ],
+        "RockfordStart": [
+            3,
+            21
+        ],
+        "TileForProbability": [
+            "BOULDER",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            90,
+            20
+        ]
+    },
+    {
+        "CaveLetter": "S",
+        "CaveNumber": 15,
+        "CaveTime": [
+            30,
+            25,
+            20,
+            20,
+            20
+        ],
+        "Colors": [
+            "cyan",
+            "red",
+            "pink"
+        ],
+        "DiamondExtraValue": 60,
+        "DiamondValue": 25,
+        "DiamondsRequired": [
+            2,
+            2,
+            2,
+            2,
+            2
+        ],
+        "InitialFill": "SPACE",
+        "Intermission": true,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWW ",
+            "W .q. . . . . . ..W ",
+            "WP. . . . . . . ..W ",
+            "W . .q. . . . . ..W ",
+            "W . . . . . . . ..W ",
+            "W . . .q. . . dqdXW ",
+            "W . . . . . . . ..W ",
+            "W . . . .q. .q. ..W ",
+            "W . . . . . . . ..W ",
+            "W . . . . .q. . ..W ",
+            "W . . . . . . . ..W ",
+            "WWWWWWWWWWWWWWWWWWW "
+        ],
+        "RockfordExit": [
+            5,
+            17
+        ],
+        "RockfordStart": [
+            2,
+            1
+        ]
+    },
+    {
+        "CaveLetter": "M",
+        "CaveNumber": 16,
+        "CaveTime": [
+            200,
+            200,
+            200,
+            200,
+            180
+        ],
+        "Colors": [
+            "green",
+            "purple",
+            "white"
+        ],
+        "DiamondExtraValue": 10,
+        "DiamondValue": 2,
+        "DiamondsRequired": [
+            1,
+            20,
+            20,
+            40,
+            50
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-X-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "W-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-...W",
+            "W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W-W..W",
+            "Wr.r.r.r.r.r.r.r.r.r.r.r.r.r.r.r.r.r...W",
+            "WrWrWrWrWrWrWrWrWrWrWrWrWrWrWrWrWrWrW..W",
+            "Wssssssssssssssssssssssssssssssssssss..W",
+            "W.P....................................W",
+            "W......................................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            137,
+            140,
+            100,
+            251,
+            51
+        ],
+        "RockfordExit": [
+            13,
+            2
+        ],
+        "RockfordStart": [
+            19,
+            2
+        ],
+        "SlimePermeability": 0,
+        "TileForProbability": [
+            "BOULDER",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            255,
+            127
+        ]
+    },
+    {
+        "CaveLetter": "N",
+        "CaveNumber": 17,
+        "CaveTime": [
+            200,
+            180,
+            160,
+            140,
+            120
+        ],
+        "Colors": [
+            "purple",
+            "blue",
+            "pink"
+        ],
+        "DiamondExtraValue": 1,
+        "DiamondValue": 20,
+        "DiamondsRequired": [
+            21,
+            21,
+            21,
+            21,
+            21
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W                                      W",
+            "W ...d....d....d....d....d....d....d.. W",
+            "W .----------------------------------. W",
+            "W .----------------------------------. W",
+            "W .----------------------------------. W",
+            "W .--d----d----d----d----d----d----d-. W",
+            "W .----------------------------------. W",
+            "W .----------------------------------. W",
+            "W .----------------------------------. W",
+            "W .--d----d----d----d----d----d----d-. W",
+            "W .----------------------------------. W",
+            "W .----------------------------------. W",
+            "W .................................... W",
+            "W                  ...                 W",
+            "W                  . .                 W",
+            "W                  . .                 W",
+            "W                  .P.                 W",
+            "W                  . .                 W",
+            "Wq q q q q q q q q .X.                 W",
+            "Wq q q q q q q q q ... q q q q q q q q W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            15,
+            16,
+            17,
+            18,
+            19
+        ],
+        "RockfordExit": [
+            19,
+            20
+        ],
+        "RockfordStart": [
+            17,
+            20
+        ],
+        "TileForProbability": [
+            "BOULDER"
+        ],
+        "TileProbability": [
+            60
+        ]
+    },
+    {
+        "CaveLetter": "O",
+        "CaveNumber": 18,
+        "CaveTime": [
+            200,
+            150,
+            133,
+            125,
+            120
+        ],
+        "Colors": [
+            "cyan",
+            "purple",
+            "lt.orange"
+        ],
+        "DiamondExtraValue": 10,
+        "DiamondValue": 10,
+        "DiamondsRequired": [
+            36,
+            36,
+            36,
+            36,
+            36
+        ],
+        "MagicWallTime": 10,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W.......................r..............W",
+            "W......................................W",
+            "W.......................r.............XW",
+            "W......................................W",
+            "W.....r................................W",
+            "W...........x.xrx.x....................W",
+            "W...    c...w  . cw...........r    c...W",
+            "W...     ...w     w          ..     ...W",
+            "W...     ...w     w wwwwwwww ..     ...W",
+            "W...     ...w     w  .    c. ..     ...W",
+            "W...     ...w     w  .     . ..     ...W",
+            "W...........w.....w  .     . .MMMMMMM..W",
+            "W...........w.....w  .     . .MMMMMMM..W",
+            "W...........w.....w  .     . ..........W",
+            "W...........wwwwwww  ....... ..........W",
+            "W...........wwwwwww          ..........W",
+            "W......................................W",
+            "W..P...................................W",
+            "W......................................W",
+            "W......................................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RockfordExit": [
+            3,
+            38
+        ],
+        "RockfordStart": [
+            18,
+            3
+        ]
+    },
+    {
+        "CaveLetter": "P",
+        "CaveNumber": 19,
+        "CaveTime": [
+            200,
+            200,
+            200,
+            200,
+            200
+        ],
+        "Colors": [
+            "purple",
+            "green",
+            "white"
+        ],
+        "DiamondExtraValue": 40,
+        "DiamondValue": 10,
+        "DiamondsRequired": [
+            20,
+            15,
+            17,
+            15,
+            20
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "W......................................W",
+            "W.-P----------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------X-----------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W.------------------------------------.W",
+            "W......................................W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ],
+        "RandSeed": [
+            10,
+            11,
+            12,
+            13,
+            14
+        ],
+        "RockfordExit": [
+            11,
+            20
+        ],
+        "RockfordStart": [
+            2,
+            3
+        ],
+        "TileForProbability": [
+            "SPACE",
+            "BOULDER",
+            "DIAMOND"
+        ],
+        "TileProbability": [
+            189,
+            179,
+            19
+        ]
+    },
+    {
+        "CaveLetter": "T",
+        "CaveNumber": 20,
+        "CaveTime": [
+            20,
+            20,
+            20,
+            20,
+            20
+        ],
+        "Colors": [
+            "cyan",
+            "blue",
+            "lt.orange"
+        ],
+        "DiamondExtraValue": 20,
+        "DiamondValue": 10,
+        "DiamondsRequired": [
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "Intermission": true,
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWW ",
+            "W.P...............W ",
+            "W.........   .....W ",
+            "W......... d .....W ",
+            "W.........  q.....W ",
+            "W.....   .........W ",
+            "W..... r .........W ",
+            "W.....   .........W ",
+            "W.........qqW.....W ",
+            "W.........qXW.....W ",
+            "W.........qqW.....W ",
+            "WWWWWWWWWWWWWWWWWWW "
+        ],
+        "RockfordExit": [
+            9,
+            11
+        ],
+        "RockfordStart": [
+            1,
+            2
+        ]
+    },
+    {
+        "CaveLetter": "Z",
+        "CaveNumber": 21,
+        "CaveTime": [
+            10,
+            10,
+            10,
+            10,
+            10
+        ],
+        "Colors": [
+            "purple",
+            "red",
+            "white"
+        ],
+        "DiamondExtraValue": 1,
+        "DiamondValue": 1,
+        "DiamondsRequired": [
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "Map": [
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW",
+            "s   r         r   s                    W",
+            "s  rrrr     rrrr  s                    W",
+            "s  sssrwwwwwrsss  s                    W",
+            "s     r     r     s                    W",
+            "s    rrr   rrr    s                    W",
+            "s   xxxxxxxxxxx   s                    W",
+            "s     www www     s                    W",
+            "s      w   w      s                    W",
+            "s      w   w      s                    W",
+            "s     www www     s                    W",
+            "s sssssssssssssss s                    W",
+            "WqWWWWWWWWWWWWWWWcW                    W",
+            "Wcq             cqW                    W",
+            "WWWWWWWWWWWWWWWWWWW                    W",
+            "W                                      W",
+            "W                                      W",
+            "W                                      W",
+            "W                                      W",
+            "W                                      W",
+            "W                                      W",
+            "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW"
+        ]
+    }
+]
