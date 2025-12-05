@@ -818,6 +818,7 @@ TAP_filenames
     .byt "B3CAVES", 0
     .byt "P1CAVES", 0
     .byt "A1CAVES", 0
+    .byt "A2CAVES", 0
     .byt "BBCAVES", 0
 
 version_option_text
@@ -828,7 +829,8 @@ version_option_text
     .byt 2, "BOULDER DASH 3 "
     .byt 5, "BOULDER DASH +1"
     .byt 3, "ARNO DASH 1    "
-    .byt 4, "BONUS CAVES    "
+    .byt 4, "ARNO DASH 2    "
+    .byt 7, "BONUS CAVES    "
 
 ; *************************************************************************************
 ; title screen theme tune

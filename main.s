@@ -2676,10 +2676,10 @@ version_loop
     beq end_version_selection
 
     cmp #KEY_MASK_UP_ARROW
-    beq version_up
+    beq version_down
 
     cmp #KEY_MASK_DOWN_ARROW
-    beq version_down
+    beq version_up
 
     cmp #KEY_MASK_RIGHT_ARROW
     beq version_up
@@ -2732,9 +2732,9 @@ version_selected
     .byt 2  ;Point to third option in TAP_filenames table (zero-based, first cave file)
 
 version_selection_cycle_up
-    .byt 0,0,3,4,5,6,7,2
+    .byt 0,0,3,4,5,6,7,8,2
 version_selection_cycle_down
-    .byt 0,0,7,2,3,4,5,6
+    .byt 0,0,8,2,3,4,5,6,7
 
 end_version_selection
 

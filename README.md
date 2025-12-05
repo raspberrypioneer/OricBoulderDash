@@ -2,7 +2,7 @@
 This is a fan-developed version of Boulder Dash for the Oric (Oric-1 or Atmos).
 I thought it would be a good way of getting to find out more about the Oric-1 I recently purchased by porting the BBC/Acorn Electron version of Boulder Dash to this platform.
 
-This repo really contains 5 different versions of the game. They all run with the same 'game engine' but have different caves. Select the version to play from the splash screen.
+This repo really contains 6 different versions of the game. They all run with the same 'game engine' but have different caves. Select the version to play from the splash screen.
 
 ![Splash screen](./docs/BDver.png)
 
@@ -18,9 +18,11 @@ This repo really contains 5 different versions of the game. They all run with th
 
 ![Boulder Dash +1](./docs/BDP1.png)
 
-- Arno Dash 1 is one example of the many fan-developed caves found on [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/). Boulder Dash format files (BDCFF) are used to create new caves which run with the game-engine.
+- The Arno Dash games are some examples of the many fan-developed caves found on [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/). Boulder Dash format files (BDCFF) are used to create new caves which run with the game-engine.
 
-![Arno Dash](./docs/AD1.png)
+![Arno Dash 1](./docs/AD1.png)
+
+![Arno Dash 2](./docs/AD2.png)
 
 
 ## Oric-1, Atmos and emulation
@@ -60,7 +62,7 @@ There are some differences in this Oric version of the game, although they do no
 
 ## Caves
 - All 20 caves are available in memory (16 standard and 4 bonus caves). They each have the same size, 48 bytes used for parameters, 400 bytes for the map. Each tile in the map is a nibble (each byte represents two tiles). When a particular cave is about to be played, it is loaded into a section of memory labelled `cave_parameter_data`. See `cavedata.s` for more details about the parameters available. 
-- New cave files can be converted from BDCFF files found on [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/) using a conversion utility `BDCavegen.py` found in the [BBC/Acorn Electron enhanced Boulder Dash repo](https://github.com/raspberrypioneer/BoulderDash). Although it is aimed at that platform, the caves it produces have the same format as the caves for the Oric game.
+- New cave files can be converted from BDCFF files found on [Arno's Boulder Dash fansite](https://www.boulder-dash.nl/) using a conversion utility `BDCavegen.py` found in the `utilities` folder.
 
 ## Switching between Atmos and Oric-1
 By default this game runs on the Oric Atmos but is easy to build for an Oric-1 instead. In `main.s` and `single_row_keyboard.s` (or `full_matrix_keyboard.s`), comment out the line `#define rom_v1_1`, then rebuild by running `bd_build_all.bat`.

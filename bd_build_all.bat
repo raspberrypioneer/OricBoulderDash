@@ -56,6 +56,10 @@ set BDVER=ArnoDash01
 set BDTAP=A1CAVES
 call :create_tap_file_for_version
 
+set BDVER=ArnoDash02
+set BDTAP=A2CAVES
+call :create_tap_file_for_version
+
 set BDVER=BoulderBonus
 set BDTAP=BBCAVES
 call :create_tap_file_for_version
@@ -65,7 +69,7 @@ goto :create_combined_tap_file
 
 :: Subroutine to create one large cave file containing all caves A to T with the Z intro cave on the end for a given version
 :create_tap_file_for_version
-cd .\caves_bin\%BDVER%
+cd .\caves_bin\%BDVER%_Oric
 copy /b A+B+C+D+E+F+G+H+I+J+K+L+M+N+O+P+Q+R+S+T+Z ..\..\BUILD\CAVES >nul
 cd ..\..
 %OSDK%\bin\header.exe .\BUILD\CAVES .\tap\%BDTAP%.tap %CAVEADDR% >nul
@@ -77,6 +81,6 @@ exit /B
 :: The order of the tap files is important, the program does not rewind the tape!
 :create_combined_tap_file
 cd .\tap
-copy /b BDASH.tap+BSPLASH.tap+B1CAVES.tap+B2CAVES.tap+B3CAVES.tap+P1CAVES.tap+A1CAVES.tap+BBCAVES.tap+SPRITES.tap BOULDERDASH.tap >nul
+copy /b BDASH.tap+BSPLASH.tap+B1CAVES.tap+B2CAVES.tap+B3CAVES.tap+P1CAVES.tap+A1CAVES.tap+A2CAVES.tap+BBCAVES.tap+SPRITES.tap BOULDERDASH.tap >nul
 cd ..\..
 echo Created full game BOULDERDASH.tap, combining all tap files
